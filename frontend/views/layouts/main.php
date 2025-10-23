@@ -41,7 +41,6 @@ AppAsset::register($this);
             </ul>
             <div class="auth-buttons">
                 <?= Html::a('Login',['login'],['class' => ['btn btn-secondary']])?>
-                <a class="btn btn-secondary" href="/VortexApp/frontend/web/index.php?r=site%2Flogin">Login 2</a>
                 <?= Html::a('Registar',['/site/signup'],['class' => ['btn btn-primary']])?>
             </div>
         </nav>
