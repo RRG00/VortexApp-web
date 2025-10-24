@@ -44,7 +44,7 @@
                             ['label' => 'Inactive Page', 'iconStyle' => 'far'],
                         ]
                     ],
-                    ['label' => 'Gestão de Utilizadores', 'icon' => 'th', 'badge'],
+                    ['label' => 'Gestão de Utilizadores', 'icon'=> 'th', 'badge', 'url' => ['site/crud']], 
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
