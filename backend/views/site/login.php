@@ -8,42 +8,49 @@
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
-$this->title = 'Login';
+$this->title = 'Iniciar Sessão';
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
+
+
+<div class="site-login container">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+    <p>Preencha os campos abaixo para iniciar sessão:</p>
 
     <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <div class="col-md-8">
+            <div class="col-md-10">
+                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password')->passwordInput() ?>
 
-            <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
-            <div class="my-1 mx-0" style="color:#999;">
-                If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                <br>
-                Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
+                <div class="my-1 mx-0" style="color:#999;">
+                    Esqueceu-se da sua password: <?= Html::a('Recuperar', ['site/request-password-reset']) ?>.
+                    <br>
+                    <br>
+                </div>
+
+                <div class="form-group">
+                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
             </div>
-
-            <div class="form-group">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-            </div>
-
-            <?php ActiveForm::end(); ?>
         </div>
+        <div class="col-md-4">
+            <div class="img-vortex">
+                <img src="../web/assets/img/VortexApp_Logo-NoBackground.png">
+            </div>
+        </div>
+
     </div>
 </div>
 
-<p class="mb-1">
-    <a href="forgot-password.html">I forgot my password</a>
-</p>
 </div>
 
 
