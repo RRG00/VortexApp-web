@@ -24,7 +24,7 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-
+    <link rel="stylesheet" type="text/css" href="../web/css/styleTemplate.css" />
 </head>
 <body class="hold-transition sidebar-mini">
 <?php $this->beginBody() ?>
