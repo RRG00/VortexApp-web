@@ -65,10 +65,6 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-    public function actionCrud(){
-        return $this -> render('crud');
-    }
-
     /**
      * Login action.
      *
