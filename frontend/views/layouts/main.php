@@ -33,7 +33,7 @@ AppAsset::register($this);
                 <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
             </div>
             <ul class="nav-links">
-                <li><a href="#home">Início</a></li>
+                <?= Html::a('Início',['index'])?>
                 <li><a href="#tournaments">Torneios</a></li>
                 <li><a href="#rankings">Rankings</a></li>
                 <li><a href="#news">Notícias</a></li>
