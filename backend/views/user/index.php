@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 style="color: black;"><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
@@ -26,6 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'tableOptions' => ['class' => 'table table-striped table-bordered',
+                           'style' => 'background-color: #fff;',
+                           'style' => 'color: #000000;'
+],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
