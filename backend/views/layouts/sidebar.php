@@ -44,7 +44,11 @@
                             ['label' => 'Inactive Page', 'iconStyle' => 'far'],
                         ]
                     ],
+<<<<<<< HEAD
                     ['label' => 'Gestão de Utilizadores', 'icon' => 'th', 'url' => ['user/index']],
+=======
+                    ['label' => 'Gestão de Utilizadores', 'icon' => 'th', 'badge'],
+>>>>>>> parent of 5c28a94 (BackEnd Url Gestao de Users)
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
