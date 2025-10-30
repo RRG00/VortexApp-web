@@ -27,7 +27,7 @@ class UserController extends Controller
                     'rules' => [
                         [ // Rules => Admin
                             'allow' => true,
-                            'actions' => ['index','view', 'update', 'delete'],
+                            'actions' => ['index','create','view', 'update', 'delete'],
                             'roles' => ['admin'],
                         ],
                     ]

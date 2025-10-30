@@ -18,9 +18,9 @@ class RbacController extends Controller
         $admin->description = 'Administrador - gere users';
         $auth->add($admin);
 
-
-        $auth->assign($admin);
+        $auth->assign($admin,1);
 
         echo "RBAC Admin criado com sucesso!\n";
     }
 }
+
