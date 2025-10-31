@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
+
+
     <?= $form->field($model, 'best_of')->textInput() ?>
 
     <?= $form->field($model, 'regras')->textarea(['rows' => 6]) ?>
@@ -22,9 +24,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'premios')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'data_inicio')->textInput() ?>
+    <?= $form->field($model, 'data_inicio')-> Input('date') ?>
 
-    <?= $form->field($model, 'data_fim')->textInput() ?>
+    <?= $form->field($model, 'data_fim')-> Input('date') ?>
 
     <?= $form->field($model, 'estado')->textInput(['maxlength' => true]) ?>
 
@@ -32,7 +34,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'aprovado_por')->textInput() ?>
 
-    <?= $form->field($model, 'id_jogo')->textInput() ?>
+    <?= $form->field($model, 'id_jogos')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
