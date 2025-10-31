@@ -9,6 +9,7 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -33,8 +34,8 @@ AppAsset::register($this);
                 <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
             </div>
             <ul class="nav-links">
-                <?= Html::a('Início',['index'])?>
-                <li><a href="#tournaments">Torneios</a></li>
+                <?= Html::a('Início',['/site/index'])?>
+                <?= Html::a('Torneios',['/tournament/index'])?>
                 <li><a href="#rankings">Rankings</a></li>
                 <li><a href="#news">Notícias</a></li>
                 <li><a href="#calendar">Calendário</a></li>
