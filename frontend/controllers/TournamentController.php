@@ -8,7 +8,7 @@ class TournamentController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $tournaments = Tournament::find()->limit(3)->all();
+        $tournaments = Tournament::find()->all();
         return $this->render('index', ['torneios' => $tournaments]);
     }
 
