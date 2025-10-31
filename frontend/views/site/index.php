@@ -21,7 +21,7 @@ $this->title = 'VORTEX';
             <div class="tournament-card">
                 <div class="tournament-header">
                     <span class="game-badge">Counter-Strike 2</span>
-                    <span class="status active">Ativo</span>
+                    <span class="status cancelled">Ativo</span>
                 </div>
                 <div class="tournament-info">
                     <h3>Vortex Championship 2025</h3>

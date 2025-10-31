@@ -11,18 +11,30 @@ use yii\helpers\Url;
         <?php foreach ($torneios as $torneio) {?>
         <div class="tournament-card">
             <div class="tournament-header">
-                <span class="game-badge"></span>
-                <span class="status active">Ativo</span>
+                <span class="game-badge"><?=$torneio->jogo->nome?></span>
+                <span class="status <?php
+                if ($torneio->estado == 'em breve' || $torneio->estado == 'pending') {
+                    echo 'pending';
+                } elseif ($torneio->estado == 'Ativo' || $torneio->estado == 'active' || $torneio->estado == 'Em Curso') {
+                    echo 'active';
+                } elseif ($torneio->estado == 'concluido' || $torneio->estado == 'completed' || $torneio->estado == 'Terminado') {
+                    echo 'completed';
+                } elseif ($torneio->estado == 'cancelado' || $torneio->estado == 'cancelled') {
+                    echo 'cancelled';
+                } else {
+                    echo 'pending'; // classe padrão
+                }
+                ?>"><?=$torneio->estado?></span>
             </div>
             <div class="tournament-info">
                 <h3><?=$torneio->nome?></h3>
                 <div class="tournament-details">
-                    <span class="detail-item">16 Equipas</span>
-                    <span class="detail-item">Eliminatória</span>
-                    <span class="detail-item">€5,000</span>
+                    <span class="detail-item"><?=$torneio->limite_inscricoes?> Equipas</span>
+                    <span class="detail-item">Best Of: <?=$torneio->best_of?></span>
+                    <span class="detail-item"><?=$torneio->premios?>€</span>
                 </div>
                 <p style="color: var(--text-secondary); margin: 1rem 0;">
-                    Torneio principal da temporada. As melhores equipas competem pelo título.
+                    <?=$torneio->descricao?>
                 </p>
                 <?= Html::a('Ver Detalhes',Url::to(['/tournament/view','id'=> $torneio -> id_torneio]),['class' => ['btn btn-primary']])?>
                 <!-- index.php?r=tournament/view&id=1 -->
