@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use app\Models\User;
 use app\Models\UserSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -76,6 +77,16 @@ class UserController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+
+                $auth = Yii::$app->authManager;
+
+                if ($model->papel) {
+                    $role = $auth->getRole($model->papel);
+                    if ($role) {
+                        $auth->assign($role, $model->id);
+                    }
+                }
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -99,6 +110,15 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $auth = Yii::$app->authManager;
+            $auth->revokeAll($model->id);
+
+            if ($model->papel) {
+                $role = $auth->getRole($model->papel);
+                if ($role) {
+                    $auth->assign($role, $model->id);
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

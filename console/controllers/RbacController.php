@@ -24,7 +24,7 @@ class RbacController extends Controller
         $auth->add($organizer);
 
         $auth->assign($admin,1);
-        $auth->assign($organizer,2);
+        $auth->assign($organizer,4);
 
 
         echo "RBAC Admin criado com sucesso!\n";

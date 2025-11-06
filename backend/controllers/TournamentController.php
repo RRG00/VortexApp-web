@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Tournament;
 use common\models\TournamentSearch;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
