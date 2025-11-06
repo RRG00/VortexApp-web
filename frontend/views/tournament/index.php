@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 ?>
 <section class="tournaments" id="tournaments">
-    <h2 class="section-title">Torneios Ativos</h2>
+    <h1 class="section-title">Torneios Ativos</h1>
     <div class="tournament-grid">
         <?php foreach ($torneios as $torneio) {?>
         <div class="tournament-card">

@@ -64,24 +64,4 @@ class JOGO extends \yii\db\ActiveRecord
         return $this->hasMany(ESTATISTICAS::class, ['id_jogo' => 'id_jogo']);
     }
 
-    /**
-     * Gets query for [[NOTICIAs]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNOTICIAs()
-    {
-        return $this->hasMany(NOTICIA::class, ['id_jogo' => 'id_jogo']);
-    }
-
-    /**
-     * Gets query for [[TORNEIOs]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTORNEIOs()
-    {
-        return $this->hasMany(TORNEIO::class, ['id_jogo' => 'id_jogo']);
-    }
-
 }
