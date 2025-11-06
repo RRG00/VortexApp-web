@@ -1,7 +1,6 @@
 <?php
 
-namespace app\controllers;
-
+namespace backend\controllers;
 use common\models\Tournament;
 use common\models\TournamentSearch;
 use Yii;
