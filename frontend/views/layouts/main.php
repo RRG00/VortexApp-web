@@ -41,7 +41,7 @@ AppAsset::register($this);
                 <li><a href="#calendar">Calendário</a></li>
             </ul>
             <div class="auth-buttons">
-                <?= Html::a('Login',['login'],['class' => ['btn btn-secondary']])?>
+                <?= Html::a('Login',['/site/login'],['class' => ['btn btn-secondary']])?>
                 <?= Html::a('Registar',['/site/signup'],['class' => ['btn btn-primary']])?>
             </div>
         </nav>
@@ -69,7 +69,7 @@ AppAsset::register($this);
             <div class="footer-section">
                 <h3>Links Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="#tournaments">Torneios</a></li>
+                    <?= Html::a('Torneios',['/tournament/index'])?>
                     <li><a href="#rankings">Rankings</a></li>
                     <li><a href="#news">Notícias</a></li>
                     <li><a href="#calendar">Calendário</a></li>
