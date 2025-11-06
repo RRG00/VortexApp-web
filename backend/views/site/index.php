@@ -1,134 +1,113 @@
 <?php
-$this->title = 'Starter Page';
+$this->title = 'Dashboard';
 $this->params['breadcrumbs'] = [['label' => $this->title]];
+
+// Dados reais da BD (quando tiveres)
+// $totalUsers = User::find()->count();
+// $admins = User::find()->where(['role' => 'admin'])->count();
+// $organizers = User::find()->where(['role' => 'organizer'])->count();
+// $players = User::find()->where(['role' => 'player'])->count();
+
+// Substituir por valores da base de dados !Important
+$totalUsers = 0;
+$admins = 0;
+$organizers = 0;
+$players = 0;
+$newUsersThisMonth = 0;
 ?>
+
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-6">
-            <?= \hail812\adminlte\widgets\Alert::widget([
-                'type' => 'success',
-                'body' => '<h3>Congratulations!</h3>',
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Callout::widget([
-                'type' => 'danger',
-                'head' => 'I am a danger callout!',
-                'body' => 'There is a problem that we need to fix. A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.'
-            ]) ?>
+    <!-- Header -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2>Bem-vindo, <?= Yii::$app->user->identity->username ?>!</h2>
+            <p class="text-muted">Painel de Administração - Gestão de Utilizadores</p>
         </div>
     </div>
 
+    <!-- Estatísticas principais -->
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'CPU Traffic',
-                'number' => '10 <small>%</small>',
-                'icon' => 'fas fa-cog',
-            ]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Messages',
-                'number' => '1,410',
-                'icon' => 'far fa-envelope',
-            ]) ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Bookmarks',
-                'number' => '410',
-                 'theme' => 'success',
-                'icon' => 'far fa-flag',
-            ]) ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Uploads',
-                'number' => '13,648',
-                'theme' => 'gradient-warning',
-                'icon' => 'far fa-copy',
-            ]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Bookmarks',
-                'number' => '41,410',
-                'icon' => 'far fa-bookmark',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ]
-            ]) ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
-                'text' => 'Likes',
-                'number' => '41,410',
-                'theme' => 'success',
-                'icon' => 'far fa-thumbs-up',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ]
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Ribbon::widget([
-                'id' => $infoBox->id.'-ribbon',
-                'text' => 'Ribbon',
-            ]) ?>
-            <?php \hail812\adminlte\widgets\InfoBox::end() ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Events',
-                'number' => '41,410',
-                'theme' => 'gradient-warning',
-                'icon' => 'far fa-calendar-alt',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ],
-                'loadingStyle' => true
-            ]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+        <!-- Total de Utilizadores -->
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
-                'title' => '150',
-                'text' => 'New Orders',
-                'icon' => 'fas fa-shopping-cart',
+                    'title' => $totalUsers,
+                    'text' => 'Total de Utilizadores',
+                    'icon' => 'fas fa-users',
+                    'theme' => 'info',
+                    'linkUrl' => ['/user/index'],
+                    'linkText' => 'Ver todos'
             ]) ?>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <?php $smallBox = \hail812\adminlte\widgets\SmallBox::begin([
-                'title' => '150',
-                'text' => 'New Orders',
-                'icon' => 'fas fa-shopping-cart',
-                'theme' => 'success'
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Ribbon::widget([
-                'id' => $smallBox->id.'-ribbon',
-                'text' => 'Ribbon',
-                'theme' => 'warning',
-                'size' => 'lg',
-                'textSize' => 'lg'
-            ]) ?>
-            <?php \hail812\adminlte\widgets\SmallBox::end() ?>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+
+        <!-- Administradores -->
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
-                'title' => '44',
-                'text' => 'User Registrations',
-                'icon' => 'fas fa-user-plus',
-                'theme' => 'gradient-success',
-                'loadingStyle' => true
+                    'title' => $admins,
+                    'text' => 'Administradores',
+                    'icon' => 'fas fa-user-shield',
+                    'theme' => 'danger',
+                    'linkUrl' => ['/user/index'],
+                    'linkText' => 'Ver admins'
             ]) ?>
+        </div>
+
+        <!-- Organizadores -->
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <?= \hail812\adminlte\widgets\SmallBox::widget([
+                    'title' => $organizers,
+                    'text' => 'Organizadores',
+                    'icon' => 'fas fa-user-tie',
+                    'theme' => 'warning',
+                    'linkUrl' => ['/user/index'],
+                    'linkText' => 'Ver organizadores'
+            ]) ?>
+        </div>
+
+        <!-- Jogadores -->
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <?= \hail812\adminlte\widgets\SmallBox::widget([
+                    'title' => $players,
+                    'text' => 'Jogadores',
+                    'icon' => 'fas fa-gamepad',
+                    'theme' => 'success',
+                    'linkUrl' => ['/user/index'],
+                    'linkText' => 'Ver jogadores'
+            ]) ?>
+        </div>
+    </div>
+
+
+
+    <!-- Ações rápidas -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="<?= \yii\helpers\Url::to(['/user/create']) ?>" class="btn btn-lg btn-primary w-100">
+                                <i class="fas fa-user-plus"></i><br>
+                                <strong>Criar Utilizador</strong>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="<?= \yii\helpers\Url::to(['/user/index']) ?>" class="btn btn-lg btn-info w-100">
+                                <i class="fas fa-list"></i><br>
+                                <strong>Listar Utilizadores</strong>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <a href="<?= \yii\helpers\Url::to(['/site/index']) ?>" class="btn btn-lg btn-secondary w-100">
+                                <i class="fas fa-cog"></i><br>
+                                <strong>Configurações</strong>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
