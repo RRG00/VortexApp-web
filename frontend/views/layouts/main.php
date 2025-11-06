@@ -31,7 +31,9 @@ AppAsset::register($this);
 
     <nav>
             <div class="logo">
-                <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
+                <a href="<?= Url::to(['/site/index']) ?>">
+                    <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
+                </a>
             </div>
             <ul class="nav-links">
                 <?= Html::a('Início',['/site/index'])?>
