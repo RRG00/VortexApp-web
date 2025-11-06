@@ -36,7 +36,7 @@ AppAsset::register($this);
             <ul class="nav-links">
                 <?= Html::a('Início',['/site/index'])?>
                 <?= Html::a('Torneios',['/tournament/index'])?>
-                <li><a href="#rankings">Rankings</a></li>
+                <?= Html::a('Rankings',['/ranking/index'])?>
                 <li><a href="#news">Notícias</a></li>
                 <li><a href="#calendar">Calendário</a></li>
             </ul>
