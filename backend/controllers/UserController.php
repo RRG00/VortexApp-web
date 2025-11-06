@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace app\controllers;
 
 use app\Models\User;
 use app\Models\UserSearch;
