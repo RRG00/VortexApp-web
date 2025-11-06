@@ -1,40 +1,39 @@
 <?php
 
+use yii\helpers\Html;
+
 /* @var $this yii\web\View */
 /* @var $name string */
 /* @var $message string */
 /* @var $exception Exception */
 
-use yii\helpers\Html;
-
 $this->title = $name;
-$this->params['breadcrumbs'] = [['label' => $this->title]];
 ?>
-<div class="error-page">
-    <div class="error-content" style="margin-left: auto;">
-        <h3><i class="fas fa-exclamation-triangle text-danger"></i> <?= Html::encode($name) ?></h3>
+<div class="site-error">
 
-        <p>
-            <?= nl2br(Html::encode($message)) ?>
-        </p>
+    <h1 style="color: #2c3e50;"><?= Html::encode($this->title) ?></h1>
 
-        <p>
-            The above error occurred while the Web server was processing your request.
-            Please contact us if you think this is a server error. Thank you.
-            Meanwhile, you may <?= Html::a('return to dashboard', Yii::$app->homeUrl); ?>
-            or try using the search form.
-        </p>
-
-        <form class="search-form" style="margin-right: 190px;">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search">
-
-                <div class="input-group-append">
-                    <button type="submit" name="submit" class="btn btn-danger"><i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
+    <div class="alert alert-dark" style="background-color: #2c3e50; color: white; border: none;">
+        <?= nl2br(Html::encode($message)) ?>
     </div>
-</div>
 
+    <?php if ($exception->statusCode == 403): ?>
+        <div style="color: #2c3e50;">
+            <p>
+                <strong>⛔ Acesso Negado!</strong>
+            </p>
+            <p>
+                Não tens permissões para aceder a esta área.
+            </p>
+        </div>
+    <?php else: ?>
+        <p style="color: #2c3e50;">
+            O servidor encontrou um erro ao processar o teu pedido.
+        </p>
+    <?php endif; ?>
+
+    <p>
+        <?= Html::a('← Voltar ao Dashboard', ['site/index'], ['class' => 'btn btn-dark']) ?>
+    </p>
+
+</div>
