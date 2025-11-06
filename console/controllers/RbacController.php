@@ -38,12 +38,19 @@ class RbacController extends Controller
         $referre->description = 'Referre';
         $auth->add($referre);
 
+        //Create Capitan
+        $capitan = $auth->createRole('capitan');
+        $capitan->description = 'Capitan';
+        $auth->add($capitan);
+
+
 
         $auth->assign($admin,1);
         $auth->assign($equipa,2);
         $auth->assign($referre,3);
         $auth->assign($organizer,4);
         $auth->assign($player,5);
+        $auth->assign($capitan,6);
 
 
 
@@ -52,6 +59,7 @@ class RbacController extends Controller
         echo "RBAC Player criado com sucesso!\n";
         echo "RBAC Equipa criado com sucesso!\n";
         echo "RBAC Referre criado com sucesso!\n";
+        echo "RBAC Capitan criado com sucesso!\n";
 
 
     }
