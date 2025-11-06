@@ -44,7 +44,8 @@
                             ['label' => 'Inactive Page', 'iconStyle' => 'far'],
                         ]
                     ],
-                    ['label' => 'User Control', 'icon' => 'th', 'url' => ['user/index']],
+                    ['label' => 'User Control', 'icon' => 'users-cog text-white', 'url' => ['user/index']],
+                    ['label' => 'Tournament Control', 'icon' => 'folder-open text-white', 'url' => ['tournament/index']],
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],

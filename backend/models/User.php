@@ -30,6 +30,7 @@ class User extends \yii\db\ActiveRecord
         return 'User';
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -45,6 +46,7 @@ class User extends \yii\db\ActiveRecord
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
+            [['papel'],'required']
         ];
     }
 
