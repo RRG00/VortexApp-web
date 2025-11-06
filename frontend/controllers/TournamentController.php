@@ -14,7 +14,7 @@ class TournamentController extends \yii\web\Controller
 
     public function actionView($id)
     {
-        $a =3;
+
         $tournament = Tournament::find()
             ->where(['id_torneio' => $id])
             ->one();
