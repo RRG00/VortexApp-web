@@ -16,6 +16,7 @@ AppAsset::register($this);
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
+
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -24,41 +25,61 @@ AppAsset::register($this);
     <?php $this->head() ?>
     <link rel="stylesheet" type="text/css" href="../web/css/styleTemplate.css" />
 </head>
+
 <body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
+    <?php $this->beginBody() ?>
 
-<header>
+    <header>
 
-    <nav>
+        <nav>
             <div class="logo">
-                <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
+                <a href="<?= Url::to(['/site/index']) ?>">
+                    <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
+                </a>
             </div>
             <ul class="nav-links">
-                <?= Html::a('Início',['/site/index'])?>
-                <?= Html::a('Torneios',['/tournament/index'])?>
-                <li><a href="#rankings">Rankings</a></li>
+                <li><?= Html::a('Início', ['/site/index']) ?></li>
+                <li><?= Html::a('Torneios', ['/tournament/index']) ?></li>
+                <li><?= Html::a('Rankings', ['/ranking/index']) ?></li>
                 <li><a href="#news">Notícias</a></li>
                 <li><a href="#calendar">Calendário</a></li>
             </ul>
             <div class="auth-buttons">
-                <?= Html::a('Login',['/site/login'],['class' => ['btn btn-secondary']])?>
-                <?= Html::a('Registar',['/site/signup'],['class' => ['btn btn-primary']])?>
+                <?php if (Yii::$app->user->isGuest): ?>
+                    <?= Html::a('Login', ['/site/login'], ['class' => ['btn btn-secondary']]) ?>
+                    <?= Html::a('Registar', ['/site/signup'], ['class' => ['btn btn-primary']]) ?>
+                <?php else: ?>
+                    <?php
+                    $user = Yii::$app->user->identity;
+                    $username = $user->username ?? 'User';
+                    $initials = strtoupper(substr($username, 0, 2));
+                    ?>
+                    <a href="<?= Url::to(['/profile/index']) ?>" class="player-avatar-link" title="<?= Html::encode($username) ?>">
+                        <div class="player-avatar">
+                            <?= $initials ?>
+                        </div>
+                    </a>
+                    <?= Html::a('Logout', ['/site/logout'], [
+                        'class' => ['btn btn-secondary'],
+                        'data' => ['method' => 'post']
+                    ]) ?>
+                <?php endif; ?>
             </div>
         </nav>
-</header>
+    </header>
 
-<main role="main" class="flex-shrink-0">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
-</main>
+    <main role="main" class="flex-shrink-0">
+        <div class="container">
+            <?= Breadcrumbs::widget([
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </div>
+    </main>
 
 
- <footer>
+    <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Sobre o Vortex</h3>
@@ -69,8 +90,8 @@ AppAsset::register($this);
             <div class="footer-section">
                 <h3>Links Rápidos</h3>
                 <ul class="footer-links">
-                    <?= Html::a('Torneios',['/tournament/index'])?>
-                    <li><a href="#rankings">Rankings</a></li>
+                    <li><?= Html::a('Torneios', ['/tournament/index']) ?></li>
+                    <li><?= Html::a('Rankings', ['/ranking/index']) ?></li>
                     <li><a href="#news">Notícias</a></li>
                     <li><a href="#calendar">Calendário</a></li>
                 </ul>
@@ -99,7 +120,8 @@ AppAsset::register($this);
         </div>
     </footer>
 
-<?php $this->endBody() ?>
+    <?php $this->endBody() ?>
 </body>
+
 </html>
 <?php $this->endPage();
