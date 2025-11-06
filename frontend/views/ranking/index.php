@@ -7,9 +7,8 @@ use yii\helpers\Html;
 $this->title = 'Rankings';
 ?>
 
-<!-- Rankings Section -->
 <section class="rankings" id="rankings">
-    <h2 class="section-title">Rankings</h2>
+    <h1 class="section-title">Rankings</h1>
     <div class="ranking-table">
         <table>
             <thead>
