@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace app\controllers;
 
 use common\models\Tournament;
 use common\models\TournamentSearch;
