@@ -1,9 +1,9 @@
 <?php
 
 namespace backend\controllers;
-
 use common\models\Tournament;
 use common\models\TournamentSearch;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -28,7 +28,7 @@ class TournamentController extends Controller
                             [ // Rules => Organizer
                                 'allow' => true,
                                 'actions' => ['index', 'create', 'view', 'update', 'delete'],
-                                'roles' => ['organizer'],
+                                'roles' => ['organizer', 'admin'],
                             ],
                         ],
                     ],
