@@ -37,7 +37,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
                     <div class="stat-value"><?= $totalJogos ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Vitórias</div>
+                    <div class="stat-label">VitÃ³rias</div>
                     <div class="stat-value" style="color: #48bb78;"><?= $totalVitorias ?></div>
                 </div>
                 <div class="stat-card">
@@ -45,7 +45,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
                     <div class="stat-value" style="color: #f56565;"><?= $totalDerrotas ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Taxa de Vitórias</div>
+                    <div class="stat-label">Taxa de VitÃ³rias</div>
                     <div class="stat-value"><?= $winRate ?>%</div>
                 </div>
             </div>
