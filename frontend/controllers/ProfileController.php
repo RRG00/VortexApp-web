@@ -6,16 +6,18 @@ use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use common\models\User;
+use common\models\UpdateUserForm;
 use common\models\Estatisticas;
+use yii\web\UploadedFile;
 
-class ProfileController extends Controller
+class ProfileController extends Controller  
 {
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index'],
+                'only' => ['index', 'edit'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -57,4 +59,46 @@ class ProfileController extends Controller
             'winRate' => $winRate,
         ]);
     }
+
+    // In your UserController.php
+public function actionEditProfile()
+{
+    $user = Yii::$app->user->identity;
+    $model = new UpdateUserForm();
+    $model->user = $user;
+    
+    // Add virtual attributes for password fields
+    $model->user->current_password = '';
+    $model->user->new_password = '';
+    $model->user->confirm_password = '';
+    
+    if ($model->load(Yii::$app->request->post())) {
+        // Validate current password if trying to change
+
+        $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+        if (!empty($model->user->new_password)) {
+            if (empty($model->user->current_password) || !$model->validatePassword($model->user->current_password)) {
+                $model->addError('current_password', 'Senha atual incorreta.');
+                return $this->render('edit-profile', ['model' => $model]);
+            }
+            
+            if ($model->user->new_password !== $model->user->confirm_password) {
+                $model->addError('confirm_password', 'As senhas não coincidem.');
+                return $this->render('edit-profile', ['model' => $model]);
+            }
+            
+            $model->user->setPassword($model->user->new_password);
+
+            
+        }
+        
+        if ($model->update()) {
+            Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso!');
+            return $this->redirect(['index']);
+        }
+    }
+    
+    return $this->render('edit-profile', ['model' => $model]);
+}
 }
