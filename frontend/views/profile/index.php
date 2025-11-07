@@ -16,7 +16,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
 ?>
 
 <div class="profile-container">
-    <a href="<?= Url::to(['/site/index']) ?>" class="back-button"><- Voltar ao Início</a>
+    <a href="<?= Url::to(['/site/index']) ?>" class="btn btn-primary" style="margin-bottom: 10px;"><- Voltar ao Inicio</a>
 
             <!-- Profile Header -->
             <div class="profile-header">
@@ -37,7 +37,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
                     <div class="stat-value"><?= $totalJogos ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">VitÃ³rias</div>
+                    <div class="stat-label">Vitórias</div>
                     <div class="stat-value" style="color: #48bb78;"><?= $totalVitorias ?></div>
                 </div>
                 <div class="stat-card">
@@ -45,7 +45,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
                     <div class="stat-value" style="color: #f56565;"><?= $totalDerrotas ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Taxa de VitÃ³ria</div>
+                    <div class="stat-label">Taxa de Vitórias</div>
                     <div class="stat-value"><?= $winRate ?>%</div>
                 </div>
             </div>
@@ -56,7 +56,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
 
                 <?php if (!empty($estatisticas)): ?>
                     <?php foreach ($estatisticas as $stat): ?>
-                        <div class="game-stat">
+                        <divs class="game-stat">
                             <div class="game-name">
                                 <?= Html::encode($stat->jogo->nome ?? 'Jogo Desconhecido') ?>
                             </div>
