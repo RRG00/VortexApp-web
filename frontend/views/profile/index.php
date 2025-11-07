@@ -56,7 +56,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
 
                 <?php if (!empty($estatisticas)): ?>
                     <?php foreach ($estatisticas as $stat): ?>
-                        <divs class="game-stat">
+                        <div class="game-stat">
                             <div class="game-name">
                                 <?= Html::encode($stat->jogo->nome ?? 'Jogo Desconhecido') ?>
                             </div>
