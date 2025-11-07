@@ -280,7 +280,7 @@
         }
 
         .detail-item::before {
-            content: 'â€¢';
+            content: '•';
             color: var(--accent);
             font-size: 1.5rem;
         }
