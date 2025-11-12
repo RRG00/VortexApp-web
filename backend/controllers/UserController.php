@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use backend\Models\SignupForm;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -73,10 +74,10 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new SignupForm();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post()) && $model->signup()) {
 
                 $auth = Yii::$app->authManager;
 
@@ -90,7 +91,7 @@ class UserController extends Controller
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
-            $model->loadDefaultValues();
+         
         }
 
         return $this->render('create', [

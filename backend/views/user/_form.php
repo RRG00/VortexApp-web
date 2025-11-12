@@ -46,27 +46,15 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
                     </div>
 
                     <div class="col-md-6">
-                        <?= $form->field($model, 'password_hash')
-                                ->passwordInput(['maxlength' => true, 'placeholder' => 'Senha'])
-                                ->label('Palavra-passe') ?>
-                    </div>
-
-                    <div class="col-md-6">
                         <?= $form->field($model, 'status')
                                 ->dropDownList([10 => 'Ativo', 0 => 'Inativo'], ['prompt' => 'Selecione o estado'])
                                 ->label('Estado') ?>
-                    </div>
+                    </div> 
 
                     <div class="col-md-6">
                         <?= $form->field($model, 'papel')
                                 ->dropDownList($roleList, ['prompt' => 'Selecione um papel'])
                                 ->label('Papel / Função') ?>
-                    </div>
-
-                    <div class="col-md-6">
-                        <?= $form->field($model, 'verification_token')
-                                ->textInput(['maxlength' => true, 'placeholder' => 'Token de verificação'])
-                                ->label('Token de Verificação') ?>
                     </div>
                 </div>
 
