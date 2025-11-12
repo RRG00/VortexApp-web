@@ -16,7 +16,7 @@ $this->title = 'Rankings';
                     <th>#</th>
                     <th>Jogador</th>
                     <th>Jogo</th>
-                    <th>Vitorias</th>
+                    <th>Vitórias</th>
                     <th>Derrotas</th>
                     <th>K/D</th>
                 </tr>
@@ -42,7 +42,7 @@ $this->title = 'Rankings';
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" style="text-align: center;">Nenhum ranking dispon�vel</td>
+                        <td colspan="5" style="text-align: center;">Nenhum ranking disponível</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
