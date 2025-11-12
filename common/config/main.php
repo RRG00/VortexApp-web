@@ -12,5 +12,12 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
+        'mailer' => [
+            'class' => 'yii\symfonymailer\Mailer',
+            'useFileTransport' => true,
+            'transport' => [
+                'dsn' => 'smtp://vortex.app.backend@gmail.com:vortex@app2025@smtp.gmail.com:465',]
+        ]
     ],
+
 ];

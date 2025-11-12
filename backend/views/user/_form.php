@@ -46,12 +46,6 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
                     </div>
 
                     <div class="col-md-6">
-                        <?= $form->field($model, 'status')
-                                ->dropDownList([10 => 'Ativo', 0 => 'Inativo'], ['prompt' => 'Selecione o estado'])
-                                ->label('Estado') ?>
-                    </div> 
-
-                    <div class="col-md-6">
                         <?= $form->field($model, 'papel')
                                 ->dropDownList($roleList, ['prompt' => 'Selecione um papel'])
                                 ->label('Papel / Função') ?>
