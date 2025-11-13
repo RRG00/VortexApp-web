@@ -14,14 +14,24 @@
   --accent: #00d4ff;
   --success: #00b894;
   --warning: #fdcb6e;
-  --canceled: #fdcb6e;
-  --completed: #fdcb6e;
   --purple: #6a5acd;
+  --gray-100: #f7fafc;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e0;
+  --gray-600: #718096;
+  --gray-700: #4a5568;
+  --gray-800: #2d3748;
+  --gray-900: #1a202c;
+  --danger: #e53e3e;
+  --danger-dark: #c53030;
+  --danger-light: #fff5f5;
+  --danger-border: #feb2b2;
+  --danger-text: #742a2a;
 }
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #252541 100%);
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--card-bg) 100%);
   color: var(--text-primary);
   min-height: 100vh;
 }
@@ -43,39 +53,6 @@ nav {
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
-}
-
-.player-avatar-link {
-  text-decoration: none;
-  color: inherit;
-  display: inline-block;
-}
-
-.player-avatar-link:hover,
-.player-avatar-link:visited,
-.player-avatar-link:active,
-.player-avatar-link:focus {
-  text-decoration: none;
-  color: inherit;
-  outline: none;
-}
-
-.player-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--primary-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.player-avatar:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
 }
 
 #logo {
@@ -123,6 +100,66 @@ nav {
   width: 100%;
 }
 
+/* Avatar Components */
+.player-avatar-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.player-avatar-link:hover,
+.player-avatar-link:visited,
+.player-avatar-link:active,
+.player-avatar-link:focus {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+
+.player-avatar,
+.nav-avatar-initials {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.player-avatar:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.nav-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-avatar-img,
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.nav-avatar-initials {
+  width: 48px;
+  height: 48px;
+}
+
+/* Buttons */
 .auth-buttons {
   display: flex;
   gap: 1rem;
@@ -140,11 +177,7 @@ nav {
 }
 
 .btn-primary {
-  background: linear-gradient(
-    45deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   color: white;
 }
 
@@ -162,6 +195,16 @@ nav {
 .btn-secondary:hover {
   background: var(--primary-color);
   color: white;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  margin-top: 15px;
+}
+
+.btn-danger:hover {
+  background: var(--danger-dark);
 }
 
 /* Hero Section */
@@ -186,10 +229,17 @@ nav {
   margin-bottom: 2rem;
 }
 
-/* Tournament Grid */
-.tournaments {
+/* Section Layouts */
+.tournaments,
+.news {
   padding: 3rem 5%;
   max-width: 1400px;
+  margin: 0 auto;
+}
+
+.rankings {
+  padding: 3rem 5%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -199,6 +249,7 @@ nav {
   text-align: center;
 }
 
+/* Tournament Cards */
 .tournament-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -246,18 +297,10 @@ nav {
   color: white;
 }
 
-.status.pending {
-  background: var(--warning);
-  color: var(--dark-bg);
-}
-
-.status.cancelled {
-  background: var(--canceled);
-  color: var(--dark-bg);
-}
-
+.status.pending,
+.status.cancelled,
 .status.completed {
-  background: var(--completed);
+  background: var(--warning);
   color: var(--dark-bg);
 }
 
@@ -287,13 +330,7 @@ nav {
   font-size: 1.5rem;
 }
 
-/* Rankings */
-.rankings {
-  padding: 3rem 5%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
+/* Rankings Table */
 .ranking-table {
   background: var(--card-bg);
   border-radius: 15px;
@@ -334,12 +371,6 @@ tr:hover {
 }
 
 /* News Section */
-.news {
-  padding: 3rem 5%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
 .news-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -384,58 +415,11 @@ tr:hover {
   line-height: 1.6;
 }
 
-/* Footer */
-footer {
-  background: var(--card-bg);
-  padding: 3rem 5%;
-  margin-top: 4rem;
-  border-top: 2px solid var(--primary-color);
-}
-
-.footer-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-.footer-section h3 {
-  color: var(--accent);
-  margin-bottom: 1rem;
-}
-
-.footer-links {
-  list-style: none;
-}
-
-.footer-links li {
-  margin-bottom: 0.5rem;
-}
-
-.footer-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.footer-links a:hover {
-  color: var(--accent);
-}
-
-.footer-bottom {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
-}
-
-/* Profile Container */
+/* Profile Section */
 .profile-container {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 20px;
 }
 
 .profile-header {
@@ -460,15 +444,8 @@ footer {
   font-size: 48px;
   font-weight: bold;
   border: 4px solid white;
-  overflow: hidden; /* Important for circular crop */
-  flex-shrink: 0; /* Prevent shrinking */
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .profile-info h1 {
@@ -481,7 +458,7 @@ footer {
   opacity: 0.9;
 }
 
-/* Profile Stats Grid */
+/* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -490,7 +467,7 @@ footer {
 }
 
 .stat-card {
-  background: #2d3748;
+  background: var(--gray-800);
   border-radius: 15px;
   padding: 25px;
   text-align: center;
@@ -513,7 +490,7 @@ footer {
 
 /* Games Section */
 .games-section {
-  background: #2d3748;
+  background: var(--gray-800);
   border-radius: 20px;
   padding: 30px;
   color: white;
@@ -525,7 +502,7 @@ footer {
 }
 
 .game-stat {
-  background: #1a202c;
+  background: var(--gray-900);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 15px;
@@ -578,9 +555,10 @@ footer {
   text-decoration: underline;
 }
 
-/* Edit Profile Styles */
-.edit-profile-section {
-  background: red;
+/* Forms */
+.edit-profile-section,
+.account-actions {
+  background: white;
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -590,22 +568,23 @@ footer {
 .form-section {
   margin-bottom: 30px;
   padding-bottom: 30px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--gray-200);
 }
 
 .form-section:last-of-type {
   border-bottom: none;
 }
 
-.form-section h3 {
+.form-section h3,
+.account-actions h3 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: #2d3748;
+  color: var(--gray-800);
   font-size: 20px;
 }
 
 .help-text {
-  color: #718096;
+  color: var(--gray-600);
   font-size: 14px;
   margin-bottom: 15px;
 }
@@ -617,7 +596,7 @@ footer {
 .form-control {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--gray-200);
   border-radius: 8px;
   font-size: 14px;
   transition: all 0.3s;
@@ -632,13 +611,13 @@ footer {
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #4a5568;
+  color: var(--gray-700);
   font-weight: 500;
   font-size: 14px;
 }
 
 .help-block {
-  color: #e53e3e;
+  color: var(--danger);
   font-size: 13px;
   margin-top: 5px;
 }
@@ -649,54 +628,79 @@ footer {
   margin-top: 30px;
 }
 
-.btn-danger {
-  background: #e53e3e;
-  color: white;
-  margin-top: 15px;
+.has-error .form-control {
+  border-color: var(--danger);
 }
 
-.btn-danger:hover {
-  background: #c53030;
+.has-error label {
+  color: var(--danger);
 }
 
-.account-actions {
-  background: white;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.account-actions h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #2d3748;
-}
-
+/* Danger Zone */
 .danger-zone {
   padding: 20px;
-  background: #fff5f5;
-  border: 1px solid #feb2b2;
+  background: var(--danger-light);
+  border: 1px solid var(--danger-border);
   border-radius: 8px;
 }
 
 .danger-zone p {
   margin: 5px 0;
-  color: #742a2a;
+  color: var(--danger-text);
 }
 
 .danger-zone strong {
-  color: #c53030;
+  color: var(--danger-dark);
 }
 
-.has-error .form-control {
-  border-color: #e53e3e;
+/* Footer */
+footer {
+  background: var(--card-bg);
+  padding: 3rem 5%;
+  margin-top: 4rem;
+  border-top: 2px solid var(--primary-color);
 }
 
-.has-error label {
-  color: #e53e3e;
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
 }
 
-/* Responsive */
+.footer-section h3 {
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
@@ -711,9 +715,21 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .f-header {
+  .profile-header {
     flex-direction: column;
     text-align: center;
+    padding: 30px;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+    border: 3px solid white;
+  }
+
+  .profile-info h1 {
+    font-size: 28px;
   }
 
   .form-actions {
@@ -722,33 +738,6 @@ footer {
 
   .btn {
     width: 100%;
-  }
-
-  .nav-user-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .nav-avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .nav-avatar-initials {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #4169e1;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    padding: 12px 30px;
   }
 }
