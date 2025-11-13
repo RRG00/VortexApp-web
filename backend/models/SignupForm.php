@@ -36,6 +36,7 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
             ['papel', 'required'],
+            ['papel', 'in', 'range' => ['admin', 'referre', 'organizer'], 'not' => true, 'message' => 'ERRORRR! -> Role não conhecida.'],
         ];
     }
 

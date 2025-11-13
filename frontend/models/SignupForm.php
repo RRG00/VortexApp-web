@@ -48,7 +48,7 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
@@ -56,25 +56,27 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 
-        return $user->save() && $this->sendEmail($user);
+        if ($user->save()) {
+            $user->papel = 'player';
+            $user->save(false);
+
+            $auth = Yii::$app->authManager;
+            $playerRole = $auth->getRole('player');
+            if ($playerRole) {
+                $auth->assign($playerRole, $user->id);
+            }
+            return $user;
+        }
+
+        return null;
+
     }
+
 
     /**
      * Sends confirmation email to user
      * @param User $user user model to with email should be send
      * @return bool whether the email was sent
      */
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
-    }
+
 }
