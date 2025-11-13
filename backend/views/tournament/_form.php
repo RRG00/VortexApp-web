@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'aprovado_por')->textInput() ?>
 
-    <?= $form->field($model, 'id_jogos')->textInput() ?>
+    <?= $form->field($model, 'id_jogo')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

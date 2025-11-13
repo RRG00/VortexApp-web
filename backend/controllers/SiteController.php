@@ -80,6 +80,8 @@ class SiteController extends Controller
         $this->layout = 'blank';
 
         $model = new LoginForm();
+        $model->isBackendLogin = true;
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
@@ -90,6 +92,7 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
 
     /**
      * Logout action.
