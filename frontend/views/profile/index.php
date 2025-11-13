@@ -15,23 +15,17 @@ $this->title = 'Perfil - ' . Html::encode($user->username);
 $initials = strtoupper(substr($user->username, 0, 2));
 ?>
 
-<?php if ($user->profileImage): ?>
-    <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
-        alt="<?= Html::encode($user->username) ?>"
-        class="user-avatar">
-<?php else: ?>
-    <div class="user-avatar-initials">
-        <?= $initials ?>
-    </div>
-<?php endif; ?>
-
 <div class="profile-container">
-    
-
     <!-- Profile Header -->
     <div class="profile-header">
         <div class="profile-avatar">
-            <?= $initials ?>
+            <?php if ($user->profileImage): ?>
+                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                    alt="<?= Html::encode($user->username) ?>"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            <?php else: ?>
+                <?= $initials ?>
+            <?php endif; ?>
         </div>
         <div class="profile-info">
             <h1><?= Html::encode($user->username) ?></h1>

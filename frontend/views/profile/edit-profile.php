@@ -16,7 +16,13 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
     <!-- Profile Header --> 
     <div class="profile-header">
         <div class="profile-avatar">
-            <?= $initials ?>
+            <?php if ($model->user->profileImage): ?>
+                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($model->user->profileImage->path) ?>"
+                    alt="<?= Html::encode($model->user->username) ?>"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            <?php else: ?>
+                <?= $initials ?>
+            <?php endif; ?>
         </div>
         <div class="profile-info">
             <h1>Editar Perfil</h1>

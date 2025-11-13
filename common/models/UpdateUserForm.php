@@ -40,7 +40,7 @@ class UpdateUserForm extends Model
             $extension = $this->imageFile->extension;
             $filename = $imagename;
 
-            $uploadPath = Yii::getAlias('\frontend\uploads\\');
+            $uploadPath = Yii::getAlias('@frontend/web/uploads/');
 
             $oldImage = Images::find()->where(['id_user' => $user->id])->one();
             if ($oldImage) {
