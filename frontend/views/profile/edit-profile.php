@@ -28,7 +28,7 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
         <div class="profile-info">
             <h1>Editar Perfil</h1>
             <p>Atualize suas informações pessoais</p>
-            <a href="<?= Url::to(['/profile/index']) ?>" class="btn btn-secondary" style="margin-bottom: 10px;">
+            <a href="<?= Url::to(['/profile/index']) ?>" class="btn btn-primary" style="margin-bottom: 10px;">
                 Voltar ao Perfil
             </a>
         </div>

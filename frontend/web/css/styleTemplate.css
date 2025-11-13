@@ -31,7 +31,7 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--card-bg) 100%);
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg) 100%);
   color: var(--text-primary);
   min-height: 100vh;
 }
@@ -197,18 +197,18 @@ nav {
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+  transform: scale(1.02);
 }
 
 .btn-secondary {
-  background: transparent;
+  background: transparent;  
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
 }
 
 .btn-secondary:hover {
-  background: var(--primary-color);
+  transform: scale(1.02);
+  background: var(--primary-color);;
   color: white;
 }
 
@@ -220,6 +220,7 @@ nav {
 
 .btn-danger:hover {
   background: var(--danger-dark);
+  transform: scale(1.02);
 }
 
 /* Hero Section */
@@ -568,10 +569,20 @@ tr:hover {
 
 .back-button:hover {
   text-decoration: underline;
+  transform: scale(1.02);
 }
 
 /* Forms */
-.edit-profile-section,
+.edit-profile-section{
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+
+.profile-section,
 .account-actions {
   background: white;
   border-radius: 15px;
@@ -589,6 +600,7 @@ tr:hover {
 .form-section:last-of-type {
   border-bottom: none;
 }
+
 
 .form-section h3,
 .account-actions h3 {
