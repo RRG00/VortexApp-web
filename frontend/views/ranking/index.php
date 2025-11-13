@@ -1,6 +1,9 @@
 <?php
+
 /** @var yii\web\View $this */
 /** @var common\models\Estatisticas[] $rankings */
+
+use yii\helpers\Url;
 
 use yii\helpers\Html;
 
@@ -28,9 +31,17 @@ $this->title = 'Rankings';
                             <td><span class="rank"><?= $index + 1 ?></span></td>
                             <td>
                                 <div class="player-info">
-                                    <div class="player-avatar">
-                                        <?= strtoupper(substr($ranking->utilizador->username ?? 'VX', 0, 2)) ?>
-                                    </div>
+                                    <a href="<?= Url::to(['/profile/view', 'id' => $ranking->utilizador->id]) ?>" class="player-avatar-link" title="Ver perfil de <?= Html::encode($ranking->utilizador->username) ?>">
+                                        <div class="player-avatar">
+                                            <?php if ($ranking->utilizador->profileImage): ?>
+                                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($ranking->utilizador->profileImage->path) ?>"
+                                                    alt="<?= Html::encode($ranking->utilizador->username) ?>"
+                                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                            <?php else: ?>
+                                                <?= $initials ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </a>
                                     <span><?= Html::encode($ranking->utilizador->username ?? 'Unknown') ?></span>
                                 </div>
                             </td>
