@@ -38,7 +38,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return 'User';
     }
 
     /**
@@ -54,10 +54,19 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+    // common/models/User.php
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
+            [['password_reset_token', 'verification_token'], 'default', 'value' => null],
+            [['status'], 'default', 'value' => 10],
+            [['username', 'auth_key', 'password_hash'], 'required'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
+            [['auth_key'], 'string', 'max' => 32],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['password_reset_token'], 'unique'],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
             
             // Username rules
@@ -92,6 +101,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['current_password', 'new_password', 'confirm_password'], 'safe'],
         ];
     }
+
 
     /**
      * {@inheritdoc}

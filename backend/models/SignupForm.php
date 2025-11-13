@@ -14,7 +14,7 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
-    public $papel; 
+    public $papel;
     public $isNewRecord;
     public $status;
 
@@ -35,10 +35,8 @@ class SignupForm extends Model
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
             ['papel', 'required'],
+            ['papel', 'in', 'range' => ['admin', 'referre', 'organizer'], 'not' => true, 'message' => 'ERRORRR! -> Role não conhecida.'],
         ];
     }
 
@@ -56,38 +54,20 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
+        $user->status = $this->status = 10;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-
-        $user->save();
-
+        $user -> save();
         $auth = Yii::$app->authManager;
-        $role = $auth->getRole($papel);
-        $auth ->assign($role, $user->id);
+        $role = $auth->getRole($this->papel);
+        if ($role) {
+            $auth->assign($role, $user->id);
+        }
 
-        $this->sendEmail($user);
-
-
-        
+        return $user; 
     }
 
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
-    }
+
+
 }

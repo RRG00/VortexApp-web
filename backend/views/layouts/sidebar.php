@@ -2,7 +2,7 @@
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
         <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" class="brand-image  elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">VORTEX Painel</span>
+        <span class="brand-text font-weight-light">Vortex Painel</span>
     </a>
 
     <!-- Sidebar -->
