@@ -12,7 +12,7 @@ foreach ($roles as $role) {
 }
 
 /** @var yii\web\View $this */
-/** @var app\Models\User $model */
+/** @var common\Models\User $model */
 /** @var yii\widgets\ActiveForm $form */
 
 // Importa o CSS externo

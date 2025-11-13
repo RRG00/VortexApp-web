@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use app\Models\User;
+use common\Models\User;
 use app\Models\UserSearch;
 use frontend\models\VerifyEmailForm;
 use InvalidArgumentException;
