@@ -30,7 +30,7 @@ class UserController extends Controller
                 'access' => [
                     'class' => AccessControl::className(),
                         'rules' => [
-                            [ // Rules => Admin
+                            [ 
                                 'allow' => true,
                                 'actions' => ['index', 'create', 'view', 'update', 'delete'],
                                 'roles' => ['admin'],

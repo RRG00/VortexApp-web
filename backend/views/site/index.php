@@ -8,14 +8,8 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
 // $organizers = User::find()->where(['role' => 'organizer'])->count();
 // $players = User::find()->where(['role' => 'player'])->count();
 
-// Substituir por valores da base de dados !Important
-$totalUsers = 0;
-$admins = 0;
-$organizers = 0;
-$players = 0;
-$newUsersThisMonth = 0;
-?>
 
+?>
 <div class="container-fluid">
     <!-- Header -->
     <div class="row mb-3">
@@ -24,21 +18,8 @@ $newUsersThisMonth = 0;
             <p class="text-muted">Painel de Administração - Gestão de Utilizadores</p>
         </div>
     </div>
-
     <!-- Estatísticas principais -->
-    <div class="row">
-        <!-- Total de Utilizadores -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\SmallBox::widget([
-                    'title' => $totalUsers,
-                    'text' => 'Total de Utilizadores',
-                    'icon' => 'fas fa-users',
-                    'theme' => 'info',
-                    'linkUrl' => ['/user/index'],
-                    'linkText' => 'Ver todos'
-            ]) ?>
-        </div>
-
+    <div class="row justify-content-center">
         <!-- Administradores -->
         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
@@ -74,6 +55,17 @@ $newUsersThisMonth = 0;
                     'linkText' => 'Ver jogadores'
             ]) ?>
         </div>
+        <!-- Árbitros -->
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <?= \hail812\adminlte\widgets\SmallBox::widget([
+                    'title' => $referees,
+                    'text' => 'Árbitros',
+                    'icon' => 'fa fa-user',
+                    'theme' => 'success',
+                    'linkUrl' => ['/user/index'],
+                    'linkText' => 'Ver jogadores'
+            ]) ?>
+        </div>
     </div>
 
 
@@ -86,7 +78,7 @@ $newUsersThisMonth = 0;
                     <h3 class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-md-4 col-sm-6 mb-3">
                             <a href="<?= \yii\helpers\Url::to(['/user/create']) ?>" class="btn btn-lg btn-primary w-100">
                                 <i class="fas fa-user-plus"></i><br>
@@ -97,12 +89,6 @@ $newUsersThisMonth = 0;
                             <a href="<?= \yii\helpers\Url::to(['/user/index']) ?>" class="btn btn-lg btn-info w-100">
                                 <i class="fas fa-list"></i><br>
                                 <strong>Listar Utilizadores</strong>
-                            </a>
-                        </div>
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="<?= \yii\helpers\Url::to(['/site/index']) ?>" class="btn btn-lg btn-secondary w-100">
-                                <i class="fas fa-cog"></i><br>
-                                <strong>Configurações</strong>
                             </a>
                         </div>
                     </div>
