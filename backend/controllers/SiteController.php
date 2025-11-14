@@ -63,6 +63,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
 {
+
     $admins = \common\models\User::find()->where(['papel' => 'admin'])->count();
     $organizers = \common\models\User::find()->where(['papel' => 'organizer'])->count();
     $players = \common\models\User::find()->where(['papel' => 'player'])->count();

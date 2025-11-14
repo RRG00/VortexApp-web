@@ -28,6 +28,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    
 
     public $current_password;
     public $new_password;
@@ -60,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['password_reset_token', 'verification_token'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 10],
-            [['username', 'auth_key', 'password_hash'], 'required'],
+            [['username', 'auth_key', 'password_hash', 'papel'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
