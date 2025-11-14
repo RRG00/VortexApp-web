@@ -13,6 +13,7 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $rememberMe = true;
+    public $isBackendLogin = false;
 
     private $_user;
 
@@ -54,14 +55,26 @@ class LoginForm extends Model
      *
      * @return bool whether the user is logged in successfully
      */
+
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            $user = $this->getUser();
+
+            if ($user && $this->isBackendLogin) {
+                if (!Yii::$app->authManager->checkAccess($user->id, 'accessBackend')) {
+                    $this->addError('username', 'Sua conta não possui permissão para acessar o Backend.');
+                    return false;
+                }
+            }
+
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
-        
+
         return false;
     }
+
+
 
     /**
      * Finds user by [[username]]

@@ -13,6 +13,10 @@ class RbacController extends Controller
         // Delete all
         $auth->removeAll();
 
+        $accessBackend = $auth->createPermission('accessBackend');
+        $accessBackend->description = 'Permissão para acessar o backend';
+        $auth->add($accessBackend);
+
         // Create role Admin
         $admin = $auth->createRole('admin');
         $admin->description = 'Administrador - gere users';
@@ -42,6 +46,12 @@ class RbacController extends Controller
         $capitan = $auth->createRole('capitan');
         $capitan->description = 'Capitan';
         $auth->add($capitan);
+
+
+        $auth->addChild($admin, $accessBackend);
+        $auth->addChild($organizer, $accessBackend);
+        $auth->addChild($referre, $accessBackend);
+
 
 
 

@@ -30,7 +30,6 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
 
     <header>
-
         <nav>
             <div class="logo">
                 <a href="<?= Url::to(['/site/index']) ?>">
@@ -56,7 +55,13 @@ AppAsset::register($this);
                     ?>
                     <a href="<?= Url::to(['/profile/index']) ?>" class="player-avatar-link" title="<?= Html::encode($username) ?>">
                         <div class="player-avatar">
-                            <?= $initials ?>
+                            <?php if ($user->profileImage): ?>
+                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                                    alt="<?= Html::encode($username) ?>"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                            <?php else: ?>
+                                <span style="color: white; font-weight: bold; font-size: 16px;"><?= $initials ?></span>
+                            <?php endif; ?>
                         </div>
                     </a>
                     <?= Html::a('Logout', ['/site/logout'], [

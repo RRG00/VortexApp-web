@@ -18,7 +18,7 @@ use yii\web\IdentityInterface;
  * @property string $verification_token
  * @property string $email
  * @property string $auth_key
- * @property integer $status
+ * @property integer $status            
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -29,13 +29,16 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
+    public $current_password;
+    public $new_password;
+    public $confirm_password;
 
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return 'User';
     }
 
     /**
@@ -51,13 +54,54 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+    // common/models/User.php
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
+            [['password_reset_token', 'verification_token'], 'default', 'value' => null],
+            [['status'], 'default', 'value' => 10],
+            [['username', 'auth_key', 'password_hash'], 'required'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
+            [['auth_key'], 'string', 'max' => 32],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['password_reset_token'], 'unique'],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            
+            // Username rules
+            ['username', 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 
+                'message' => 'Este nome de usuário já está em uso.',
+                'filter' => function($query) {
+                    if (!$this->isNewRecord) {
+                        $query->andWhere(['<>', 'id', $this->id]);
+                    }
+                }
+            ],
+            ['username', 'string', 'min' => 2, 'max' => 255],
+
+            // Email rules
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'unique', 'targetClass' => '\common\models\User',
+                'message' => 'Este email já está em uso.',
+                'filter' => function($query) {
+                    if (!$this->isNewRecord) {
+                        $query->andWhere(['<>', 'id', $this->id]);
+                    }
+                }
+            ],
+            ['email', 'string', 'max' => 255],
+
+            // Password fields (not required, only validated if filled)
+            [['current_password', 'new_password', 'confirm_password'], 'string', 'min' => 6],
+            [['current_password', 'new_password', 'confirm_password'], 'safe'],
         ];
     }
+
 
     /**
      * {@inheritdoc}
@@ -210,4 +254,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public function getProfileImage()
+{
+    return $this->hasOne(Images::class, ['id_user' => 'id']);
+}
 }
