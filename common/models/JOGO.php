@@ -12,11 +12,11 @@ use Yii;
  * @property string $genero
  * @property string|null $imagem
  *
- * @property ESTATISTICAS[] $eSTATISTICASs
- * @property NOTICIA[] $nOTICIAs
- * @property TORNEIO[] $tORNEIOs
+ * @property Estatiscas[] $eSTATISTICASs
+ * @property Noticia[] $nOTICIAs
+ * @property Torneio[] $tORNEIOs
  */
-class JOGO extends \yii\db\ActiveRecord
+class Jogo extends \yii\db\ActiveRecord
 {
 
 
@@ -25,7 +25,7 @@ class JOGO extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'JOGO';
+        return 'jogo';
     }
 
     /**
