@@ -106,7 +106,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getJogo()
     {
-        return $this->hasOne(JOGO::class, ['id_jogo' => 'id_jogo']);
+        return $this->hasOne(Jogo::class, ['id_jogo' => 'id_jogo']);
     }
 
     /**
