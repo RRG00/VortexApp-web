@@ -1,0 +1,100 @@
+.tournament-index {
+    background-color: #f4f5ff;
+    min-height: 100vh;
+    padding: 3rem 2rem;
+}
+
+.tournament-header {
+    background: linear-gradient(135deg, #3a3970, #5858d6);
+    color: #fff;
+    padding: 1.5rem;
+    border-radius: 18px 18px 0 0;
+    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tournament-header h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    background: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+.tournament-index .btn-success {
+    background: linear-gradient(135deg, #5858d6, #3a3970);
+    border: none !important;
+    color: #fff !important;
+    border-radius: 10px;
+    padding: 0.55rem 1.3rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(37, 37, 65, 0.3);
+}
+
+.tournament-index .btn-success:hover {
+    background: linear-gradient(135deg, #4a4ac0, #2e2e66);
+}
+
+.tournament-index .grid-view {
+    background: linear-gradient(145deg, #ffffff, #f4f5ff);
+    border: 1px solid #e4e4f0;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    padding: 2rem;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+.tournament-index table {
+    background-color: transparent;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #2c2c3a;
+}
+
+.tournament-index table thead {
+    background: linear-gradient(135deg, #3a3970, #5858d6) !important;
+}
+
+.tournament-index table thead tr th,
+.tournament-index table thead tr th a {
+    background: transparent !important;
+    color: #fff !important;
+    text-align: center;
+    font-weight: 500;
+    padding: 0.75rem;
+    border: none;
+}
+
+.tournament-index table thead tr th a:hover {
+    color: #fff !important;
+}
+
+
+.tournament-index table td {
+    background-color: #ffffff;
+    padding: 0.9rem;
+    border-top: 1px solid #e4e4f0;
+    text-align: center;
+    vertical-align: middle;
+    color: #000;
+}
+
+.tournament-index table tr:hover td {
+    background-color: #f1f1ff;
+}
+
+.tournament-index table a {
+    color: #5858d6;
+    transition: color 0.3s ease;
+}
+
+.tournament-index table a:hover {
+    color: #3a3970;
+}
