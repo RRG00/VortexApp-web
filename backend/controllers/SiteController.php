@@ -62,9 +62,21 @@ class SiteController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
-        return $this->render('index');
-    }
+{
+
+    $admins = \common\models\User::find()->where(['papel' => 'admin'])->count();
+    $organizers = \common\models\User::find()->where(['papel' => 'organizer'])->count();
+    $players = \common\models\User::find()->where(['papel' => 'player'])->count();
+    $referees = \common\models\User::find()->where(['papel' => 'referre'])->count();
+
+    return $this->render('index', [
+        'admins' => $admins,
+        'organizers' => $organizers,
+        'players' => $players,
+        'referees' => $referees,
+    ]);
+}
+
 
     /**
      * Login action.
