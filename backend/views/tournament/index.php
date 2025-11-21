@@ -1,5 +1,4 @@
 <?php
-
 use common\models\Tournament;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -12,35 +11,27 @@ use yii\grid\GridView;
 
 $this->title = 'Tournaments';
 $this->params['breadcrumbs'][] = $this->title;
+
+// Importa o CSS externo
+$this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 ?>
+
 <div class="tournament-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
+    <div class="tournament-header">
+        <h1><?= Html::encode($this->title) ?></h1>
         <?= Html::a('Create Tournament', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id_torneio',
             'nome',
             'best_of',
             'regras:ntext',
             'limite_inscricoes',
-            //'premios',
-            //'data_inicio',
-            //'data_fim',
-            //'estado',
-            //'organizador_id',
-            //'aprovado_por',
-            //'id_jogo',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
@@ -49,6 +40,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
-
 </div>
