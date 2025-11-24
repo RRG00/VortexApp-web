@@ -33,7 +33,7 @@ class UserController extends Controller
                             [ 
                                 'allow' => true,
                                 'actions' => ['index', 'create', 'view', 'update', 'delete'],
-                                'roles' => ['admin'],
+                                'roles' => ['admin', 'organizer'],
                             ],
                         ],
                 ]

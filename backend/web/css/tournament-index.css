@@ -65,7 +65,7 @@
 .tournament-index table thead tr th,
 .tournament-index table thead tr th a {
     background: transparent !important;
-    color: #fff !important;
+    color: #fff;
     text-align: center;
     font-weight: 500;
     padding: 0.75rem;
@@ -75,7 +75,6 @@
 .tournament-index table thead tr th a:hover {
     color: #fff !important;
 }
-
 
 .tournament-index table td {
     background-color: #ffffff;
@@ -91,10 +90,10 @@
 }
 
 .tournament-index table a {
-    color: #5858d6;
+    color: black;
     transition: color 0.3s ease;
 }
 
 .tournament-index table a:hover {
-    color: #3a3970;
+    color: #5858d6;
 }
