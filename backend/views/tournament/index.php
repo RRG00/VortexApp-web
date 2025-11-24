@@ -21,23 +21,48 @@ $this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\boot
         <h1><?= Html::encode($this->title) ?></h1>
         <?= Html::a('Create Tournament', ['create'], ['class' => 'btn btn-success']) ?>
     </div>
-
+    <div class="tournament-card-body">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'summary' => '',
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id_torneio',
-            'nome',
-            'best_of',
-            'regras:ntext',
-            'limite_inscricoes',
+
             [
-                'class' => ActionColumn::className(),
+                'attribute' => 'nome',
+                'label' => 'Nome',
+                'enableSorting' => false,
+            ],
+
+            [
+                'attribute' => 'best_of',
+                'label' => 'Best_of',
+                'enableSorting' => false,
+            ],
+
+            [
+                'attribute' => 'regras', 
+                'format' => 'ntext',
+                'label' => 'Regras',  
+                'enableSorting' => false,
+            ],
+
+            [
+                'attribute' => 'limite_inscricoes', 
+                'label' => 'Limite de Inscrições', 
+                'enableSorting' => false,
+            ],
+
+
+            [
+                'class' => ActionColumn::class,
+                'header' => 'Ações',
                 'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
                  }
             ],
         ],
-    ]); ?>
+    ]);  ?>
+    </div>
 </div>
