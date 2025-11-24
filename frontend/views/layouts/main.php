@@ -24,6 +24,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <link rel="stylesheet" type="text/css" href="../web/css/styleTemplate.css" />
+    <link rel="icon" type="image/x-icon" href="../web/assets/img/VortexAPP_Logo_SemTexto.png">
 </head>
 
 <body class="d-flex flex-column h-100">

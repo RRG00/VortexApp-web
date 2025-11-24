@@ -1,6 +1,12 @@
 # Ignore everything
 *
 
-# But not the img folder
+# But don't ignore directories (so we can recurse into them)
+!*/
+
+# And don't ignore the img folder and its contents
 !img/
 !img/**
+
+# Make sure .gitignore itself isn't ignored
+!.gitignore
