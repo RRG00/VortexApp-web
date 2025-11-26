@@ -27,23 +27,42 @@ class SiteController extends Controller
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
-
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['@'], 
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['viewUsers'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['createUsers'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateUsers'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteUsers'],
+                    ],
+                            ],
+                        ],
+                        'verbs' => [
+                            'class' => VerbFilter::class,
+                            'actions' => [
+                                'logout' => ['POST'],
+                            ],
+                        ],
+            ];
+        }
 
     /**
      * {@inheritdoc}
