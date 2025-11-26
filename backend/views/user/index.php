@@ -50,6 +50,11 @@ $this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4
                                 'label' => 'Status',
                                 'enableSorting' => false,
                             ],
+                            [
+                               'attribute' => 'papel',
+                                'label' => 'Role',
+                                'enableSorting' => false,
+                            ],
 
                             [
                                     'class' => ActionColumn::class,
