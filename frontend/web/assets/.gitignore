@@ -1,6 +1,6 @@
-1d0614cb
-8ce12986
-9ec245d9
-16f5d61d
-8946fd84
-cbdc8874
+# Ignore everything
+*
+
+# But not the img folder
+!img/
+!img/**

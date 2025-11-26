@@ -32,12 +32,25 @@ $this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4
                     'filterModel' => $searchModel,
                     'tableOptions' => ['class' => 'table table-hover align-middle mb-0 user-table'],
                     'columns' => [
-                            ['class' => 'yii\grid\SerialColumn', 'header' => '#'],
+                            ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
-                            'username',
-                            'email:email',
-                            'status',
+                            [
+                                'attribute' => 'username',
+                                'label' => 'Username',
+                                'enableSorting' => false,
+                            ],
+                            [
+                                'attribute' => 'email',
+                                'format' => 'Email',
+                                'enableSorting' => false,
+                            ],
+
+                            [
+                                'attribute' => 'status',
+                                'label' => 'Status',
+                                'enableSorting' => false,
+                            ],
+
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Ações',

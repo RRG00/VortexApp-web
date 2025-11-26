@@ -1,4 +1,7 @@
 <?php
+
+use hail812\adminlte\widgets\Card;
+
 $this->title = 'Dashboard';
 $this->params['breadcrumbs'] = [['label' => $this->title]];
 
@@ -8,14 +11,8 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
 // $organizers = User::find()->where(['role' => 'organizer'])->count();
 // $players = User::find()->where(['role' => 'player'])->count();
 
-// Substituir por valores da base de dados !Important
-$totalUsers = 0;
-$admins = 0;
-$organizers = 0;
-$players = 0;
-$newUsersThisMonth = 0;
-?>
 
+?>
 <div class="container-fluid">
     <!-- Header -->
     <div class="row mb-3">
@@ -24,57 +21,116 @@ $newUsersThisMonth = 0;
             <p class="text-muted">Painel de Administração - Gestão de Utilizadores</p>
         </div>
     </div>
-
     <!-- Estatísticas principais -->
-    <div class="row">
-        <!-- Total de Utilizadores -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\SmallBox::widget([
-                    'title' => $totalUsers,
-                    'text' => 'Total de Utilizadores',
-                    'icon' => 'fas fa-users',
-                    'theme' => 'info',
-                    'linkUrl' => ['/user/index'],
-                    'linkText' => 'Ver todos'
-            ]) ?>
-        </div>
-
+    <div class="row justify-content-center">
         <!-- Administradores -->
         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
-                    'title' => $admins,
-                    'text' => 'Administradores',
-                    'icon' => 'fas fa-user-shield',
-                    'theme' => 'danger',
-                    'linkUrl' => ['/user/index'],
-                    'linkText' => 'Ver admins'
+                'title' => $admins,
+                'text' => 'Administradores',
+                'icon' => 'fas fa-user-shield',
+                'theme' => 'danger',
+                'linkUrl' => ['/user/index'],
+                'linkText' => 'Ver admins'
             ]) ?>
         </div>
 
         <!-- Organizadores -->
         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
-                    'title' => $organizers,
-                    'text' => 'Organizadores',
-                    'icon' => 'fas fa-user-tie',
-                    'theme' => 'warning',
-                    'linkUrl' => ['/user/index'],
-                    'linkText' => 'Ver organizadores'
+                'title' => $organizers,
+                'text' => 'Organizadores',
+                'icon' => 'fas fa-user-tie',
+                'theme' => 'warning',
+                'linkUrl' => ['/user/index'],
+                'linkText' => 'Ver organizadores'
             ]) ?>
         </div>
 
         <!-- Jogadores -->
         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
-                    'title' => $players,
-                    'text' => 'Jogadores',
-                    'icon' => 'fas fa-gamepad',
-                    'theme' => 'success',
-                    'linkUrl' => ['/user/index'],
-                    'linkText' => 'Ver jogadores'
+                'title' => $players,
+                'text' => 'Jogadores',
+                'icon' => 'fas fa-gamepad',
+                'theme' => 'success',
+                'linkUrl' => ['/user/index'],
+                'linkText' => 'Ver jogadores'
             ]) ?>
         </div>
+        <!-- Árbitros -->
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <?= \hail812\adminlte\widgets\SmallBox::widget([
+                'title' => $referees,
+                'text' => 'Árbitros',
+                'icon' => 'fa fa-user',
+                'theme' => 'success',
+                'linkUrl' => ['/user/index'],
+                'linkText' => 'Ver jogadores'
+            ]) ?>
+
     </div>
+    </div>
+
+    <!--Grafico de Registo de Users -->
+    <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color:black">
+                            Evolução de Registos (Últimos 12 Meses)
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="registrosChart" style="min-height: 250px; height: 250px; max-height: 250px;"></canvas>
+                    </div>
+                </div>     
+    </div>
+   <?php
+            $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \yii\web\View::POS_HEAD]);
+
+            $monthsJson = json_encode($months);
+            $dataJson = json_encode($registrations);
+
+            $this->registerJs("
+            document.addEventListener('DOMContentLoaded', function() {
+                var ctx = document.getElementById('registrosChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: $monthsJson,
+                        datasets: [{
+                            label: 'Novos Registos',
+                            data: $dataJson,
+                            borderColor: 'rgba(60, 141, 188, 1)',
+                            backgroundColor: 'rgba(60, 141, 188, 0.2)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+            ", \yii\web\View::POS_END);
+        ?>
+
+
 
 
 
@@ -86,7 +142,7 @@ $newUsersThisMonth = 0;
                     <h3 class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-md-4 col-sm-6 mb-3">
                             <a href="<?= \yii\helpers\Url::to(['/user/create']) ?>" class="btn btn-lg btn-primary w-100">
                                 <i class="fas fa-user-plus"></i><br>
@@ -97,12 +153,6 @@ $newUsersThisMonth = 0;
                             <a href="<?= \yii\helpers\Url::to(['/user/index']) ?>" class="btn btn-lg btn-info w-100">
                                 <i class="fas fa-list"></i><br>
                                 <strong>Listar Utilizadores</strong>
-                            </a>
-                        </div>
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="<?= \yii\helpers\Url::to(['/site/index']) ?>" class="btn btn-lg btn-secondary w-100">
-                                <i class="fas fa-cog"></i><br>
-                                <strong>Configurações</strong>
                             </a>
                         </div>
                     </div>

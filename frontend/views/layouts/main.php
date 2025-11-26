@@ -24,6 +24,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <link rel="stylesheet" type="text/css" href="../web/css/styleTemplate.css" />
+    <link rel="icon" type="image/x-icon" href="../web/assets/img/VortexAPP_Logo_SemTexto.png">
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -40,6 +41,7 @@ AppAsset::register($this);
                 <li><?= Html::a('Início', ['/site/index']) ?></li>
                 <li><?= Html::a('Torneios', ['/tournament/index']) ?></li>
                 <li><?= Html::a('Rankings', ['/ranking/index']) ?></li>
+                <li><?= Html::a('Equipa', ['/team/index']) ?></li>
                 <li><a href="#news">Notícias</a></li>
                 <li><a href="#calendar">Calendário</a></li>
             </ul>

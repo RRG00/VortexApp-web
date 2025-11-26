@@ -30,10 +30,10 @@ class UserController extends Controller
                 'access' => [
                     'class' => AccessControl::className(),
                         'rules' => [
-                            [ // Rules => Admin
+                            [ 
                                 'allow' => true,
                                 'actions' => ['index', 'create', 'view', 'update', 'delete'],
-                                'roles' => ['admin'],
+                                'roles' => ['admin', 'organizer'],
                             ],
                         ],
                 ]
@@ -101,20 +101,25 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+
             $auth = Yii::$app->authManager;
             $auth->revokeAll($model->id);
 
+
             if ($model->papel) {
+
                 $role = $auth->getRole($model->papel);
                 if ($role) {
                     $auth->assign($role, $model->id);
+
                 }
+    
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
+       return $this->render('update', [
+        'model' => $model,
         ]);
     }
 

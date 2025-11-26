@@ -21,11 +21,11 @@ use Yii;
  * @property int $id_jogo
  *
  * @property User $aprovadoPor
- * @property INSCRICAO[] $iNSCRICAOs
- * @property JOGO $jogo
+ * @property Inscricao[] $iNSCRICAOs
+ * @property Jogo $jogo
  * @property User $organizador
- * @property PARTIDA[] $pARTIDAs
- * @property PATROCINADOR[] $pATROCINADORs
+ * @property Partida[] $pARTIDAs
+ * @property Patrocinador[] $pATROCINADORs
  */
 class Tournament extends \yii\db\ActiveRecord
 {
@@ -36,7 +36,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'TORNEIO';
+        return 'torneio';
     }
 
     /**
@@ -96,7 +96,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getINSCRICAOs()
     {
-        return $this->hasMany(INSCRICAO::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Inscricao::class, ['id_torneio' => 'id_torneio']);
     }
 
     /**
@@ -106,7 +106,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getJogo()
     {
-        return $this->hasOne(JOGO::class, ['id_jogo' => 'id_jogo']);
+        return $this->hasOne(Jogo::class, ['id_jogo' => 'id_jogo']);
     }
 
     /**
@@ -126,7 +126,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getPARTIDAs()
     {
-        return $this->hasMany(PARTIDA::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Partida::class, ['id_torneio' => 'id_torneio']);
     }
 
     /**
@@ -136,7 +136,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getPATROCINADORs()
     {
-        return $this->hasMany(PATROCINADOR::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Patrocinador::class, ['id_torneio' => 'id_torneio']);
     }
 
 }

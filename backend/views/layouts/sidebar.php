@@ -1,6 +1,10 @@
+<?php
+use yii\helpers\Url;
+?>
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="<?= Url::home()?>" class="brand-link">
         <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" class="brand-image  elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Vortex Painel</span>
     </a>
@@ -27,6 +31,7 @@
                 'items' => [
                     ['label' => 'User Control', 'icon' => 'users-cog text-white', 'url' => ['user/index']],
                     ['label' => 'Tournament Control', 'icon' => 'fa fa-trophy text-white', 'url' => ['tournament/index']],
+                    ['label' => 'Player/Match Control', 'icon' => ' fa-user text-white' , 'url' => ['referre/index']],
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],

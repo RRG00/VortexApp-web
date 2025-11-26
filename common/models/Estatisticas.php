@@ -1,5 +1,7 @@
 <?php
 namespace common\models;
+use common\models\Jogo;
+
 use Yii;
 
 /**
@@ -38,9 +40,9 @@ class Estatisticas extends \yii\db\ActiveRecord
             'id_estatistica' => 'ID',
             'id_utilizador' => 'Utilizador',
             'id_jogo' => 'Jogo',
-            'vitorias' => 'Vitórias',
+            'vitorias' => 'Vitorias',
             'derrotas' => 'Derrotas',
-            'pontuacao' => 'Pontuação',
+            'pontuacao' => 'Pontuacao',
             'kd' => 'K/D',
         ];
     }

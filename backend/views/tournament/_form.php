@@ -6,6 +6,9 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Tournament $model */
 /** @var yii\widgets\ActiveForm $form */
+
+// Importa o CSS externo
+$this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 ?>
 
 <div class="tournament-form">

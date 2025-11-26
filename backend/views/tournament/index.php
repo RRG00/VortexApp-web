@@ -1,5 +1,4 @@
 <?php
-
 use common\models\Tournament;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -12,43 +11,58 @@ use yii\grid\GridView;
 
 $this->title = 'Tournaments';
 $this->params['breadcrumbs'][] = $this->title;
+
+// Importa o CSS externo
+$this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 ?>
+
 <div class="tournament-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
+    <div class="tournament-header">
+        <h1><?= Html::encode($this->title) ?></h1>
         <?= Html::a('Create Tournament', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    </div>
+    <div class="tournament-card-body">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'summary' => '',
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id_torneio',
-            'nome',
-            'best_of',
-            'regras:ntext',
-            'limite_inscricoes',
-            //'premios',
-            //'data_inicio',
-            //'data_fim',
-            //'estado',
-            //'organizador_id',
-            //'aprovado_por',
-            //'id_jogo',
             [
-                'class' => ActionColumn::className(),
+                'attribute' => 'nome',
+                'label' => 'Nome',
+                'enableSorting' => false,
+            ],
+
+            [
+                'attribute' => 'best_of',
+                'label' => 'Best_of',
+                'enableSorting' => false,
+            ],
+
+            [
+                'attribute' => 'regras', 
+                'format' => 'ntext',
+                'label' => 'Regras',  
+                'enableSorting' => false,
+            ],
+
+            [
+                'attribute' => 'limite_inscricoes', 
+                'label' => 'Limite de Inscrições', 
+                'enableSorting' => false,
+            ],
+
+
+            [
+                'class' => ActionColumn::class,
+                'header' => 'Ações',
                 'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
                  }
             ],
         ],
-    ]); ?>
-
-
+    ]);  ?>
+    </div>
 </div>
