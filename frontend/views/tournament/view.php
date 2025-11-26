@@ -1,3 +1,9 @@
+<?php
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <div class="container my-5">
@@ -61,9 +67,14 @@
 
             <!-- Botão de Inscrição -->
             <div class="d-grid">
-                <a href="#" class="btn btn-primary btn-lg py-3">
-                    <i class="bi bi-trophy-fill me-2"></i>Inscrever Equipa
-                </a>
+                <?= Html::a(
+                    '<i class="bi bi-trophy-fill me-2"></i>Inscrever Equipa',
+                    ['tournament/inscricao', 'id' => $torneio->id_torneio],
+                    [
+                        'class' => 'btn btn-primary btn-lg py-3',
+                        'data-method' => 'post', // Força usar POST em vez de GET
+                    ]
+                ) ?>
             </div>
         </div>
     </div>
