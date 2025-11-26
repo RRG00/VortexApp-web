@@ -13,13 +13,13 @@ use yii\helpers\Url;
             <div class="tournament-header">
                 <span class="game-badge"><?=$torneio->jogo->nome?></span>
                 <span class="status <?php
-                if ($torneio->estado == 'em breve' || $torneio->estado == 'pending') {
+                if ($torneio->estado == 'Em breve') {
                     echo 'pending';
-                } elseif ($torneio->estado == 'Ativo' || $torneio->estado == 'active' || $torneio->estado == 'Em Curso') {
+                } elseif ($torneio->estado == 'A decorrer') {
                     echo 'active';
-                } elseif ($torneio->estado == 'concluido' || $torneio->estado == 'completed' || $torneio->estado == 'Terminado') {
+                } elseif ($torneio->estado == 'Concluido') {
                     echo 'completed';
-                } elseif ($torneio->estado == 'cancelado' || $torneio->estado == 'cancelled') {
+                } elseif ($torneio->estado == 'Cancelado') {
                     echo 'cancelled';
                 } else {
                     echo 'pending'; // classe padrão
