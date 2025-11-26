@@ -17,7 +17,7 @@ $this->registerCssFile('@web/css/referre-index.css', ['depends' => [\yii\bootstr
 <div class="referre-index-wrapper">
   <div class="referre-card">
     <div class="referre-card-header">
-      <?= Html::encode($this->title) ?>
+      <h1><?= Html::encode($this->title)?></h1>
     </div>
     <div class="referre-card-body">
       <?= GridView::widget([
