@@ -19,7 +19,7 @@ class RbacController extends Controller
 
         // Create role Admin
         $admin = $auth->createRole('admin');
-        $admin->description = 'Administrador - gere users';
+        $admin->description = 'Administrador - gere users.';
         $auth->add($admin);
 
         //Create Role Organizer
