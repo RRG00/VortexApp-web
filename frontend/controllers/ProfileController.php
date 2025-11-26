@@ -11,7 +11,7 @@ use common\models\UpdateUserForm;
 use common\models\Estatisticas;
 use yii\web\UploadedFile;
 
-class ProfileController extends Controller  
+class ProfileController extends Controller
 {
     public function behaviors()
     {
@@ -32,25 +32,25 @@ class ProfileController extends Controller
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-        
+
         // Get user statistics
         $estatisticas = Estatisticas::find()
             ->where(['id_utilizador' => $user->id])
             ->joinWith(['jogo'])
             ->all();
-        
+
         // Calculate total wins and losses
         $totalVitorias = 0;
         $totalDerrotas = 0;
-        
+
         foreach ($estatisticas as $stat) {
             $totalVitorias += $stat->vitorias;
             $totalDerrotas += $stat->derrotas;
         }
-        
+
         $totalJogos = $totalVitorias + $totalDerrotas;
         $winRate = $totalJogos > 0 ? round(($totalVitorias / $totalJogos) * 100, 1) : 0;
-        
+
         return $this->render('index', [
             'user' => $user,
             'estatisticas' => $estatisticas,
@@ -70,25 +70,25 @@ class ProfileController extends Controller
     public function actionView($id)
     {
         $user = $this->findModel($id);
-        
+
         // Get user statistics
         $estatisticas = Estatisticas::find()
             ->where(['id_utilizador' => $user->id])
             ->joinWith(['jogo'])
             ->all();
-        
+
         // Calculate total wins and losses
         $totalVitorias = 0;
         $totalDerrotas = 0;
-        
+
         foreach ($estatisticas as $stat) {
             $totalVitorias += $stat->vitorias;
             $totalDerrotas += $stat->derrotas;
         }
-        
+
         $totalJogos = $totalVitorias + $totalDerrotas;
         $winRate = $totalJogos > 0 ? round(($totalVitorias / $totalJogos) * 100, 1) : 0;
-        
+
         return $this->render('view', [
             'user' => $user,
             'estatisticas' => $estatisticas,
@@ -104,36 +104,20 @@ class ProfileController extends Controller
         $user = Yii::$app->user->identity;
         $model = new UpdateUserForm();
         $model->user = $user;
-        
-        // Add virtual attributes for password fields
-        $model->user->current_password = '';
-        $model->user->new_password = '';
-        $model->user->confirm_password = '';
-        
+
+        // Initialize form with current user data
+        $model->username = $user->username;
+        $model->email = $user->email;
+
         if ($model->load(Yii::$app->request->post())) {
-            // Validate current password if trying to change
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
-            if (!empty($model->user->new_password)) {
-                if (empty($model->user->current_password) || !$model->validatePassword($model->user->current_password)) {
-                    $model->addError('current_password', 'Senha atual incorreta.');
-                    return $this->render('edit-profile', ['model' => $model]);
-                }
-                
-                if ($model->user->new_password !== $model->user->confirm_password) {
-                    $model->addError('confirm_password', 'As senhas não coincidem.');
-                    return $this->render('edit-profile', ['model' => $model]);
-                }
-                
-                $model->user->setPassword($model->user->new_password);
-            }
-            
             if ($model->update()) {
                 Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso!');
                 return $this->redirect(['index']);
             }
         }
-        
+
         return $this->render('edit-profile', ['model' => $model]);
     }
 

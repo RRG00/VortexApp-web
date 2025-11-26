@@ -47,7 +47,7 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             <h3>Informações Básicas</h3>
 
             <div class="form-row">
-                <?= $form->field($model->user, 'username')->textInput([
+                <?= $form->field($model, 'username')->textInput([
                     'maxlength' => true,
                     'placeholder' => 'Digite seu nome de usuário',
                     'class' => 'form-control'
@@ -55,7 +55,7 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             </div>
 
             <div class="form-row">
-                <?= $form->field($model->user, 'email')->textInput([
+                <?= $form->field($model, 'email')->textInput([
                     'maxlength' => true,
                     'placeholder' => 'Digite seu email',
                     'type' => 'email',
@@ -75,21 +75,21 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             <p class="help-text">Deixe em branco se não quiser alterar a senha</p>
 
             <div class="form-row">
-                <?= $form->field($model->user, 'current_password')->passwordInput([
+                <?= $form->field($model, 'current_password')->passwordInput([
                     'placeholder' => 'Digite sua senha atual',
                     'class' => 'form-control'
                 ])->label('Senha Atual') ?>
             </div>
 
             <div class="form-row">
-                <?= $form->field($model->user, 'new_password')->passwordInput([
+                <?= $form->field($model, 'new_password')->passwordInput([
                     'placeholder' => 'Digite a nova senha',
                     'class' => 'form-control'
                 ])->label('Nova Senha') ?>
             </div>
 
             <div class="form-row">
-                <?= $form->field($model->user, 'confirm_password')->passwordInput([
+                <?= $form->field($model, 'confirm_password')->passwordInput([
                     'placeholder' => 'Confirme a nova senha',
                     'class' => 'form-control'
                 ])->label('Confirmar Nova Senha') ?>
@@ -126,4 +126,3 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
     </div>
 
 </div>
-
