@@ -42,16 +42,16 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
     <?= $form->field($model, 'estado')->dropDownList(
         ['Em breve' => 'Em Breve', 'A decorrer' => 'A decorrer','Concluido' => 'Concluído', 'Cancelado' => 'Cancelado', ],
-        ['prompt' => 'Selecione o estado']
-    ) ?>
+        ['prompt' => 'Selecione o estado'])
+    ?>
 
     <?= $form->field($model, 'organizador_id')->hiddenInput(
         ['readonly' => true, 'value' => Yii::$app->user->id]) ->label(false)
-        ?>
+    ?>
 
     <?= $form->field($model, 'aprovado_por')->textInput(
         ['readonly' => true, 'value' => Yii::$app->user->id])
-        ?>
+    ?>
 
     <?= $form->field($model, 'arbitro_id')->dropDownList(
         ArrayHelper::map(
@@ -59,8 +59,8 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
             'id',
             'username'
         ),
-        ['prompt' => 'Selecione um árbitro']
-    ) ?>
+        ['prompt' => 'Selecione um árbitro']) 
+    ?>
 
     <?= $form->field($model, 'id_jogo')->dropDownList(
         ArrayHelper::map(
