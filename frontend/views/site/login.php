@@ -6,7 +6,6 @@
 /** @var \common\models\LoginForm $model */
 
 use yii\bootstrap5\Html;
-use yii\helpers\Url;
 use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Iniciar Sessão';
@@ -39,11 +38,6 @@ $this->title = 'Iniciar Sessão';
             </div>
 
             <?php ActiveForm::end(); ?>
-        </div>
-        <div class="col-lg-7">
-            <a>
-                <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="login-logo" class="login-logo">
-            </a>
         </div>
     </div>
 </div>

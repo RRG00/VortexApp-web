@@ -11,11 +11,6 @@ foreach ($roles as $role) {
     $roleList[$role->name] = ucfirst($role->name);
 }
 
-$status = [
-    common\Models\User::STATUS_ACTIVE => '10',
-    common\Models\User::STATUS_INACTIVE => '9',
-];
-
 /** @var yii\web\View $this */
 /** @var common\Models\User $model */
 /** @var yii\widgets\ActiveForm $form */
@@ -54,11 +49,6 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
                         <?= $form->field($model, 'papel')
                                 ->dropDownList($roleList, ['prompt' => 'Selecione um papel'])
                                 ->label('Papel / Função') ?>
-                    </div>
-                    <div class="col-md-6">
-                        <?= $form->field($model, 'status')
-                                ->dropDownList($status, ['prompt' => 'Selecione um estado'])
-                                ->label('Estado') ?>
                     </div>
                 </div>
 

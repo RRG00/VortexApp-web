@@ -5,32 +5,25 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use common\models\User;
 use common\models\UpdateUserForm;
 use common\models\Estatisticas;
 use yii\web\UploadedFile;
 
-class ProfileController extends Controller
+class ProfileController extends Controller  
 {
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'edit-profile', 'delete-account'],
+                'only' => ['index', 'edit-profile'],
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'], // Only authenticated users
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete-account' => ['post'],
                 ],
             ],
         ];
@@ -39,25 +32,25 @@ class ProfileController extends Controller
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-
+        
         // Get user statistics
         $estatisticas = Estatisticas::find()
             ->where(['id_utilizador' => $user->id])
             ->joinWith(['jogo'])
             ->all();
-
+        
         // Calculate total wins and losses
         $totalVitorias = 0;
         $totalDerrotas = 0;
-
+        
         foreach ($estatisticas as $stat) {
             $totalVitorias += $stat->vitorias;
             $totalDerrotas += $stat->derrotas;
         }
-
+        
         $totalJogos = $totalVitorias + $totalDerrotas;
         $winRate = $totalJogos > 0 ? round(($totalVitorias / $totalJogos) * 100, 1) : 0;
-
+        
         return $this->render('index', [
             'user' => $user,
             'estatisticas' => $estatisticas,
@@ -77,25 +70,25 @@ class ProfileController extends Controller
     public function actionView($id)
     {
         $user = $this->findModel($id);
-
+        
         // Get user statistics
         $estatisticas = Estatisticas::find()
             ->where(['id_utilizador' => $user->id])
             ->joinWith(['jogo'])
             ->all();
-
+        
         // Calculate total wins and losses
         $totalVitorias = 0;
         $totalDerrotas = 0;
-
+        
         foreach ($estatisticas as $stat) {
             $totalVitorias += $stat->vitorias;
             $totalDerrotas += $stat->derrotas;
         }
-
+        
         $totalJogos = $totalVitorias + $totalDerrotas;
         $winRate = $totalJogos > 0 ? round(($totalVitorias / $totalJogos) * 100, 1) : 0;
-
+        
         return $this->render('view', [
             'user' => $user,
             'estatisticas' => $estatisticas,
@@ -111,41 +104,37 @@ class ProfileController extends Controller
         $user = Yii::$app->user->identity;
         $model = new UpdateUserForm();
         $model->user = $user;
-
-        // Initialize form with current user data
-        $model->username = $user->username;
-        $model->email = $user->email;
-
+        
+        // Add virtual attributes for password fields
+        $model->user->current_password = '';
+        $model->user->new_password = '';
+        $model->user->confirm_password = '';
+        
         if ($model->load(Yii::$app->request->post())) {
+            // Validate current password if trying to change
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
+            if (!empty($model->user->new_password)) {
+                if (empty($model->user->current_password) || !$model->validatePassword($model->user->current_password)) {
+                    $model->addError('current_password', 'Senha atual incorreta.');
+                    return $this->render('edit-profile', ['model' => $model]);
+                }
+                
+                if ($model->user->new_password !== $model->user->confirm_password) {
+                    $model->addError('confirm_password', 'As senhas não coincidem.');
+                    return $this->render('edit-profile', ['model' => $model]);
+                }
+                
+                $model->user->setPassword($model->user->new_password);
+            }
+            
             if ($model->update()) {
                 Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso!');
                 return $this->redirect(['index']);
             }
         }
-
+        
         return $this->render('edit-profile', ['model' => $model]);
-    }
-
-    /**
-     * Soft delete user account
-     * @return \yii\web\Response
-     */
-    public function actionDeleteAccount()
-    {
-        $userId = Yii::$app->user->id;
-
-        if (User::softDeleteById($userId)) {
-            // Logout the user
-            Yii::$app->user->logout();
-
-            Yii::$app->session->setFlash('success', 'Sua conta foi desativada com sucesso.');
-            return $this->goHome();
-        } else {
-            Yii::$app->session->setFlash('error', 'Não foi possível desativar sua conta. Por favor, tente novamente.');
-            return $this->redirect(['edit-profile']);
-        }
     }
 
     /**

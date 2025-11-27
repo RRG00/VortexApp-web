@@ -1,5 +1,6 @@
 /* Container do formulário */
 .tournament-form {
+    background-color: #f4f5ff;
     min-height: 100vh;
     padding: 3rem 2rem;
     display: flex;

@@ -44,27 +44,8 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            
-            if (!$user) {
-                $this->addError($attribute, 'Nome de usuário ou senha incorretos.');
-                return;
-            }
-            
-            // Check if user account is disabled/inactive
-            if ($user->status === User::STATUS_INACTIVE || $user->status === User::STATUS_DELETED) {
-                $this->addError('username', 'Esta conta foi desativada. Entre em contato com o suporte para reativá-la.');
-                return;
-            }
-            
-            // Check if user is not active
-            if ($user->status !== User::STATUS_ACTIVE) {
-                $this->addError('username', 'Esta conta não está ativa. Entre em contato com o suporte.');
-                return;
-            }
-            
-            // Validate password
-            if (!$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Nome de usuário ou senha incorretos.');
+            if (!$user || !$user->validatePassword($this->password)) {
+                $this->addError($attribute, 'Incorrect username or password.');
             }
         }
     }
@@ -74,18 +55,12 @@ class LoginForm extends Model
      *
      * @return bool whether the user is logged in successfully
      */
+
     public function login()
     {
         if ($this->validate()) {
             $user = $this->getUser();
 
-            // Double-check user status before login
-            if ($user && !$user->isActive()) {
-                $this->addError('username', 'Esta conta foi desativada. Entre em contato com o suporte para reativá-la.');
-                return false;
-            }
-
-            // Check backend access if it's a backend login
             if ($user && $this->isBackendLogin) {
                 if (!Yii::$app->authManager->checkAccess($user->id, 'accessBackend')) {
                     $this->addError('username', 'Sua conta não possui permissão para acessar o Backend.');
@@ -99,6 +74,8 @@ class LoginForm extends Model
         return false;
     }
 
+
+
     /**
      * Finds user by [[username]]
      *
@@ -107,8 +84,7 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            // Find user regardless of status to show appropriate error message
-            $this->_user = User::findOne(['username' => $this->username]);
+            $this->_user = User::findByUsername($this->username);
         }
 
         return $this->_user;
