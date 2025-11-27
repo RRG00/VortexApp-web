@@ -23,7 +23,7 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'descricao')->textInput(['maxlength' => true]) ?>
-    
+
 
     <?= $form->field($model, 'best_of')->dropDownList(
         ['1' => 'Best of 1', '3' => 'Best of 3', '5' => 'Best of 5'],
@@ -36,21 +36,24 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
     <?= $form->field($model, 'premios')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'data_inicio')-> Input('date') ?>
+    <?= $form->field($model, 'data_inicio')->Input('date') ?>
 
-    <?= $form->field($model, 'data_fim')-> Input('date') ?>
+    <?= $form->field($model, 'data_fim')->Input('date') ?>
 
     <?= $form->field($model, 'estado')->dropDownList(
-        ['Em breve' => 'Em Breve', 'A decorrer' => 'A decorrer','Concluido' => 'Concluído', 'Cancelado' => 'Cancelado', ],
-        ['prompt' => 'Selecione o estado'])
+        ['Em breve' => 'Em Breve', 'A decorrer' => 'A decorrer', 'Concluido' => 'Concluído', 'Cancelado' => 'Cancelado',],
+        ['prompt' => 'Selecione o estado']
+    )
     ?>
 
     <?= $form->field($model, 'organizador_id')->hiddenInput(
-        ['readonly' => true, 'value' => Yii::$app->user->id]) ->label(false)
+        ['readonly' => true, 'value' => Yii::$app->user->id]
+    )->label(false)
     ?>
 
     <?= $form->field($model, 'aprovado_por')->textInput(
-        ['readonly' => true, 'value' => Yii::$app->user->id])
+        ['readonly' => true, 'value' => Yii::$app->user->id]
+    )
     ?>
 
     <?= $form->field($model, 'arbitro_id')->dropDownList(
@@ -59,7 +62,8 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
             'id',
             'username'
         ),
-        ['prompt' => 'Selecione um árbitro']) 
+        ['prompt' => 'Selecione um árbitro']
+    )
     ?>
 
     <?= $form->field($model, 'id_jogo')->dropDownList(
@@ -68,11 +72,13 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
             'id_jogo',
             'nome'
         ),
-        ['prompt' => 'Selecione um jogo'])->label('Jogo')
+        ['prompt' => 'Selecione um jogo']
+    )->label('Jogo')
     ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']);
+        ?>
     </div>
 
 

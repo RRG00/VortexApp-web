@@ -79,29 +79,7 @@
   color: #2e2e66;
 }
 
-/* ====== Pequeno detalhe visual ====== */
 .user-card-body .form-group {
   margin-bottom: 1.5rem;
 }
 
-.user-update h1 {
-  color: black;
-}
-
-.user-view h1 {
-  color: black;
-}
-
-.user-view .detail-view th {
-  font-weight: 600;
-  border-radius: 5px;
-  color: white;
-  background: linear-gradient(135deg, #4a4ac0, #2e2e66);
-  
-}
-
-.user-view .detail-view td {
-  font-weight: 600;
-  color: black;
-  
-}

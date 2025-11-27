@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /** @var User\Models\User $model */
 
 $this->title = "Edit User" . $model->username;
-$this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
+$this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
