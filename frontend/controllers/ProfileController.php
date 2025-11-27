@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use common\models\User;
 use common\models\UpdateUserForm;
@@ -18,12 +19,18 @@ class ProfileController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'edit-profile'],
+                'only' => ['index', 'edit-profile', 'delete-account'],
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'], // Only authenticated users
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete-account' => ['post'],
                 ],
             ],
         ];
@@ -119,6 +126,26 @@ class ProfileController extends Controller
         }
 
         return $this->render('edit-profile', ['model' => $model]);
+    }
+
+    /**
+     * Soft delete user account
+     * @return \yii\web\Response
+     */
+    public function actionDeleteAccount()
+    {
+        $userId = Yii::$app->user->id;
+
+        if (User::softDeleteById($userId)) {
+            // Logout the user
+            Yii::$app->user->logout();
+
+            Yii::$app->session->setFlash('success', 'Sua conta foi desativada com sucesso.');
+            return $this->goHome();
+        } else {
+            Yii::$app->session->setFlash('error', 'Não foi possível desativar sua conta. Por favor, tente novamente.');
+            return $this->redirect(['edit-profile']);
+        }
     }
 
     /**
