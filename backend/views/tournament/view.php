@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id_torneio',
             'nome',
+            'descricao',
             'best_of',
             'regras:ntext',
             'limite_inscricoes',
@@ -41,6 +42,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'organizador_id',
             'aprovado_por',
             'id_jogo',
+            'arbitro_id',
+            
         ],
     ]) ?>
 

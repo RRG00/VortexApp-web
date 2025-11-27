@@ -210,14 +210,14 @@ nav {
 }
 
 .btn-secondary {
-  background: transparent;  
+  background: transparent;
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
 }
 
 .btn-secondary:hover {
   transform: scale(1.02);
-  background: var(--primary-color);;
+  background: var(--primary-color);
   color: white;
 }
 
@@ -322,10 +322,18 @@ nav {
   color: white;
 }
 
-.status.pending,
-.status.cancelled,
-.status.completed {
+.status.pending {
   background: var(--warning);
+  color: var(--dark-bg);
+}
+  
+.status.cancelled {
+  background: red;
+  color: var(--dark-bg);
+}
+
+.status.completed {
+  background: gray;
   color: var(--dark-bg);
 }
 
@@ -582,14 +590,13 @@ tr:hover {
 }
 
 /* Forms */
-.edit-profile-section{
+.edit-profile-section {
   background: white;
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
 }
-
 
 .profile-section,
 .account-actions {
@@ -609,7 +616,6 @@ tr:hover {
 .form-section:last-of-type {
   border-bottom: none;
 }
-
 
 .form-section h3,
 .account-actions h3 {

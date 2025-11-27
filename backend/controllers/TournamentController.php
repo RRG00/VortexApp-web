@@ -73,6 +73,8 @@ class TournamentController extends Controller
     public function actionCreate()
     {
         $model = new Tournament();
+        $model->organizador_id = Yii::$app->user->id;
+        $model->aprovado_por = Yii::$app->user->id;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
