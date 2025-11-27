@@ -4,9 +4,14 @@ namespace frontend\controllers;
 
 use common\models\Equipa;
 use common\models\EquipaSearch;
+use common\models\MembrosEquipa;
+use common\models\UpdateTeamForm;
+use common\models\UpdateUserForm;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * TeamController implements the CRUD actions for Equipa model.
@@ -55,6 +60,9 @@ class TeamController extends Controller
      */
     public function actionView($id_equipa)
     {
+        $membros = $this->findModel($id_equipa)->membrosEquipas;
+        //$capitao = $membros
+
         return $this->render('view', [
             'equipa' => $this->findModel($id_equipa),
         ]);
@@ -67,18 +75,25 @@ class TeamController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Equipa();
-
+        $equipaModel = new Equipa();
+        $equipaModel -> data_criacao = date('Y-m-d H:i:s');
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id_equipa' => $model->id_equipa]);
+            if ($equipaModel->load($this->request->post()) && $equipaModel->save()) {
+
+                $membroEquipa = new MembrosEquipa();
+                $membroEquipa->create($equipaModel->id_equipa,Yii::$app->user->identity->id);
+
+                if($membroEquipa->save()){
+                    return $this->redirect(['view', 'id_equipa' => $equipaModel->id_equipa]);
+                }
+
             }
         } else {
-            $model->loadDefaultValues();
+            $equipaModel->loadDefaultValues();
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model' => $equipaModel,
         ]);
     }
 
@@ -89,18 +104,41 @@ class TeamController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id_equipa)
-    {
-        $model = $this->findModel($id_equipa);
+//    public function actionUpdate($id_equipa)
+//    {
+//        $model = $this->findModel($id_equipa);
+//
+//        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id_equipa' => $model->id_equipa]);
+//        }
+//
+//        return $this->render('create', [
+//            'model' => $model,
+//        ]);
+//    }
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id_equipa' => $model->id_equipa]);
+    public function actionEditTeam($id)
+    {
+        $equipa = $this->findModel($id);
+        $model = new UpdateUserForm();
+        $model->equipa = $equipa;
+
+
+        if ($model->load(Yii::$app->request->post())) {
+            // Validate current password if trying to change
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+            if ($model->update()) {
+                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
+                return $this->redirect(['index']);
+            }
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('edit-team', ['model' => $model]);
     }
+
+
+
 
     /**
      * Deletes an existing Equipa model.
