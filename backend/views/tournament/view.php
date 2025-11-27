@@ -7,24 +7,14 @@ use yii\widgets\DetailView;
 /** @var common\models\Tournament $model */
 
 $this->title = $model->id_torneio;
+$this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 $this->params['breadcrumbs'][] = ['label' => 'Tournaments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="tournament-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id_torneio' => $model->id_torneio], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id_torneio' => $model->id_torneio], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <h1><?= Html::encode("View Tournament: " . $model->nome) ?></h1>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -46,5 +36,16 @@ $this->params['breadcrumbs'][] = $this->title;
             
         ],
     ]) ?>
+
+    <p>
+        <?= Html::a('Update', ['update', 'id_torneio' => $model->id_torneio], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id_torneio' => $model->id_torneio], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to delete this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>
 
 </div>

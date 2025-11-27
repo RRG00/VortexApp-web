@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use common\models\MembrosEquipa;
 
 /** @var yii\web\View $this */
 /** @var common\models\EquipaSearch $searchModel */
@@ -31,19 +32,24 @@ use yii\grid\GridView;
                         <div class="tournament-details">
 
                             <span class="detail-item">
-                                Capitão: <?= $equipa->capitao ? Html::encode($equipa->capitao->username) : 'N/A' ?>
+                                Capitão:
+                                 <?= $equipa->capitao && $equipa->capitao->user
+                                    ? Html::encode($equipa->capitao->user->username)
+                                    : 'N/A' ?>
                             </span>
+
                             <span class="detail-item">
                                 <?= Yii::$app->formatter->asDate($equipa->data_criacao, 'short') ?>
                             </span>
                         </div>
                         <p style="color: var(--text-secondary); margin: 1rem 0;">
-                            <?php if ($equipa->capitao): ?>
-                                Equipa liderada por <?= Html::encode($equipa->capitao->username) ?>
+                            <?php if ($equipa->capitao && $equipa->capitao->user): ?>
+                                Equipa liderada por <?= Html::encode($equipa->capitao->user->username) ?>
                             <?php else: ?>
                                 Equipa registada no sistema
                             <?php endif; ?>
                         </p>
+
                         <?= Html::a('Ver Detalhes', ['view', 'id_equipa' => $equipa->id_equipa], ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>

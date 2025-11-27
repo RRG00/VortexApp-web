@@ -29,13 +29,13 @@ class UserController extends Controller
             [
                 'access' => [
                     'class' => AccessControl::className(),
-                        'rules' => [
-                            [ 
-                                'allow' => true,
-                                'actions' => ['index', 'create', 'view', 'update', 'delete'],
-                                'roles' => ['admin', 'organizer'],
-                            ],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'create', 'view', 'update', 'delete'],
+                            'roles' => ['admin', 'organizer'],
                         ],
+                    ],
                 ]
             ]
         );
@@ -77,17 +77,17 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-    $model = new SignupForm();
+        $model = new SignupForm();
 
-    if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
-        $model -> password = Yii::$app->getSecurity()->generateRandomString(10);
+        if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
+            $model->password = Yii::$app->getSecurity()->generateRandomString(10);
 
-        $user = $model->signup();
-       return $this->redirect(['view', 'id' => $user->id]);
+            $user = $model->signup();
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', ['model' => $model]);
     }
-
-    return $this->render('create', ['model' => $model]);
-}
 
     /**
      * Updates an existing User model.
@@ -111,15 +111,13 @@ class UserController extends Controller
                 $role = $auth->getRole($model->papel);
                 if ($role) {
                     $auth->assign($role, $model->id);
-
                 }
-    
             }
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
-       return $this->render('update', [
-        'model' => $model,
+        return $this->render('update', [
+            'model' => $model,
         ]);
     }
 
