@@ -28,43 +28,44 @@ $this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4
 
         <div class="user-card-body">
             <?= GridView::widget([
-                'dataProvider' => $dataProvider,
-                'tableOptions' => ['class' => 'table table-hover align-middle mb-0 user-table'],
-                'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'tableOptions' => ['class' => 'table table-hover align-middle mb-0 user-table'],
+                    'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
 
-                    [
-                        'attribute' => 'username',
-                        'label' => 'Username',
-                        'enableSorting' => false,
-                    ],
-                    [
-                        'attribute' => 'email',
-                        'format' => 'Email',
-                        'enableSorting' => false,
-                    ],
-                    [
-                        'attribute' => 'papel',
-                        'label' => 'Role',
-                        'enableSorting' => false,
-                    ],
-                    [
-                        'attribute' => 'status',
-                        'label' => 'Status',
-                        'enableSorting' => false,
-                    ],
+                            [
+                                'attribute' => 'username',
+                                'label' => 'Username',
+                                'enableSorting' => false,
+                            ],
+                            [
+                                'attribute' => 'email',
+                                'format' => 'Email',
+                                'enableSorting' => false,
+                            ],
 
+                            [
+                                'attribute' => 'status',
+                                'label' => 'Status',
+                                'enableSorting' => false,
+                            ],
+                            [
+                               'attribute' => 'papel',
+                                'label' => 'Role',
+                                'enableSorting' => false,
+                            ],
 
-                    [
-                        'class' => ActionColumn::class,
-                        'header' => 'Ações',
-                        'urlCreator' => function ($action, User $model, $key, $index, $column) {
-                            return Url::toRoute([$action, 'id' => $model->id]);
-                        },
-                        'template' => '{view} {update} {delete}',
-                        'contentOptions' => ['class' => 'text-center'],
+                            [
+                                    'class' => ActionColumn::class,
+                                    'header' => 'Ações',
+                                    'urlCreator' => function ($action, User $model, $key, $index, $column) {
+                                        return Url::toRoute([$action, 'id' => $model->id]);
+                                    },
+                                    'template' => '{view} {update} {delete}',
+                                    'contentOptions' => ['class' => 'text-center'],
+                            ],
                     ],
-                ],
             ]); ?>
         </div>
     </div>

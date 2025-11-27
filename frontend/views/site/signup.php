@@ -19,22 +19,17 @@ $this->title = 'Registo';
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-            <?= $form->field($model, 'email') ?>
+                <?= $form->field($model, 'email') ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password')->passwordInput() ?>
 
-            <div class="form-group">
-                <?= Html::submitButton('Registar', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            </div>
+                <div class="form-group">
+                    <?= Html::submitButton('Registar', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                </div>
 
             <?php ActiveForm::end(); ?>
-        </div>
-        <div class="col-lg-7">
-            <a>
-                <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="login-logo" class="login-logo">
-            </a>
         </div>
     </div>
 </div>

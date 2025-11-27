@@ -28,7 +28,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
+    
 
     public $current_password;
     public $new_password;
@@ -69,16 +69,13 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-
+            
             // Username rules
             ['username', 'trim'],
             ['username', 'required'],
-            [
-                'username',
-                'unique',
-                'targetClass' => '\common\models\User',
+            ['username', 'unique', 'targetClass' => '\common\models\User', 
                 'message' => 'Este nome de usuário já está em uso.',
-                'filter' => function ($query) {
+                'filter' => function($query) {
                     if (!$this->isNewRecord) {
                         $query->andWhere(['<>', 'id', $this->id]);
                     }
@@ -90,12 +87,9 @@ class User extends ActiveRecord implements IdentityInterface
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
-            [
-                'email',
-                'unique',
-                'targetClass' => '\common\models\User',
+            ['email', 'unique', 'targetClass' => '\common\models\User',
                 'message' => 'Este email já está em uso.',
-                'filter' => function ($query) {
+                'filter' => function($query) {
                     if (!$this->isNewRecord) {
                         $query->andWhere(['<>', 'id', $this->id]);
                     }
@@ -161,8 +155,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token)
-    {
+    public static function findByVerificationToken($token) {
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
@@ -264,34 +257,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     public function getProfileImage()
-    {
-        return $this->hasOne(Images::class, ['id_user' => 'id']);
-    }
-
-    public static function softDeleteById($userId)
-    {
-        $user = static::findOne($userId);
-        if ($user !== null) {
-            $user->status = self::STATUS_INACTIVE;
-            return $user->save(false);
-        }
-        return false;
-    }
-    /**
-     * Check if user is active
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->status === self::STATUS_ACTIVE;
-    }
-
-    /**
-     * Check if user is deleted
-     * @return bool
-     */
-    public function isDeleted()
-    {
-        return $this->status === self::STATUS_INACTIVE;
-    }
+{
+    return $this->hasOne(Images::class, ['id_user' => 'id']);
+}
 }

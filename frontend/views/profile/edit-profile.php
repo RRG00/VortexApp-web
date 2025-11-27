@@ -47,7 +47,7 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             <h3>Informações Básicas</h3>
 
             <div class="form-row">
-                <?= $form->field($model, 'username')->textInput([
+                <?= $form->field($model->user, 'username')->textInput([
                     'maxlength' => true,
                     'placeholder' => 'Digite seu nome de usuário',
                     'class' => 'form-control'
@@ -55,7 +55,7 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             </div>
 
             <div class="form-row">
-                <?= $form->field($model, 'email')->textInput([
+                <?= $form->field($model->user, 'email')->textInput([
                     'maxlength' => true,
                     'placeholder' => 'Digite seu email',
                     'type' => 'email',
@@ -75,21 +75,21 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             <p class="help-text">Deixe em branco se não quiser alterar a senha</p>
 
             <div class="form-row">
-                <?= $form->field($model, 'current_password')->passwordInput([
+                <?= $form->field($model->user, 'current_password')->passwordInput([
                     'placeholder' => 'Digite sua senha atual',
                     'class' => 'form-control'
                 ])->label('Senha Atual') ?>
             </div>
 
             <div class="form-row">
-                <?= $form->field($model, 'new_password')->passwordInput([
+                <?= $form->field($model->user, 'new_password')->passwordInput([
                     'placeholder' => 'Digite a nova senha',
                     'class' => 'form-control'
                 ])->label('Nova Senha') ?>
             </div>
 
             <div class="form-row">
-                <?= $form->field($model, 'confirm_password')->passwordInput([
+                <?= $form->field($model->user, 'confirm_password')->passwordInput([
                     'placeholder' => 'Confirme a nova senha',
                     'class' => 'form-control'
                 ])->label('Confirmar Nova Senha') ?>
@@ -114,17 +114,11 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
         <h3>Ações da Conta</h3>
         <div class="danger-zone">
             <p><strong>Zona de Perigo</strong></p>
-            <p>Desativar sua conta irá:</p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Desconectá-lo imediatamente</li>
-                <li>Impedir o acesso à sua conta</li>
-                <li>Manter seus dados armazenados com segurança</li>
-            </ul>
-            <p style="margin-bottom: 15px;"><em>Nota: Para reativar sua conta, entre em contato com o suporte.</em></p>
-            <?= Html::a('Desativar Conta', ['/profile/delete-account'], [
+            <p>Uma vez que você excluir sua conta, não há como voltar atrás.</p>
+            <?= Html::a('Excluir Conta', ['/user/delete'], [
                 'class' => 'btn btn-danger',
                 'data' => [
-                    'confirm' => 'Tem certeza que deseja desativar sua conta? Você será desconectado imediatamente e não poderá acessar o sistema.',
+                    'confirm' => 'Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.',
                     'method' => 'post',
                 ],
             ]) ?>
@@ -132,3 +126,4 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
     </div>
 
 </div>
+

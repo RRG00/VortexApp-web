@@ -3,13 +3,13 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\Tournament $model */
+/** @var app\models\Referre $model */
 
-$this->title = 'Create Tournament';
-$this->params['breadcrumbs'][] = ['label' => 'Tournaments', 'url' => ['index']];
+$this->title = 'Create Referre';
+$this->params['breadcrumbs'][] = ['label' => 'Referres', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="tournament-create">
+<div class="referre-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

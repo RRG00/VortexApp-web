@@ -20,9 +20,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
+            background: linear-gradient(135deg, #1a1a2e 0%, #252541 100%);
             color: var(--text-primary);
-            min-height: 100vh;  
+            min-height: 100vh;
         }
 
         /* Header/Navigation */
@@ -40,7 +40,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -184,6 +184,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1rem;
         }
 
         .game-badge {
