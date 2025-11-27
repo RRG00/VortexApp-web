@@ -1,4 +1,5 @@
 <?php
+
 use common\models\Tournament;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -22,47 +23,47 @@ $this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\boot
         <?= Html::a('Create Tournament', ['create'], ['class' => 'btn btn-success']) ?>
     </div>
     <div class="tournament-card-body">
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'summary' => '',
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'tableOptions' => ['class' => 'table table-hover align-middle mb-0 user-table'],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            [
-                'attribute' => 'nome',
-                'label' => 'Nome',
-                'enableSorting' => false,
+                [
+                    'attribute' => 'nome',
+                    'label' => 'Nome',
+                    'enableSorting' => false,
+                ],
+
+                [
+                    'attribute' => 'best_of',
+                    'label' => 'Best_of',
+                    'enableSorting' => false,
+                ],
+
+                [
+                    'attribute' => 'regras',
+                    'format' => 'ntext',
+                    'label' => 'Regras',
+                    'enableSorting' => false,
+                ],
+
+                [
+                    'attribute' => 'limite_inscricoes',
+                    'label' => 'Limite de Inscrições',
+                    'enableSorting' => false,
+                ],
+
+
+                [
+                    'class' => ActionColumn::class,
+                    'header' => 'Ações',
+                    'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
+                        return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
+                    }
+                ],
             ],
-
-            [
-                'attribute' => 'best_of',
-                'label' => 'Best_of',
-                'enableSorting' => false,
-            ],
-
-            [
-                'attribute' => 'regras', 
-                'format' => 'ntext',
-                'label' => 'Regras',  
-                'enableSorting' => false,
-            ],
-
-            [
-                'attribute' => 'limite_inscricoes', 
-                'label' => 'Limite de Inscrições', 
-                'enableSorting' => false,
-            ],
-
-
-            [
-                'class' => ActionColumn::class,
-                'header' => 'Ações',
-                'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
-                 }
-            ],
-        ],
-    ]);  ?>
+        ]);  ?>
     </div>
 </div>
