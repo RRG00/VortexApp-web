@@ -27,8 +27,23 @@ class TournamentController extends Controller
                         'rules' => [
                             [ // Rules => Organizer
                                 'allow' => true,
-                                'actions' => ['index', 'create', 'view', 'update', 'delete'],
-                                'roles' => ['organizer', 'admin'],
+                                'actions' => ['index'],
+                                'roles' => ['viewTournament'],
+                            ],
+                            [ 
+                                'allow' => true,
+                                'actions' => ['create'],
+                                'roles' => ['createTournament'],
+                            ],
+                            [ 
+                                'allow' => true,
+                                'actions' => ['update'],
+                                'roles' => ['updateTournament'],
+                            ],
+                            [ 
+                                'allow' => true,
+                                'actions' => ['delete'],
+                                'roles' => ['deleteTournament'],
                             ],
                         ],
                     ],

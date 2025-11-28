@@ -129,35 +129,4 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
             });
             ", \yii\web\View::POS_END);
         ?>
-
-
-
-
-
-    <!-- Ações rápidas -->
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row justify-content-center">
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="<?= \yii\helpers\Url::to(['/user/create']) ?>" class="btn btn-lg btn-primary w-100">
-                                <i class="fas fa-user-plus"></i><br>
-                                <strong>Criar Utilizador</strong>
-                            </a>
-                        </div>
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="<?= \yii\helpers\Url::to(['/user/index']) ?>" class="btn btn-lg btn-info w-100">
-                                <i class="fas fa-list"></i><br>
-                                <strong>Listar Utilizadores</strong>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
