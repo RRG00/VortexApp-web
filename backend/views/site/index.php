@@ -1,25 +1,16 @@
 <?php
 
-use hail812\adminlte\widgets\Card;
-
 $this->title = 'Dashboard';
 $this->params['breadcrumbs'] = [['label' => $this->title]];
 
-// Dados reais da BD (quando tiveres)
-// $totalUsers = User::find()->count();
-// $admins = User::find()->where(['role' => 'admin'])->count();
-// $organizers = User::find()->where(['role' => 'organizer'])->count();
-// $players = User::find()->where(['role' => 'player'])->count();
-
-
 ?>
-<div class="container-fluid">
+<div class="container-fluid ">
     <!-- Header -->
-    <div class="row mb-3">
+    <div class="row mb-3 " style="color:black">
         <div class="col-12">
             <h2>Bem-vindo, <?= Yii::$app->user->identity->username ?>!</h2>
             <p class="text-muted">Painel de Administração - Gestão de Utilizadores</p>
-        </div>
+        </div>  
     </div>
     <!-- Estatísticas principais -->
     <div class="row justify-content-center">
