@@ -77,7 +77,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title" style="color:black">
-                            Evolução de Registos (Últimos 12 Meses)
+                            Registos (Últimos 12 Meses)
                         </h3>
                     </div>
                     <div class="card-body">
