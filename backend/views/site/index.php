@@ -1,25 +1,16 @@
 <?php
 
-use hail812\adminlte\widgets\Card;
-
 $this->title = 'Dashboard';
 $this->params['breadcrumbs'] = [['label' => $this->title]];
 
-// Dados reais da BD (quando tiveres)
-// $totalUsers = User::find()->count();
-// $admins = User::find()->where(['role' => 'admin'])->count();
-// $organizers = User::find()->where(['role' => 'organizer'])->count();
-// $players = User::find()->where(['role' => 'player'])->count();
-
-
 ?>
-<div class="container-fluid">
+<div class="container-fluid ">
     <!-- Header -->
-    <div class="row mb-3">
+    <div class="row mb-3 " style="color:black">
         <div class="col-12">
             <h2>Bem-vindo, <?= Yii::$app->user->identity->username ?>!</h2>
             <p class="text-muted">Painel de Administração - Gestão de Utilizadores</p>
-        </div>
+        </div>  
     </div>
     <!-- Estatísticas principais -->
     <div class="row justify-content-center">
@@ -77,7 +68,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title" style="color:black">
-                            Evolução de Registos (Últimos 12 Meses)
+                            Registos (Últimos 12 Meses)
                         </h3>
                     </div>
                     <div class="card-body">
@@ -129,35 +120,4 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
             });
             ", \yii\web\View::POS_END);
         ?>
-
-
-
-
-
-    <!-- Ações rápidas -->
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row justify-content-center">
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="<?= \yii\helpers\Url::to(['/user/create']) ?>" class="btn btn-lg btn-primary w-100">
-                                <i class="fas fa-user-plus"></i><br>
-                                <strong>Criar Utilizador</strong>
-                            </a>
-                        </div>
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <a href="<?= \yii\helpers\Url::to(['/user/index']) ?>" class="btn btn-lg btn-info w-100">
-                                <i class="fas fa-list"></i><br>
-                                <strong>Listar Utilizadores</strong>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

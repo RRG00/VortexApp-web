@@ -10,68 +10,113 @@ class RbacController extends Controller
     {
         $auth = Yii::$app->authManager;
         
-        // Delete all
         $auth->removeAll();
 
+        //acesso do Backend!
         $accessBackend = $auth->createPermission('accessBackend');
         $accessBackend->description = 'Permissão para acessar o backend';
         $auth->add($accessBackend);
 
-        // Create role Admin
+        $usersDashboard = $auth->createPermission('usersDashboard');
+        $usersDashboard->description = 'Acesso ao Dashboard de Users';
+        $auth->add($usersDashboard);
+
+        //Permissões gestão de Users
+        $viewUsers = $auth->createPermission('viewUsers');
+        $viewUsers->description ="Ver Lista de Users";
+        $auth->add($viewUsers);
+
+        $createUsers = $auth->createPermission('createUsers');
+        $createUsers -> description ="Criar User";
+        $auth->add($createUsers);
+        
+        $updateUsers = $auth->createPermission('updateUsers');
+        $updateUsers->description="Atualizar Users";
+        $auth->add($updateUsers);
+
+
+        $deleteUsers = $auth->createPermission('deleteUsers');
+        $deleteUsers-> description="Apagar Users";
+        $auth->add($deleteUsers);
+
+        //Premissões gestão Torneios
+        $viewTournament = $auth->createPermission('viewTournament');
+        $viewTournament->description="Ver Torneios";
+        $auth->add($viewTournament);
+
+        $createTournament = $auth->createPermission('createTournament');
+        $createTournament->description="Criar Torneios";
+        $auth->add($createTournament);
+
+        $updateTournament = $auth->createPermission('updateTournament');
+        $updateTournament->description="Atualizar Torneios";
+        $auth->add($updateTournament);
+
+        $deleteTournament = $auth->createPermission('deleteTournament');
+        $deleteTournament->description="Apagar Torneios";
+        $auth->add($deleteTournament);
+        
+        //Permissões para Resultados e gestão de Players
+        $viewResults = $auth->createPermission('viewResults');
+        $viewResults->description="Ver Resultados";
+        $auth->add($viewResults);
+
+        $updateResults = $auth->createPermission('updateResults');
+        $updateResults->description="Atualizar Resultados";
+        $auth->add($updateResults);
+
+        $managePlayers = $auth->createPermission('managePlayers');
+        $managePlayers->description="Gerir Players";
+        $auth->add($managePlayers);
+        
+        $banPlayers = $auth->createPermission('banPlayers');
+        $banPlayers->description="Banir Players";
+        $auth->add($banPlayers);
+
+
+        //Roles
+        //Admin -> GereUsers
         $admin = $auth->createRole('admin');
-        $admin->description = 'Administrador - gere users';
+        $admin->description="Administrador";
         $auth->add($admin);
-
-        //Create Role Organizer
-        $organizer = $auth->createRole('organizer');
-        $organizer->description = 'Organizador - gere users';
-        $auth->add($organizer);
-
-        //Create Role Player
-        $player = $auth->createRole('player');
-        $player->description = 'Player';
-        $auth->add($player);
-
-        //Create Role Equipa
-        $equipa = $auth->createRole('equipa');
-        $equipa->description = 'Equipa';
-        $auth->add($equipa);
-
-        //Create referee
-        $referre = $auth->createRole('referre');
-        $referre->description = 'Referre';
-        $auth->add($referre);
-
-        //Create Capitan
-        $capitan = $auth->createRole('capitan');
-        $capitan->description = 'Capitan';
-        $auth->add($capitan);
-
-
+        $auth->addChild($admin, $usersDashboard);
         $auth->addChild($admin, $accessBackend);
+        $auth->addChild($admin, $viewUsers);
+        $auth->addChild($admin, $createUsers);
+        $auth->addChild($admin, $updateUsers);
+        $auth->addChild($admin, $deleteUsers);
+        $auth->addChild($admin, $viewTournament);
+        $auth->addChild($admin, $createTournament);
+        $auth->addChild($admin, $updateTournament);
+        $auth->addChild($admin, $deleteTournament);
+
+
+        //Organizador -> Gere Torneios
+        $organizer = $auth->createRole('organizer');
+        $organizer->description="Organizador";
+        $auth->add($organizer);
         $auth->addChild($organizer, $accessBackend);
-        $auth->addChild($referre, $accessBackend);
+        $auth->addChild($organizer, $viewTournament);
+        $auth->addChild($organizer, $createTournament);
+        $auth->addChild($organizer, $updateTournament);
+        $auth->addChild($organizer, $deleteTournament);
 
 
 
 
-        $auth->assign($admin,1);
-        $auth->assign($equipa,2);
-        $auth->assign($referre,3);
-        $auth->assign($organizer,4);
-        $auth->assign($player,5);
-        $auth->assign($capitan,6);
+        //Atribuir Roles a utilizadores
+        $auth->assign($admin, 1); //assumindo que o user com ID 1 é o admin
+        $auth->assign($organizer, 4); //assumindo que o user com ID 2 é o organizer
+
 
 
 
         echo "RBAC Admin criado com sucesso!\n";
         echo "RBAC Organizador criado com sucesso!\n";
         echo "RBAC Player criado com sucesso!\n";
-        echo "RBAC Equipa criado com sucesso!\n";
         echo "RBAC Referre criado com sucesso!\n";
-        echo "RBAC Capitan criado com sucesso!\n";
+
 
 
     }
 }
-
