@@ -3,16 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$auth = Yii::$app->authManager;
-$roles = $auth->getRoles();
-
-$roleList = [];
-foreach ($roles as $role) {
-    $roleList[$role->name] = ucfirst($role->name);
-}
 
 /** @var yii\web\View $this */
-/** @var common\Models\User $model */
+/** @var backend\models\SignupForm $model */
 /** @var yii\widgets\ActiveForm $form */
 
 // Importa o CSS externo
