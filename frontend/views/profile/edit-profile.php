@@ -49,7 +49,7 @@ $initials = strtoupper(substr($model->user->username, 0, 2));
             <div class="form-row">
                 <?= $form->field($model, 'username')->textInput([
                     'maxlength' => true,
-                    'placeholder' => 'Digite seu nome de usuário',
+                    'placeholder' => 'Digite seu nome de utilizador',
                     'class' => 'form-control'
                 ])->label('Nome de Usuário') ?>
             </div>

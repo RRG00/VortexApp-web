@@ -15,7 +15,6 @@ class UpdateUserForm extends Model
      */
     public $imageFile;
     public $user;
-<<<<<<< Updated upstream
     
     // Add properties for user fields
     public $username;
@@ -23,12 +22,6 @@ class UpdateUserForm extends Model
     public $current_password;
     public $new_password;
     public $confirm_password;
-=======
-    /**
-     * @var Equipa|mixed
-     */
-    public mixed $equipa;
->>>>>>> Stashed changes
 
     public function rules()
     {
