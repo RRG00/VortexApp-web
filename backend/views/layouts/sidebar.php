@@ -31,7 +31,7 @@ use yii\helpers\Url;
                 'items' => [
                     ['label' => 'User Control', 'icon' => 'users-cog text-white', 'url' => ['user/index']],
                     ['label' => 'Tournament Control', 'icon' => 'fa fa-trophy text-white', 'url' => ['tournament/index']],
-                    ['label' => 'Player/Match Control', 'icon' => ' fa-user text-white' , 'url' => ['referre/index']],
+                    ['label' => 'Tournament Dashboard', 'icon' => 'fa fa-tachometer-alt text-white', 'url' => ['referee-dashboard/index']],
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
@@ -39,7 +39,7 @@ use yii\helpers\Url;
                 ],
             ]);
             ?>
-        </nav>
+        </nav>  
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->

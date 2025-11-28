@@ -36,7 +36,7 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
             ['papel', 'required'],
-            ['papel', 'in', 'range' => ['admin', 'referre', 'organizer'], 'not' => true, 'message' => 'ERRORRR! -> Role não conhecida.'],
+
         ];
     }
 
@@ -58,7 +58,14 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        $user -> save();
+        $user->papel = $this->papel;
+
+        
+
+        if (!$user->save()) {                                                                                                       
+            return null;
+        }
+      
         $auth = Yii::$app->authManager;
         $role = $auth->getRole($this->papel);
         if ($role) {
