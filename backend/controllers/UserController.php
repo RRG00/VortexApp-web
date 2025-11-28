@@ -29,13 +29,13 @@ class UserController extends Controller
             [
                 'access' => [
                     'class' => AccessControl::className(),
-                        'rules' => [
-                            [ 
-                                'allow' => true,
-                                'actions' => ['index', 'create', 'view', 'update', 'delete'],
-                                'roles' => ['admin', 'organizer'],
-                            ],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'create', 'view', 'update', 'delete'],
+                            'roles' => ['admin', 'organizer'],
                         ],
+                    ],
                 ]
             ]
         );
@@ -77,35 +77,16 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-    $model = new SignupForm();
+        $model = new SignupForm();
 
-    $auth = Yii::$app->authManager;
-    $roles = $auth->getRoles();
+        if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
+            $model->password = Yii::$app->getSecurity()->generateRandomString(10);
 
-    $roleList = [];
-    foreach ($roles as $role) {
-        $roleList[$role->name] = $role->name;
-    }
-
-    if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
-        $model -> password = Yii::$app->getSecurity()->generateRandomString(10);
-
-        $user = $model->signup();
-        if (!$user instanceof \common\models\User) {
-            Yii::$app->session->setFlash('error', 'Erro ao criar o utilizador.');
-            return $this->render('create', [
-                                'model' => $model,
-                                'roleList' => $roleList
-                                ]);
+            $user = $model->signup();
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-       return $this->redirect(['view', 'id' => $user->id]);
-    }
 
-    return $this->render('create', [
-        'model' => $model,
-        'roleList' => $roleList 
-    ]);
-
+        return $this->render('create', ['model' => $model]);
     }
 
     /**
@@ -117,37 +98,26 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $auth = Yii::$app->authManager;
         $model = $this->findModel($id);
-        $roles = $auth->getRoles();
-        
-
-            $roleList = [];
-            foreach ($roles as $role) {
-                $roleList[$role->name] = $role->name;
-            }
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
 
             $auth = Yii::$app->authManager;
             $auth->revokeAll($model->id);
-            
+
 
             if ($model->papel) {
 
                 $role = $auth->getRole($model->papel);
                 if ($role) {
                     $auth->assign($role, $model->id);
-
                 }
-    
             }
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
-       return $this->render('update', [
-        'model' => $model,
-        'roleList' => $roleList,
+        return $this->render('update', [
+            'model' => $model,
         ]);
     }
 
