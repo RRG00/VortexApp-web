@@ -23,6 +23,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+                'denyCallback' => function () {
+                    return Yii::$app->response->redirect(['/site/login']);
+                },
+                'only' => ['login','logout', 'index'],
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
@@ -36,24 +40,9 @@ class SiteController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['viewUsers'],
+                        'roles' => ['usersDashboard'],
                     ],
-                    [
-                        'actions' => ['create'],
-                        'allow' => true,
-                        'roles' => ['createUsers'],
                     ],
-                    [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['updateUsers'],
-                    ],
-                    [
-                        'actions' => ['delete'],
-                        'allow' => true,
-                        'roles' => ['deleteUsers'],
-                    ],
-                            ],
                         ],
                         'verbs' => [
                             'class' => VerbFilter::class,
@@ -124,24 +113,39 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+    if (!Yii::$app->user->isGuest) {
+        return $this->goHome(); 
+    }
+
+    $this->layout = 'blank';
+
+    $model = new LoginForm();
+    $model->isBackendLogin = true;
+
+    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        return $this->redirectByRole();
+    }
+
+    $model->password = '';
+
+    return $this->render('login', [
+        'model' => $model,
+    ]);
+    }
+
+   private function redirectByRole()
+    {
+        $auth = Yii::$app->authManager;
+        $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+        if (isset($roles['admin'])) {
+            return $this->redirect(['site/index']);       
+        }
+        if (isset($roles['organizer'])) {
+            return $this->redirect(['tournament/index']); 
         }
 
-        $this->layout = 'blank';
-
-        $model = new LoginForm();
-        $model->isBackendLogin = true;
-
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        return $this->goHome(); 
     }
 
 

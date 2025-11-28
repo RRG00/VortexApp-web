@@ -17,6 +17,10 @@ class RbacController extends Controller
         $accessBackend->description = 'Permissão para acessar o backend';
         $auth->add($accessBackend);
 
+        $usersDashboard = $auth->createPermission('usersDashboard');
+        $usersDashboard->description = 'Acesso ao Dashboard de Users';
+        $auth->add($usersDashboard);
+
         //Permissões gestão de Users
         $viewUsers = $auth->createPermission('viewUsers');
         $viewUsers->description ="Ver Lista de Users";
@@ -75,6 +79,7 @@ class RbacController extends Controller
         $admin = $auth->createRole('admin');
         $admin->description="Administrador";
         $auth->add($admin);
+        $auth->addChild($admin, $usersDashboard);
         $auth->addChild($admin, $accessBackend);
         $auth->addChild($admin, $viewUsers);
         $auth->addChild($admin, $createUsers);
