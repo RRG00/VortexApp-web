@@ -1,5 +1,5 @@
 <?php
-
+/* Test comment */
 /** @var yii\web\View $this */
 
 use yii\helpers\Html;
