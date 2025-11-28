@@ -21,7 +21,7 @@ $initials = strtoupper(substr($user->username, 0, 2));
     <!-- Profile Header -->
     <div class="profile-header">
         <div class="profile-avatar">
-            <?php if ($user->profileImage): ?>
+            <?php if (isset($user->profileImage)): ?>
                 <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
                     alt="<?= Html::encode($user->username) ?>"
                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">

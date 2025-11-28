@@ -23,7 +23,7 @@ class TournamentController extends Controller
             parent::behaviors(),
             [
                 'access' => [
-                    'class' => AccessControl::className(),
+                    'class' => AccessControl::class,
                         'rules' => [
                             [ // Rules => Organizer
                                 'allow' => true,

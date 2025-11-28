@@ -8,9 +8,8 @@ use frontend\models\VerifyEmailForm;
 use InvalidArgumentException;
 use Yii;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
+use yii\web\Controller; 
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\Models\SignupForm;
 
@@ -28,7 +27,7 @@ class UserController extends Controller
             parent::behaviors(),
             [
                 'access' => [
-                    'class' => AccessControl::className(),
+                    'class' => AccessControl::class,
                         'rules' => [
                             [ 
                                 'allow' => true,

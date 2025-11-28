@@ -33,7 +33,7 @@ $this->title = 'Rankings';
                                 <div class="player-info">
                                     <a href="<?= Url::to(['/profile/view', 'id' => $ranking->utilizador->id]) ?>" class="player-avatar-link" title="Ver perfil de <?= Html::encode($ranking->utilizador->username) ?>">
                                         <div class="player-avatar">
-                                            <?php if ($ranking->utilizador->profileImage): ?>
+                                            <?php if (isset($ranking->utilizador->profileImage)): ?>
                                                 <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($ranking->utilizador->profileImage->path) ?>"
                                                     alt="<?= Html::encode($ranking->utilizador->username) ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
