@@ -27,8 +27,9 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
     <?= $form->field($model, 'best_of')->dropDownList(
         ['1' => 'Best of 1', '3' => 'Best of 3', '5' => 'Best of 5'],
-        ['prompt' => 'Selecione o formato']
-    ) ?>
+        ['prompt' => 'Selecione o formato'],
+    )
+    ?>
 
     <?= $form->field($model, 'regras')->textarea(['rows' => 6]) ?>
 
@@ -52,13 +53,13 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
     ?>
 
     <?= $form->field($model, 'aprovado_por')->textInput(
-        ['readonly' => true, 'value' => Yii::$app->user->id]
+        ['readonly' => true, 'value' => Yii::$app->user->identity->username]
     )
     ?>
 
     <?= $form->field($model, 'arbitro_id')->dropDownList(
         ArrayHelper::map(
-            User::find()->where(['papel' => 'referre'])->all(),
+            User::find()->where(['papel' => 'referee'])->all(),
             'id',
             'username'
         ),

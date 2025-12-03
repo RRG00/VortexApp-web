@@ -5,36 +5,37 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-// Importa o CSS externo
-$this->registerCssFile('@web/css/referre-index.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
+$this->registerCssFile(Yii::getAlias('@web/css/referre-index.css'), [
+    'depends' => [\yii\bootstrap4\BootstrapAsset::class]
+]);
 
 $this->title = 'Referee Dashboard';
 ?>
 <div class="referee-index">
-    <div class="referre-header">
+    <div class="referee-header">
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
     <div class="referee-card-body">
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'summary' => '',
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            [
-                'attribute' => 'nome',
-                'label' => 'Nome',
-                'enableSorting' => false,
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'tableOptions' => ['class' => 'table table-hover align-middle mb-0 user-table'],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'attribute' => 'nome',
+                    'label' => 'Nome',
+                    'enableSorting' => false,
+                ],
+                [
+                    'class' => ActionColumn::class,
+                    'header' => 'Ações',
+                    'template' => '{update}',
+                    'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
+                        return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
+                    }
+                ],
             ],
-
-            [
-                'class' => ActionColumn::class,
-                'header' => 'Ações',
-                'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
-                 }
-            ],
-        ],
-    ]);  ?>
+        ]); ?>
     </div>
+</div>
