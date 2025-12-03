@@ -101,7 +101,11 @@ class RbacController extends Controller
         $auth->addChild($organizer, $updateTournament);
         $auth->addChild($organizer, $deleteTournament);
 
-
+        //Arbitro -> Ver e Atualizar Resultados
+        $referee = $auth->createRole('referee');
+        $referee->description="referee";
+        $auth->add($referee);
+        $auth->addChild($referee, $accessBackend);
 
 
         //Atribuir Roles a utilizadores
