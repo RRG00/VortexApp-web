@@ -114,7 +114,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
     if (!Yii::$app->user->isGuest) {
-        return $this->goHome(); 
+        return $this->redirectByRole(); 
     }
 
     $this->layout = 'blank';
@@ -143,6 +143,9 @@ class SiteController extends Controller
         }
         if (isset($roles['organizer'])) {
             return $this->redirect(['tournament/index']); 
+        }
+        if (isset($roles['referee'])) {
+            return $this->redirect(['referee-dashboard/index']); 
         }
 
         return $this->goHome(); 
