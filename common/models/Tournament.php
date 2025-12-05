@@ -51,7 +51,7 @@ class Tournament extends \yii\db\ActiveRecord
             [['regras'], 'string'],
             [['descricao'], 'string', 'max' => 500],
             [['data_inicio', 'data_fim'], 'safe'],
-            [['nome', 'premios'], 'string', 'max' => 255],
+            [['nome', 'premios', 'requisitos'], 'string', 'max' => 255],
             [['estado'], 'string', 'max' => 50],
             [['organizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['organizador_id' => 'id']],
             [['aprovado_por'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['aprovado_por' => 'id']],
@@ -79,6 +79,7 @@ class Tournament extends \yii\db\ActiveRecord
             'aprovado_por' => 'Aprovado Por',
             'id_jogo' => 'Id Jogo',
             'arbitro_id' => 'Árbitro',
+            'requisitos' => 'Requesitos',
         ];
     }
 
