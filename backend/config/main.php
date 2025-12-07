@@ -12,8 +12,9 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [
-        'api' => [
-            'class' => 'backend\modules\api\ModuleAPI',
+    'api' => [
+        'class' => 'backend\modules\api\ModuleAPI',
+        'controllerNamespace' => 'backend\modules\api\controllers',
         ]
     ],
     'components' => [
@@ -26,6 +27,9 @@ return [
         ],*/
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -48,14 +52,17 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
+        /*'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
             'showScriptName' => false,
             'rules' => [
+                'GET api/test' => 'api/test',
+                'GET api/count' => 'api/count',
             ],
         ],
-        */
+        
+    ],*/
     ],
     'params' => $params,
 ];
