@@ -19,7 +19,7 @@ $this->registerCssFile('https://code.ionicframework.com/ionicons/2.0.1/css/ionic
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <?php $this->head() ?>
-    <link rel="stylesheet" type="text/css" href="../web/css/styleTemplate.css" />
+
 
 </head>
 <body class="hold-transition login-page">
