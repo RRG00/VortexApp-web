@@ -54,9 +54,8 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => false,
+            //'enableStrictParsing' => false,
             'rules' => [
-
                 '<controller:\w+>/<id:\d+>'                 => '<controller>/view',
                 '<controller:\w+>'                          => '<controller>/index',
                 '<controller:\w+>/create'                   => '<controller>/create',

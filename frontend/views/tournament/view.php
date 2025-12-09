@@ -69,7 +69,7 @@ use yii\helpers\Url;
             <div class="d-grid">
                 <?= Html::a(
                     '<i class="bi bi-trophy-fill me-2"></i>Inscrever Equipa',
-                    ['tournament/inscricao', 'id' => $torneio->id_torneio],
+                    ['tournament/inscricao', 'id' => $torneio->id],
                     [
                         'class' => 'btn btn-primary btn-lg py-3',
                         'data-method' => 'post', // Força usar POST em vez de GET

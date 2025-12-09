@@ -39,14 +39,19 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            //'enableStrictParsing' => false,
             'rules' => [
+                '<controller:\w+>/<id:\d+>'                 => '<controller>/view',
+                '<controller:\w+>'                          => '<controller>/index',
+                '<controller:\w+>/create'                   => '<controller>/create',
+                '<controller:\w+>/update/<id:\d+>'          => '<controller>/update',
+                '<controller:\w+>/delete/<id:\d+>'          => '<controller>/delete',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
