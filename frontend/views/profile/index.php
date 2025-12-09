@@ -58,7 +58,6 @@ $initials = strtoupper(substr($user->username, 0, 2));
     <!-- Games Statistics -->
     <div class="games-section">
         <h2>Estatisticas por Jogo</h2>
-
         <?php if (!empty($estatisticas)): ?>
             <?php foreach ($estatisticas as $stat): ?>
                 <div class="game-stat">

@@ -57,7 +57,7 @@ use yii\helpers\Url;
             <div class="col-md-6 col-lg-6 col-xl-4">
 
                 <div class="d-flex justify-content-center gap-2 mb-4">
-                    <?= Html::a('Editar Equipa', ['edit-team','id' => $equipa->id_equipa], [
+                    <?= Html::a('Editar Equipa', ['edit-team','id' => $equipa->id], [
                         'class' => 'btn btn-primary text-nowrap'
                     ]) ?>
 

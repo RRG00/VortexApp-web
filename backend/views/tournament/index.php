@@ -59,8 +59,9 @@ $this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\boot
                 [
                     'class' => ActionColumn::class,
                     'header' => 'Ações',
+                    'template' => '{update} {delete}',
                     'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
-                        return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
+                        return Url::toRoute([$action, 'id' => $model->id]);
                     }
                 ],
             ],

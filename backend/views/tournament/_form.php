@@ -22,17 +22,18 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'descricao')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'descricao')->textarea(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'best_of')->dropDownList(
-        ['1' => 'Best of 1', '3' => 'Best of 3', '5' => 'Best of 5'],
-        ['prompt' => 'Selecione o formato']
-    ) ?>
+    <?= $form->field($model, 'requisitos')->textarea(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'regras')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'best_of')->hiddenInput(['value' => '0'])->label(false) ?>
 
-    <?= $form->field($model, 'limite_inscricoes')->textInput() ?>
+    <?= $form->field($model, 'regras')->hiddenInput(['value' => 'Por definir'])->label(false) ?>
+
+    <?= $form->field($model, 'requesitos')->textarea(['value' => 'Por definir'])->label('Requesitos do Torneio') ?>
+
+    <?= $form->field($model, 'limite_inscricoes')->HiddenInput(['value' => '0'])->label(false) ?>
 
     <?= $form->field($model, 'premios')->textInput(['maxlength' => true]) ?>
 
@@ -40,25 +41,17 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
     <?= $form->field($model, 'data_fim')->Input('date') ?>
 
-    <?= $form->field($model, 'estado')->dropDownList(
-        ['Em breve' => 'Em Breve', 'A decorrer' => 'A decorrer', 'Concluido' => 'Concluído', 'Cancelado' => 'Cancelado',],
-        ['prompt' => 'Selecione o estado']
-    )
-    ?>
+    <?= $form->field($model, 'estado')->hiddenInput(['value' => 'Por Definir'])->label(false) ?>
 
-    <?= $form->field($model, 'organizador_id')->hiddenInput(
-        ['readonly' => true, 'value' => Yii::$app->user->id]
-    )->label(false)
-    ?>
+    <?= $form->field($model, 'organizador_id')->hiddenInput(['value' => Yii::$app->user->id])->label(false) ?>
 
-    <?= $form->field($model, 'aprovado_por')->textInput(
-        ['readonly' => true, 'value' => Yii::$app->user->id]
-    )
-    ?>
+    <?= $form->field($model, 'aprovado_por')->hiddenInput(
+        ['value' => Yii::$app->user->identity->id]
+    )->label(false) ?>
 
     <?= $form->field($model, 'arbitro_id')->dropDownList(
         ArrayHelper::map(
-            User::find()->where(['papel' => 'referre'])->all(),
+            User::find()->where(['papel' => 'referee'])->all(),
             'id',
             'username'
         ),

@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "TORNEIO".
  *
- * @property int $id_torneio
+ * @property int $id
  * @property string $nome
  * @property int $best_of
  * @property string|null $regras
@@ -51,7 +51,7 @@ class Tournament extends \yii\db\ActiveRecord
             [['regras'], 'string'],
             [['descricao'], 'string', 'max' => 500],
             [['data_inicio', 'data_fim'], 'safe'],
-            [['nome', 'premios'], 'string', 'max' => 255],
+            [['nome', 'premios', 'requisitos'], 'string', 'max' => 255],
             [['estado'], 'string', 'max' => 50],
             [['organizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['organizador_id' => 'id']],
             [['aprovado_por'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['aprovado_por' => 'id']],
@@ -66,7 +66,7 @@ class Tournament extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_torneio' => 'Id Torneio',
+            'id' => 'Id',
             'nome' => 'Nome',
             'best_of' => 'Best Of',
             'regras' => 'Regras',
@@ -79,6 +79,7 @@ class Tournament extends \yii\db\ActiveRecord
             'aprovado_por' => 'Aprovado Por',
             'id_jogo' => 'Id Jogo',
             'arbitro_id' => 'Árbitro',
+            'requisitos' => 'Requesitos',
         ];
     }
 
@@ -111,7 +112,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getINSCRICAOs()
     {
-        return $this->hasMany(Inscricao::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Inscricao::class, ['id' => 'id']);
     }
 
     /**
@@ -141,7 +142,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getPARTIDAs()
     {
-        return $this->hasMany(Partida::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Partida::class, ['id' => 'id']);
     }
 
     /**
@@ -151,7 +152,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getPATROCINADORs()
     {
-        return $this->hasMany(Patrocinador::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Patrocinador::class, ['id' => 'id']);
     }
 
 }
