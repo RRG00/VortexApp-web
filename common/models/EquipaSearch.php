@@ -17,7 +17,7 @@ class EquipaSearch extends Equipa
     public function rules()
     {
         return [
-            [['id_equipa'], 'integer'],
+            [['id'], 'integer'],
             [['nome', 'data_criacao'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class EquipaSearch extends Equipa
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_equipa' => $this->id_equipa,
+            'id' => $this->id,
             'data_criacao' => $this->data_criacao,
         ]);
 
