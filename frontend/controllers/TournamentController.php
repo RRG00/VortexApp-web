@@ -20,7 +20,7 @@ class TournamentController extends \yii\web\Controller
     {
 
         $tournament = Tournament::find()
-            ->where(['id_torneio' => $id])
+            ->where(['id' => $id])
             ->one();
 
 

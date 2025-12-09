@@ -50,7 +50,7 @@ use common\models\MembrosEquipa;
                             <?php endif; ?>
                         </p>
 
-                        <?= Html::a('Ver Detalhes', ['view', 'id_equipa' => $equipa->id_equipa], ['class' => 'btn btn-primary']) ?>
+                        <?= Html::a('Ver Detalhes', ['view', 'id' => $equipa->id], ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             <?php endforeach; ?>

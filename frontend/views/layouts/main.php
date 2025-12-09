@@ -23,8 +23,11 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <link rel="stylesheet" type="text/css" href="../web/css/styleTemplate.css" />
-    <link rel="icon" type="image/x-icon" href="../web/assets/img/VortexAPP_Logo_SemTexto.png">
+    <link rel="stylesheet" type="text/css"
+      href="<?= Yii::$app->request->baseUrl ?>/css/styleTemplate.css" />    
+    <link rel="icon" type="image/x-icon"
+      href="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexAPP_Logo_SemTexto.png">
+
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -34,7 +37,10 @@ AppAsset::register($this);
         <nav>
             <div class="logo">
                 <a href="<?= Url::to(['/site/index']) ?>">
-                    <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="logo">
+                    <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexApp_Logo-NoBackground.png" 
+                                                                alt="Vortex Logo" 
+                                                                id="logo">
+
                 </a>
             </div>
             <ul class="nav-links">

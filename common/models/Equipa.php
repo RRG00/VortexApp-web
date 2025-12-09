@@ -9,7 +9,7 @@ use common\models\MembrosEquipa;
 /**
  * This is the model class for table "equipa".
  *
- * @property int $id_equipa
+ * @property int $id
  * @property string $nome
  * @property string $data_criacao
  *
@@ -48,7 +48,7 @@ class Equipa extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_equipa' => 'Id Equipa',
+            'id' => 'Id',
             'nome' => 'Nome',
             'data_criacao' => 'Data Criacao',
         ];
@@ -81,7 +81,7 @@ class Equipa extends \yii\db\ActiveRecord
      */
     public function getPartidas()
     {
-        return $this->hasMany(Partida::class, ['equipa_a' => 'id_equipa']);
+        return $this->hasMany(Partida::class, ['equipa_a' => 'id']);
     }
 
     /**
@@ -91,18 +91,18 @@ class Equipa extends \yii\db\ActiveRecord
      */
     public function getPartidas0()
     {
-        return $this->hasMany(Partida::class, ['equipa_b' => 'id_equipa']);
+        return $this->hasMany(Partida::class, ['equipa_b' => 'id']);
     }
 
     public function getCapitao()
     {
-        return $this->hasOne(MembrosEquipa::class, ['id_equipa' => 'id_equipa'])
+        return $this->hasOne(MembrosEquipa::class, ['id_equipa' => 'id'])
             ->andWhere(['funcao' => 'capitao']);
     }
 
     public function getUtilizadors()
     {
-        return $this->hasMany(MembrosEquipa::class, ['id_equipa' => 'id_equipa'])
+        return $this->hasMany(MembrosEquipa::class, ['id_equipa' => 'id'])
             ->inverseOf('equipa');
     }
 

@@ -58,13 +58,13 @@ class TeamController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id_equipa)
+    public function actionView($id)
     {
-        $membros = $this->findModel($id_equipa)->membrosEquipas;
+        $membros = $this->findModel($id)->membrosEquipas;
         //$capitao = $membros
 
         return $this->render('view', [
-            'equipa' => $this->findModel($id_equipa),
+            'equipa' => $this->findModel($id),
         ]);
     }
 
@@ -81,10 +81,10 @@ class TeamController extends Controller
             if ($equipaModel->load($this->request->post()) && $equipaModel->save()) {
 
                 $membroEquipa = new MembrosEquipa();
-                $membroEquipa->create($equipaModel->id_equipa,Yii::$app->user->identity->id);
+                $membroEquipa->create($equipaModel->id,Yii::$app->user->identity->id);
 
                 if($membroEquipa->save()){
-                    return $this->redirect(['view', 'id_equipa' => $equipaModel->id_equipa]);
+                    return $this->redirect(['view', 'id' => $equipaModel->id]);
                 }
 
             }
@@ -147,9 +147,9 @@ class TeamController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id_equipa)
+    public function actionDelete($id)
     {
-        $this->findModel($id_equipa)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -161,9 +161,9 @@ class TeamController extends Controller
      * @return Equipa the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id_equipa)
+    protected function findModel($id)
     {
-        if (($model = Equipa::findOne(['id_equipa' => $id_equipa])) !== null) {
+        if (($model = Equipa::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

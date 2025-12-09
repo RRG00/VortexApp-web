@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "TORNEIO".
  *
- * @property int $id_torneio
+ * @property int $id
  * @property string $nome
  * @property int $best_of
  * @property string|null $regras
@@ -66,7 +66,7 @@ class Tournament extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_torneio' => 'Id Torneio',
+            'id' => 'Id',
             'nome' => 'Nome',
             'best_of' => 'Best Of',
             'regras' => 'Regras',
@@ -112,7 +112,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getINSCRICAOs()
     {
-        return $this->hasMany(Inscricao::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Inscricao::class, ['id' => 'id']);
     }
 
     /**
@@ -142,7 +142,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getPARTIDAs()
     {
-        return $this->hasMany(Partida::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Partida::class, ['id' => 'id']);
     }
 
     /**
@@ -152,7 +152,7 @@ class Tournament extends \yii\db\ActiveRecord
      */
     public function getPATROCINADORs()
     {
-        return $this->hasMany(Patrocinador::class, ['id_torneio' => 'id_torneio']);
+        return $this->hasMany(Patrocinador::class, ['id' => 'id']);
     }
 
 }

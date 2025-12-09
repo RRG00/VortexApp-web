@@ -36,7 +36,7 @@ use yii\helpers\Url;
                 <p style="color: var(--text-secondary); margin: 1rem 0;">
                     <?=$torneio->descricao?>
                 </p>
-                <?= Html::a('Ver Detalhes',Url::to(['/tournament/view','id'=> $torneio -> id_torneio]),['class' => ['btn btn-primary']])?>
+                <?= Html::a('Ver Detalhes',Url::to(['/tournament/view','id'=> $torneio -> id]),['class' => ['btn btn-primary']])?>
                 <!-- index.php?r=tournament/view&id=1 -->
             </div>
         </div>

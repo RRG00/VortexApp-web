@@ -17,7 +17,7 @@ class TournamentSearch extends Tournament
     public function rules()
     {
         return [
-            [['id_torneio', 'best_of', 'limite_inscricoes', 'organizador_id', 'aprovado_por', 'id_jogo'], 'integer'],
+            [['id', 'best_of', 'limite_inscricoes', 'organizador_id', 'aprovado_por', 'id_jogo'], 'integer'],
             [['nome', 'regras', 'premios', 'data_inicio', 'data_fim', 'estado'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class TournamentSearch extends Tournament
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_torneio' => $this->id_torneio,
+            'id' => $this->id,
             'best_of' => $this->best_of,
             'limite_inscricoes' => $this->limite_inscricoes,
             'data_inicio' => $this->data_inicio,
