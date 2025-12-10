@@ -13,6 +13,7 @@ use Yii;
  * @property int|null $id_torneio
  * @property string $path
  * @property string $extension
+ * @property int|null $id_equipa
  */
 class Images extends \yii\db\ActiveRecord
 {
@@ -32,8 +33,8 @@ class Images extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_jogo', 'id_torneio'], 'default', 'value' => null],
-            [['id_user', 'id_jogo', 'id_torneio'], 'integer'],
+            [['id_user', 'id_jogo', 'id_torneio', 'id_equipa'], 'default', 'value' => null],
+            [['id_user', 'id_jogo', 'id_torneio', 'id_equipa'], 'integer'],
             [['path', 'extension'], 'required'],
             [['path'], 'string', 'max' => 255],
             [['extension'], 'string', 'max' => 5],
@@ -52,6 +53,7 @@ class Images extends \yii\db\ActiveRecord
             'id_torneio' => 'Id Torneio',
             'path' => 'Path',
             'extension' => 'Extension',
+            'id_equipa' => 'Id Equipa',
         ];
     }
 

@@ -5,11 +5,11 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var common\models\UpdateUserForm $model */
+/** @var common\models\UpdateTeamForm $model */
 /** @var yii\widgets\ActiveForm $form */
 
 $this->title = 'Editar Equipa';
-$initials = strtoupper(substr($model->equipa->nome, 0, 2));
+$initials = strtoupper(substr($model->nome, 0, 2));
 ?>
 
 <div class="profile-container">
@@ -17,9 +17,9 @@ $initials = strtoupper(substr($model->equipa->nome, 0, 2));
     <!-- Profile Header -->
     <div class="profile-header">
         <div class="profile-avatar">
-            <?php if ($model->equipa->profileImage): ?>
-                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($model->equipa->profileImage->path) ?>"
-                     alt="<?= Html::encode($model->equipa->nome) ?>"
+            <?php if ($model->profileImage): ?>
+                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($model->profileImage->path) ?>"
+                     alt="<?= Html::encode($model->nome) ?>"
                      style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
             <?php else: ?>
                 <?= $initials ?>
@@ -38,16 +38,14 @@ $initials = strtoupper(substr($model->equipa->nome, 0, 2));
     <div class="edit-profile-section">
         <?php $form = ActiveForm::begin([
             'id' => 'edit-profile-form',
-            'options' => ['class' => 'profile-form', 'enctype' => 'multipart/form-data'],
-            'enableAjaxValidation' => false,
-            'enableClientValidation' => true,
+            'options' => ['class' => 'profile-form', 'enctype' => 'multipart/form-data']
         ]); ?>
 
         <div class="form-section">
             <h3>Informações Básicas</h3>
 
             <div class="form-row">
-                <?= $form->field($model->equipa, 'nome')->textInput([
+                <?= $form->field($model, 'nome')->textInput([
                     'maxlength' => true,
                     'placeholder' => 'Digite o nome da Equipa',
                     'class' => 'form-control'
@@ -55,15 +53,13 @@ $initials = strtoupper(substr($model->equipa->nome, 0, 2));
             </div>
 
             <div class="form-row">
-                <?= $form->field($model, 'imageFile')->fileInput([
-                    'class' => 'form-control'
-                ])->label('Imagem de Perfil')
+                <?= $form->field($model, 'imageFile')->fileInput();
                 ?>
             </div>
         </div>
 
         <div class="form-actions">
-            <?= Html::submitButton('Salvar Alterações', [
+            <?= Html::submitButton('Guardar Alterações', [
                 'class' => 'btn btn-primary',
                 'name' => 'save-button'
             ]) ?>

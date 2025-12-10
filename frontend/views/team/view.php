@@ -33,7 +33,7 @@ use yii\helpers\Url;
                                 <i class="bi bi-info-circle-fill me-2"></i>Nome do Capitão
                             </h3>
                             <p class="text-white-50">
-                                <?= $equipa->capitao ? $equipa->capitao->user->username : 'Sem capitão' ?>
+                                <?= $capitao ? $capitao : 'Sem capitão' ?>
                             </p>
 
 
