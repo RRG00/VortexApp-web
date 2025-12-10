@@ -32,10 +32,10 @@ $this->title = 'Referee Dashboard';
                     'header' => 'Ações',
                     'template' => '{update}',
                     'urlCreator' => function ($action, Tournament $model, $key, $index, $column) {
-                        return Url::toRoute([$action, 'id_torneio' => $model->id_torneio]);
+                        return Url::toRoute([$action, 'id' => $model->id]);
                     }
                 ],
             ],
         ]); ?>
     </div>
-</div>
+</div>  

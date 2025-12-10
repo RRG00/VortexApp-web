@@ -69,7 +69,7 @@ class TournamentController extends Controller
 
     /**
      * Displays a single Tournament model.
-     * @param int $id_torneio Id Torneio
+     * @param int $id Id Torneio
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -107,7 +107,7 @@ class TournamentController extends Controller
     /**
      * Updates an existing Tournament model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id_torneio Id Torneio
+     * @param int $id Id Torneio
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -141,7 +141,7 @@ class TournamentController extends Controller
     /**
      * Finds the Tournament model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id_torneio Id Torneio
+     * @param int $id Id Torneio
      * @return Tournament the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
