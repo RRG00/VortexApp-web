@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use common\models\MembrosEquipa;
+use yii\widgets\LinkPager;
 
 /** @var yii\web\View $this */
 /** @var common\models\EquipaSearch $searchModel */
@@ -54,6 +55,9 @@ use common\models\MembrosEquipa;
                     </div>
                 </div>
             <?php endforeach; ?>
+            <?php echo LinkPager::widget([
+                'pagination' => $dataProvider->pagination,
+            ]); ?>
         </div>
     </section>
 

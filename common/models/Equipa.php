@@ -21,6 +21,12 @@ use common\models\MembrosEquipa;
 class Equipa extends \yii\db\ActiveRecord
 {
 
+    public $imageFile;
+
+    public static function findIdentity($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
 
     /**
      * {@inheritdoc}
@@ -39,6 +45,7 @@ class Equipa extends \yii\db\ActiveRecord
             [['nome', 'data_criacao'], 'required'],
             [['data_criacao'], 'safe'],
             [['nome'], 'string', 'max' => 255],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
         ];
     }
 
@@ -61,7 +68,7 @@ class Equipa extends \yii\db\ActiveRecord
      */
     public function getInscricaos()
     {
-        return $this->hasMany(Inscricao::class, ['id_equipa' => 'id_equipa']);
+        return $this->hasMany(Inscricao::class, ['id' => 'id']);
     }
 
     /**
@@ -71,7 +78,7 @@ class Equipa extends \yii\db\ActiveRecord
      */
     public function getMembrosEquipas()
     {
-        return $this->hasMany(MembrosEquipa::class, ['id_equipa' => 'id_equipa']);
+        return $this->hasMany(MembrosEquipa::class, ['id_equipa' => 'id']);
     }
 
     /**
@@ -96,14 +103,36 @@ class Equipa extends \yii\db\ActiveRecord
 
     public function getCapitao()
     {
-        return $this->hasOne(MembrosEquipa::class, ['id_equipa' => 'id'])
+        return $this->hasOne(MembrosEquipa::class, ['id_utilizador' => 'id'])
             ->andWhere(['funcao' => 'capitao']);
     }
 
     public function getUtilizadors()
     {
-        return $this->hasMany(MembrosEquipa::class, ['id_equipa' => 'id'])
+        return $this->hasMany(MembrosEquipa::class, ['id_utilizador' => 'id'])
             ->inverseOf('equipa');
+    }
+
+    public function getProfileImage()
+    {
+        return $this->hasOne(Images::class, ['id' => 'id']);
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $images = new Images();
+            $images->path = 'uploads/' . $this->imageFile->baseName;
+            $images->extension = $this->imageFile->extension;
+            $images->id = $this->id;
+            $images->save();
+
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }

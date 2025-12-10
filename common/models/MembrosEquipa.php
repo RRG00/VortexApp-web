@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property int $id_equipa
  * @property string $funcao
- * @property int $id_user
+ * @property int $id_utilizador
  *
  * @property Equipa $equipa
  * @property User $user
@@ -33,11 +33,11 @@ class MembrosEquipa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_equipa', 'funcao', 'id_user'], 'required'],
-            [['id_equipa', 'id_user'], 'integer'],
+            [['id_equipa', 'funcao', 'id_utilizador'], 'required'],
+            [['id_equipa', 'id_utilizador'], 'integer'],
             [['funcao'], 'string', 'max' => 100],
-            [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
-            [['id_equipa'], 'exist', 'skipOnError' => true, 'targetClass' => Equipa::class, 'targetAttribute' => ['id_equipa' => 'id_equipa']],
+            [['id_utilizador'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_utilizador' => 'id']],
+            [['id_equipa'], 'exist', 'skipOnError' => true, 'targetClass' => Equipa::class, 'targetAttribute' => ['id_equipa' => 'id']],
         ];
     }
 
@@ -50,7 +50,7 @@ class MembrosEquipa extends \yii\db\ActiveRecord
             'id' => 'ID',
             'id_equipa' => 'Id Equipa',
             'funcao' => 'Funcao',
-            'id_user' => 'Id User',
+            'id_utilizador' => 'Id User',
         ];
     }
 
@@ -71,7 +71,7 @@ class MembrosEquipa extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::class, ['id' => 'id_user']);
+        return $this->hasOne(User::class, ['id' => 'id_utilizador']);
     }
 
     public function getCapitao()
@@ -86,7 +86,7 @@ class MembrosEquipa extends \yii\db\ActiveRecord
     }
 
     public function create($equipaId, $userId){
-        $this->id_user = $userId;
+        $this->id_utilizador = $userId;
         $this->funcao = 'capitao';
         $this->id_equipa = $equipaId;
         $this->save();

@@ -6,7 +6,6 @@ use common\models\Equipa;
 use common\models\EquipaSearch;
 use common\models\MembrosEquipa;
 use common\models\UpdateTeamForm;
-use common\models\UpdateUserForm;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -61,10 +60,15 @@ class TeamController extends Controller
     public function actionView($id)
     {
         $membros = $this->findModel($id)->membrosEquipas;
+        $index = array_search($id, array_column($membros, 'id_utilizador'));
+        if($this->findModel($id)->membrosEquipas[$index]->funcao === 'capitao'){
+         $capitao = $this->findModel($id)->membrosEquipas[$index]->user->username;
+        }
         //$capitao = $membros
 
         return $this->render('view', [
             'equipa' => $this->findModel($id),
+            'capitao' => $capitao,
         ]);
     }
 
@@ -81,7 +85,7 @@ class TeamController extends Controller
             if ($equipaModel->load($this->request->post()) && $equipaModel->save()) {
 
                 $membroEquipa = new MembrosEquipa();
-                $membroEquipa->create($equipaModel->id,Yii::$app->user->identity->id);
+                $membroEquipa->create($equipaModel->id,Yii::$app->user->id);
 
                 if($membroEquipa->save()){
                     return $this->redirect(['view', 'id' => $equipaModel->id]);
@@ -104,38 +108,45 @@ class TeamController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-//    public function actionUpdate($id_equipa)
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        //$model->imageFile = "";
+
+        if ($this->request->isPost && $model->load($this->request->post())){
+
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                if($model->save()){  
+
+                    Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
+                    return $this->redirect(['index']);
+                }
+            }
+
+        }
+        return $this->render('edit-team', [
+            'model' => $model,
+        ]);
+    }
+
+//    public function actionUpdateOld($id)
 //    {
-//        $model = $this->findModel($id_equipa);
+//        $model = $this->findModel($id);
 //
-//        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-//            return $this->redirect(['view', 'id_equipa' => $model->id_equipa]);
+//        if ($model->load(Yii::$app->request->post())) {
+//            // Validate current password if trying to change
+//            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+//
+//            if ($model->update()) {
+//                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
+//                return $this->redirect(['index']);
+//            }
 //        }
 //
-//        return $this->render('create', [
-//            'model' => $model,
-//        ]);
+//        return $this->render('edit-team', ['model' => $model]);
 //    }
-
-    public function actionEditTeam($id)
-    {
-        $equipa = $this->findModel($id);
-        $model = new UpdateUserForm();
-        $model->equipa = $equipa;
-
-
-        if ($model->load(Yii::$app->request->post())) {
-            // Validate current password if trying to change
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-
-            if ($model->update()) {
-                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
-                return $this->redirect(['index']);
-            }
-        }
-
-        return $this->render('edit-team', ['model' => $model]);
-    }
 
 
 
