@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\data\ActiveDataProvider;
 use common\models\Tournament;
 use common\models\TournamentSearch;
 use yii\web\NotFoundHttpException;
@@ -31,9 +30,9 @@ class RefereeDashboardController extends Controller{
         ]);
     }
 
-    public function actionUpdate($id_torneio)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($id_torneio);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -44,9 +43,9 @@ class RefereeDashboardController extends Controller{
         ]);
     }
 
-    protected function findModel($id_torneio)
+    protected function findModel($id)
     {
-        if (($model = Tournament::findOne(['id_torneio' => $id_torneio])) !== null) {
+        if (($model = Tournament::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
