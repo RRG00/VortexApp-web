@@ -33,8 +33,12 @@ $this->title = 'Registo';
         </div>
         <div class="col-lg-7">
             <a>
-                <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" id="login-logo" class="login-logo">
+                <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexApp_Logo-NoBackground.png"
+                    alt="Vortex Logo"
+                    id="login-logo"
+                    class="login-logo">
             </a>
+
         </div>
     </div>
 </div>
