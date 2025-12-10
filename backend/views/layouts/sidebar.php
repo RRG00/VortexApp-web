@@ -5,7 +5,12 @@ use yii\helpers\Url;
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="<?= Url::home()?>" class="brand-link">
-        <img src="../web/assets/img/VortexApp_Logo-NoBackground.png" alt="Vortex Logo" class="brand-image  elevation-3" style="opacity: .8">
+        <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexApp_Logo-NoBackground.png"
+                        alt="Vortex Logo"
+                        id="logo-backend"
+                        class="logo-backend"
+                        width="52">
+                  
         <span class="brand-text font-weight-light">Vortex Painel</span>
     </a>
 
