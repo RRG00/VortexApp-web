@@ -56,6 +56,11 @@ return [
             'enablePrettyUrl' => true,
             //'enableStrictParsing' => false,
             'rules' => [
+                //Controllers API
+                'POST api/login'                      => 'api/login/login',
+
+
+                //Controllers Back & Frontend
                 '<controller:\w+>/<id:\d+>'                 => '<controller>/view',
                 '<controller:\w+>'                          => '<controller>/index',
                 '<controller:\w+>/create'                   => '<controller>/create',
