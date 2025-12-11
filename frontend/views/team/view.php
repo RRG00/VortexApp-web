@@ -33,7 +33,7 @@ use yii\helpers\Url;
                                 <i class="bi bi-info-circle-fill me-2"></i>Nome do Capitão
                             </h3>
                             <p class="text-white-50">
-                                <?= $capitao ? $capitao : 'Sem capitão' ?>
+                                <?= $capitao ? $capitao : 'Sem capitão'?>
                             </p>
 
 
@@ -57,7 +57,7 @@ use yii\helpers\Url;
             <div class="col-md-6 col-lg-6 col-xl-4">
 
                 <div class="d-flex justify-content-center gap-2 mb-4">
-                    <?= Html::a('Editar Equipa', ['edit-team','id' => $equipa->id], [
+                    <?= Html::a('Editar Equipa', ['update','id' => $equipa->id], [
                         'class' => 'btn btn-primary text-nowrap'
                     ]) ?>
 
