@@ -54,8 +54,17 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            //'enableStrictParsing' => false,
+            'showScriptName' => false,
+            'enableStrictParsing' => true,
             'rules' => [
+                //Controller Login API
+                'POST api/login'                      => 'api/login/login',
+
+                //Controller User API
+                'GET api/user/<id:\d+>'                   => 'api/user/find-user',
+                'PUT api/user/<id:\d+>'                   => 'api/user/update-user',
+
+                //Controllers Back & Frontend
                 '<controller:\w+>/<id:\d+>'                 => '<controller>/view',
                 '<controller:\w+>'                          => '<controller>/index',
                 '<controller:\w+>/create'                   => '<controller>/create',
