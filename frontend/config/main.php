@@ -41,18 +41,7 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => true,
-            'enableStrictParsing' => false,
-            'rules' => [
-            'profile/view/<id:\d+>' => 'profile/view',
-            'profile/get-image/<id:\d+>' => 'profile/get-image',
-
-            '<controller:\w+>/create' => '<controller>/create',
-            '<controller:\w+>/update/<id:\d+>' => '<controller>/update',
-            '<controller:\w+>/delete/<id:\d+>' => '<controller>/delete',
-            '<controller:\w+>/<id:\d+>'        => '<controller>/view',
-            '<controller:\w+>'                 => '<controller>/index',
-            ],
+            //'showScriptName' => false,
         ],
 
     ],
