@@ -55,7 +55,11 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             //'showScriptName' => false,
+            'rules' => [
+                'POST api/login' => 'api/login/login',
+            ],
         ],
+
     ],
     'params' => $params,
 ];
