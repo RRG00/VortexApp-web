@@ -24,12 +24,24 @@ class LoginController extends Controller {
 
         if ($model->validate() && $model->login()) {
             $user = Yii::$app->user->identity;
-            return [
-                'success' => true,
-                'user_id' => $user->id,
-                'username' => $user->username,
-            ];
+            var_dump($user->id);
+            $auth  = Yii::$app->authManager;
+            $roles = $auth->getRolesByUser($user->id);
+            $rolename = null;
+            if (!empty($roles)) {
+                foreach ($roles as $role) {
+                    $rolename = array_keys($roles)[0];  
+                }
+            }
+                return [
+                    'success' => true,
+                    'user_id' => $user->id,
+                    'username' => $user->username,
+                    'role' => $rolename,
+                ];
         }
+        
+
 
         Yii::$app->response->statusCode = 401;
         return [

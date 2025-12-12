@@ -107,10 +107,19 @@ class RbacController extends Controller
         $auth->add($referee);
         $auth->addChild($referee, $accessBackend);
 
+        //Player -> Usar o frontend apenas
+        $player = $auth->createRole('player');
+        $player->description="Player";
+        $auth->add($player);
+
+
 
         //Atribuir Roles a utilizadores
         $auth->assign($admin, 1); //assumindo que o user com ID 1 é o admin
         $auth->assign($organizer, 4); //assumindo que o user com ID 2 é o organizer
+        $auth->assign($referee, 5); //assumindo que o user com ID 3 é o referee
+        $auth->assign($player, 6); //assumindo que o user com ID 4 é o player
+
 
 
 
