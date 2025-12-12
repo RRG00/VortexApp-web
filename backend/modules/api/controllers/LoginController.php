@@ -9,6 +9,28 @@ class LoginController extends Controller {
 
     public $modelClassLogin = 'common\models\LoginForm';
 
+    public function behaviors()
+{
+    $behaviors = parent::behaviors();
+
+    Yii::$app->user->enableSession = false;
+
+    if (!isset($behaviors['access'])) {
+        $behaviors['access'] = [
+            'class' => \yii\filters\AccessControl::class,
+            'rules' => [],
+        ];
+    }
+
+    $behaviors['access']['rules'][] = [
+        'allow' => true,
+        'actions' => ['login'],
+        'roles' => ['?', '@'], 
+    ];
+
+    return $behaviors;
+}
+
     public function beforeAction($action)
     {
         $this->enableCsrfValidation = false;
