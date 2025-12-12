@@ -6,6 +6,7 @@ use common\models\Equipa;
 use common\models\EquipaSearch;
 use common\models\MembrosEquipa;
 use common\models\UpdateTeamForm;
+use common\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -59,15 +60,16 @@ class TeamController extends Controller
      */
     public function actionView($id)
     {
-        $membros = $this->findModel($id)->membrosEquipas;
+        $equipa = $this->findModel($id);
+        $membros = $equipa->membrosEquipas;
         $index = array_search($id, array_column($membros, 'id_utilizador'));
-        if($this->findModel($id)->membrosEquipas[$index]->funcao === 'capitao'){
-         $capitao = $this->findModel($id)->membrosEquipas[$index]->user->username;
+        if($membros[$index]->funcao === 'capitao'){
+         $capitao = $membros[$index]->user->username;
         }
         //$capitao = $membros
 
         return $this->render('view', [
-            'equipa' => $this->findModel($id),
+            'equipa' => $equipa,
             'capitao' => $capitao,
         ]);
     }
@@ -81,6 +83,7 @@ class TeamController extends Controller
     {
         $equipaModel = new Equipa();
         $equipaModel -> data_criacao = date('Y-m-d H:i:s');
+        $equipaModel -> id_capitao = (Yii::$app->user->id);
         if ($this->request->isPost) {
             if ($equipaModel->load($this->request->post()) && $equipaModel->save()) {
 

@@ -103,9 +103,14 @@ class Equipa extends \yii\db\ActiveRecord
 
     public function getCapitao()
     {
-        return $this->hasOne(MembrosEquipa::class, ['id_utilizador' => 'id'])
-            ->andWhere(['funcao' => 'capitao']);
+        return $this->hasOne(MembrosEquipa::class, ['id_utilizador' => 'id_capitao'])
+            ->andWhere(['funcao' => 'capitao'])->andWhere(['id_equipa' => 'id']);
     }
+/*
+    public function getCapitao()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_capitao']);
+    }*/
 
     public function getUtilizadors()
     {
