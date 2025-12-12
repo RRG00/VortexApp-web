@@ -48,7 +48,8 @@ class LoginController extends Controller {
             'success' => false,
             'message' => 'Invalid username or password',
         ];
-    }       
+    }
+
 
 
 }

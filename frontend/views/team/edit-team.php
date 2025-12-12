@@ -28,7 +28,7 @@ $initials = strtoupper(substr($model->nome, 0, 2));
         <div class="profile-info">
             <h1>Editar Equipa</h1>
             <p>Atualize as informações da equipa</p>
-            <a href="<?= Url::to(['/team/view']) ?>" class="btn btn-primary" style="margin-bottom: 10px;">
+            <a href="<?= Url::to(['/team/view', 'id' => $model->id]) ?>" class="btn btn-primary" style="margin-bottom: 10px;">
                 Voltar ao Perfil
             </a>
         </div>

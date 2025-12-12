@@ -34,7 +34,7 @@ use yii\widgets\LinkPager;
 
                             <span class="detail-item">
                                 Capitão:
-                                 <?= $equipa->capitao && $equipa->capitao->user
+                                 <?= $equipa->capitao && $equipa->capitao
                                     ? Html::encode($equipa->capitao->user->username)
                                     : 'N/A' ?>
                             </span>

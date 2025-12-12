@@ -41,7 +41,7 @@ class UpdateTeamForm extends Model
 
             $uploadPath = Yii::getAlias('@frontend/web/uploads/');
 
-            $oldImage = Images::find()->where(['id_equipa' => $equipa->id])->one();
+            $oldImage = Images::find()->where(['id' => $equipa->id])->one();
             if ($oldImage) {
                 $oldFile = $uploadPath . DIRECTORY_SEPARATOR . $oldImage->path;
                 if (file_exists($oldFile)) {
