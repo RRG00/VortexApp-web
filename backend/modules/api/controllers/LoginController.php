@@ -40,13 +40,12 @@ class LoginController extends Controller {
     public function actionLogin()
     {
         $model = new LoginForm();
-        $body = Yii::$app->request->post();
+        $body = Yii::$app->request->bodyParams;
         $model->username = $body['username'] ?? null;
         $model->password = $body['password'] ?? null;
 
         if ($model->validate() && $model->login()) {
             $user = Yii::$app->user->identity;
-            var_dump($user->id);
             $auth  = Yii::$app->authManager;
             $roles = $auth->getRolesByUser($user->id);
             $rolename = null;
