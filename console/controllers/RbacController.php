@@ -115,10 +115,10 @@ class RbacController extends Controller
 
 
         //Atribuir Roles a utilizadores
-        $auth->assign($admin, 1); //assumindo que o user com ID 1 é o admin
-        $auth->assign($organizer, 4); //assumindo que o user com ID 2 é o organizer
-        $auth->assign($referee, 5); //assumindo que o user com ID 3 é o referee
-        $auth->assign($player, 6); //assumindo que o user com ID 4 é o player
+        $auth->assign($admin, 1); 
+        $auth->assign($organizer, 4); 
+        $auth->assign($referee, 5); 
+        $auth->assign($player, 6); 
 
 
 
