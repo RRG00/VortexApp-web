@@ -1,30 +1,50 @@
 <?php
+
 use yii\helpers\Url;
+use yii\helpers\Html;
 ?>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="<?= Url::home()?>" class="brand-link">
+    <a href="<?= Url::home() ?>" class="brand-link">
         <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexApp_Logo-NoBackground.png"
-                        alt="Vortex Logo"
-                        id="logo-backend"
-                        class="logo-backend"
-                        width="52">
-                  
+            alt="Vortex Logo"
+            id="logo-backend"
+            class="logo-backend"
+            width="52">
+
         <span class="brand-text font-weight-light">Vortex Painel</span>
     </a>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <!-- Sidebar user panel -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
             <div class="image">
-                <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <?php
+                $user = Yii::$app->user->identity;
+                $username = $user->username ?? 'User';
+                $initials = strtoupper(substr($username, 0, 2));
+                ?>
+                <?php if ($user->profileImage): ?>
+                    <img src="<?= Yii::getAlias('@web') ?>/../../frontend/web/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                         alt="<?= Html::encode($username) ?>"
+                         class="img-circle elevation-2">
+                <?php else: ?>
+                    <div class="user-initials img-circle elevation-2">
+                        <span><?= $initials ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="info">
-                <a href="#" class="d-block">
-                    <?= Yii::$app->user->identity->username ?>
+                <a href="<?= Url::to(['/user/profile']) ?>" class="d-block">
+                    <?= Html::encode($username) ?>
                 </a>
+                <?php if (!empty($user->email)): ?>
+                    <small class="d-block text-muted">
+                        <?= Html::encode($user->email) ?>
+                    </small>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -44,7 +64,7 @@ use yii\helpers\Url;
                 ],
             ]);
             ?>
-        </nav>  
+        </nav>
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->

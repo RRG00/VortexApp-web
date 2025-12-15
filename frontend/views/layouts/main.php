@@ -7,8 +7,6 @@ use common\widgets\Alert;
 use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
 use yii\helpers\Url;
 
 AppAsset::register($this);
@@ -24,9 +22,9 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <link rel="stylesheet" type="text/css"
-      href="<?= Yii::$app->request->baseUrl ?>/css/styleTemplate.css" />    
+        href="<?= Yii::$app->request->baseUrl ?>/css/styleTemplate.css" />
     <link rel="icon" type="image/x-icon"
-      href="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexAPP_Logo_SemTexto.png">
+        href="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexAPP_Logo_SemTexto.png">
 
 </head>
 
@@ -37,9 +35,9 @@ AppAsset::register($this);
         <nav>
             <div class="logo">
                 <a href="<?= Url::to(['/site/index']) ?>">
-                    <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexApp_Logo-NoBackground.png" 
-                                                                alt="Vortex Logo" 
-                                                                id="logo">
+                    <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexApp_Logo-NoBackground.png"
+                        alt="Vortex Logo"
+                        id="logo">
 
                 </a>
             </div>

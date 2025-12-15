@@ -92,14 +92,13 @@ class UpdateUserForm extends Model
         if ($this->imageFile) {
             $imagename = Yii::$app->security->generateRandomString();
             $extension = $this->imageFile->extension;
-            $filename = $imagename . '.' . $extension;
 
             $uploadPath = Yii::getAlias('@frontend/web/uploads/');
 
             // Delete old image if exists
             $oldImage = Images::find()->where(['id_user' => $this->user->id])->one();
             if ($oldImage) {
-                $oldFile = $uploadPath . $oldImage->path;
+                $oldFile = $uploadPath . $oldImage->path . '.' . $oldImage->extension;
                 if (file_exists($oldFile)) {
                     unlink($oldFile);
                 }
@@ -107,7 +106,7 @@ class UpdateUserForm extends Model
             }
 
             // Save new image file
-            if (!$this->imageFile->saveAs($uploadPath . $filename)) {
+            if (!$this->imageFile->saveAs($uploadPath . $imagename . '.' . $extension)) {
                 $this->addError('imageFile', 'Falha ao fazer upload da imagem.');
                 return false;
             }
@@ -115,7 +114,7 @@ class UpdateUserForm extends Model
             // Save image record
             $image = new Images();
             $image->id_user = $this->user->id;
-            $image->path = $filename;
+            $image->path = $imagename;
             $image->extension = $extension;
 
             if (!$image->save()) {
