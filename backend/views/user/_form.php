@@ -21,7 +21,7 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
     <div class="user-form-wrapper container d-flex justify-content-center align-items-center">
         <div class="card user-card">
             <div class="user-card-header">
-                <?= $model->isNewRecord ? 'Criar Utilizador' : 'Editar Utilizador' ?>
+                Gestão de Utilizadores
             </div>
 
             <div class="user-card-body">

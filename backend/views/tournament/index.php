@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var common\models\TournamentSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Tournaments';
+$this->title = 'Gestão de Torneios';
 $this->params['breadcrumbs'][] = $this->title;
 
 // Importa o CSS externo
@@ -20,7 +20,7 @@ $this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\boot
 <div class="tournament-index">
     <div class="tournament-header">
         <h1><?= Html::encode($this->title) ?></h1>
-        <?= Html::a('Create Tournament', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Criar Torneio', ['create'], ['class' => 'btn btn-success']) ?>
     </div>
     <div class="tournament-card-body">
         <?= GridView::widget([

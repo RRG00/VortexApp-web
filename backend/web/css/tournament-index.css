@@ -4,7 +4,7 @@
 }
 
 .tournament-header {
-  background: linear-gradient(135deg, #3a3970, #5858d6);
+  background: #007bff;;
   color: #fff;
   padding: 1.5rem;
   border-radius: 18px 18px 0 0;
@@ -26,19 +26,17 @@
 }
 
 .tournament-index .btn-success {
-  background: linear-gradient(135deg, #5858d6, #3a3970);
-  border: none !important;
+  background: rgba(255, 255, 255, 0.2) !important;
   color: #fff !important;
   border-radius: 10px;
-  padding: 0.55rem 1.3rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  padding: 0.55rem 1.3rem;  
+  font-weight: 900;
   box-shadow: 0 4px 10px rgba(37, 37, 65, 0.3);
 }
 
 .tournament-index .btn-success:hover {
-  background: linear-gradient(135deg, #4a4ac0, #2e2e66);
-}
+  box-shadow: 0 6px 16px rgba(37, 37, 65, 0.4);
+} 
 
 .tournament-index .grid-view {
   background: linear-gradient(145deg, #ffffff, #f4f5ff);
@@ -58,7 +56,7 @@
 }
 
 .tournament-index table thead {
-  background: linear-gradient(135deg, #3a3970, #5858d6) !important;
+  background: #007bff;;
 }
 
 .tournament-index table thead tr th,
@@ -118,7 +116,7 @@
   font-weight: 600;
   border-radius: 5px;
   color: white;
-  background: linear-gradient(135deg, #4a4ac0, #2e2e66);
+  background: #007bff;
 }
 
 .tournament-view .detail-view td {

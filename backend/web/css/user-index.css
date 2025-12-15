@@ -17,7 +17,7 @@
 }
 
 .user-card-header {
-  background: linear-gradient(135deg, #3a3970, #5858d6);
+  background: #007bff;
   color: #fff;
   padding: 1.5rem;
   font-size: 1.35rem;
@@ -27,10 +27,20 @@
   position: relative;
 }
 
-.user-card-header .btn-primary-custom {
+.user-card-header .btn-primary-user {
   position: absolute;
   right: 1.5rem;
   top: 1.2rem;
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  border-radius: 10px;
+  padding: 0.55rem 1.3rem;  
+  font-weight: 900;
+  box-shadow: 0 4px 10px rgba(37, 37, 65, 0.3);
+}
+
+.btn-primary-user:hover {
+  box-shadow: 0 6px 16px rgba(37, 37, 65, 0.4);
 }
 
 .user-card-body {
@@ -51,7 +61,7 @@
 }
 
 .user-table th {
-  background: linear-gradient(135deg, #3a3970, #5858d6);
+  background: #007bff;
   color: #fff;
   text-align: center;
   font-weight: 500;
@@ -70,21 +80,6 @@
 
 .user-table tr:hover td {
   background-color: #f1f1ff;
-}
-
-.btn-primary-custom {
-  background: linear-gradient(135deg, #5858d6, #3a3970);
-  border: none !important;
-  color: #fff !important;
-  border-radius: 10px;
-  padding: 0.55rem 1.3rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(37, 37, 65, 0.3);
-}
-
-.btn-primary-custom:hover {
-  background: linear-gradient(135deg, #4a4ac0, #2e2e66);
 }
 
 .user-table a {
@@ -108,7 +103,7 @@
   font-weight: 600;
   border-radius: 5px;
   color: white;
-  background: linear-gradient(135deg, #4a4ac0, #2e2e66);
+  background: #007bff;
 }
 
 .user-view .detail-view td {

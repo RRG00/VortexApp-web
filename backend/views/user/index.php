@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var app\Models\UserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Gestão de Utilizadores';
+$this->title = 'Gestão de Utilizadores';    
 $this->params['breadcrumbs'][] = $this->title;
 
 // Importa o CSS externo
@@ -22,7 +22,7 @@ $this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4
         <div class="user-card-header">
             <?= Html::encode($this->title) ?>
             <div class="float-end">
-                <?= Html::a('Criar Utilizador', ['create'], ['class' => 'btn btn-primary-custom']) ?>
+                <?= Html::a('Criar Utilizador', ['create'], ['class' => 'btn btn-primary-user']) ?>
             </div>
         </div>
 
