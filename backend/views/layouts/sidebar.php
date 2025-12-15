@@ -16,22 +16,43 @@ use yii\helpers\Html;
         <span class="brand-text font-weight-light">Vortex Painel</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
             <div class="image">
                 <?php
                 $user = Yii::$app->user->identity;
                 $username = $user->username ?? 'User';
                 $initials = strtoupper(substr($username, 0, 2));
+
+                // Get user role and determine profile image
+                $roleImage = null;
+
+                if (!Yii::$app->user->isGuest) {
+                    $auth = Yii::$app->authManager;
+                    $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+                    // Map roles to their respective images
+                    $roleImageMap = [
+                        'admin' => 'administrator.png',
+                        'organizer' => 'organizer.png',
+                        'referee' => 'referre.png',
+                    ];
+
+                    // Find the first matching role
+                    foreach ($roleImageMap as $role => $image) {
+                        if (isset($roles[$role])) {
+                            $roleImage = $image;
+                            break;
+                        }
+                    }
+                }
                 ?>
-                <?php if ($user->profileImage): ?>
-                    <img src="<?= Yii::getAlias('@web') ?>/../../frontend/web/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                <?php if ($roleImage): ?>
+                    <img src="<?= Yii::$app->request->baseUrl ?>/assets/img/<?= Html::encode($roleImage) ?>"
                          alt="<?= Html::encode($username) ?>"
-                         class="img-circle elevation-2">
+                         class="">
                 <?php else: ?>
-                    <div class="user-initials img-circle elevation-2">
+                    <div class="user-initials elevation-2">
                         <span><?= $initials ?></span>
                     </div>
                 <?php endif; ?>

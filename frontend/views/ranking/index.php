@@ -8,6 +8,10 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $this->title = 'Rankings';
+
+$user = Yii::$app->user->identity;
+$username = $user->username ?? 'User';
+$initials = strtoupper(substr($username, 0, 2)); 
 ?>
 
 <section class="rankings" id="rankings">
@@ -38,7 +42,7 @@ $this->title = 'Rankings';
                                                     alt="<?= Html::encode($ranking->utilizador->username) ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                             <?php else: ?>
-                                                <?= $initials ?>
+                                                <?= $initials?>
                                             <?php endif; ?>
                                         </div>
                                     </a>
