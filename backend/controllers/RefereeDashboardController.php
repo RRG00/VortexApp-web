@@ -19,9 +19,14 @@ class RefereeDashboardController extends Controller{
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         if (!Yii::$app->user->isGuest) {
-            $dataProvider->query->andWhere([
-                'arbitro_id' => Yii::$app->user->id,
-            ]);
+            $auth = Yii::$app->authManager;
+            $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+            if (!isset($roles['admin'])) {
+                $dataProvider->query->andWhere([
+                    'arbitro_id' => Yii::$app->user->id,
+                ]);
+            }
         }
 
         return $this->render('index', [

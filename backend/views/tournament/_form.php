@@ -10,7 +10,14 @@ use common\models\Jogo;
 /** @var common\models\Tournament $model */
 /** @var yii\widgets\ActiveForm $form */
 
-// Importa o CSS externo
+$status = [
+    'A decorrer' => 'A decorrer',
+    'Em Breve' => 'Em Breve',
+    'Cancelado' => 'Cancelado',
+    'Concluido' => 'Concluido',
+    
+];
+
 $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 ?>
 
@@ -35,6 +42,24 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                     </div>
 
                     <div class="col-md-12">
+                        <?= $form->field($model, 'best_of')
+                                ->textInput(['maxlength' => true, 'placeholder' => 'Best of do torneio'])
+                                ->label('Best Of') ?>
+                    </div>
+
+                    <div class="col-md-12">
+                        <?= $form->field($model, 'limite_inscricoes')
+                                ->textInput(['maxlength' => true, 'placeholder' => 'Limite de inscrições do torneio'])
+                                ->label('Limite de Inscrições') ?>  
+                    </div>
+
+                    <div class="col-md-12">
+                        <?= $form->field($model, 'regras')
+                                ->textarea(['maxlength' => true, 'placeholder' => 'Regras do torneio'])
+                                ->label('Regras') ?>
+                    </div>
+
+                    <div class="col-md-12">
                         <?= $form->field($model, 'descricao')
                                 ->textarea(['maxlength' => true, 'placeholder' => 'Descrição do torneio', 'rows' => 3])
                                 ->label('Descrição') ?>
@@ -47,15 +72,15 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                     </div>
 
                     <div class="col-md-12">
-                        <?= $form->field($model, 'requesitos')
-                                ->textarea(['value' => 'Por definir', 'placeholder' => 'Requesitos do torneio', 'rows' => 3])
-                                ->label('Requesitos do Torneio') ?>
-                    </div>
-
-                    <div class="col-md-12">
                         <?= $form->field($model, 'premios')
                                 ->textInput(['maxlength' => true, 'placeholder' => 'Prémios do torneio'])
                                 ->label('Prémios') ?>
+                    </div>
+
+                    <div class="col-md-12">
+                        <?= $form->field($model, 'estado')
+                                ->dropDownList($status, ['prompt' => 'Selecione um estado'])
+                                ->label('Estado') ?>
                     </div>
 
                     <div class="col-md-6">
@@ -93,12 +118,7 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                     </div>
                 </div>
 
-                <?= $form->field($model, 'best_of')->hiddenInput(['value' => '0'])->label(false) ?>
-                <?= $form->field($model, 'regras')->hiddenInput(['value' => 'Por definir'])->label(false) ?>
                 <?= $form->field($model, 'limite_inscricoes')->hiddenInput(['value' => '0'])->label(false) ?>
-                <?= $form->field($model, 'estado')->hiddenInput(['value' => 'Por Definir'])->label(false) ?>
-                <?= $form->field($model, 'organizador_id')->hiddenInput(['value' => Yii::$app->user->id])->label(false) ?>
-                <?= $form->field($model, 'aprovado_por')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false) ?>
 
                 <div class="mt-4 text-end">
                     <?= Html::submitButton(

@@ -40,7 +40,7 @@ class TournamentController extends Controller
                                 'actions' => ['update'],
                                 'roles' => ['updateTournament'],
                             ],
-                            [ 
+                            [
                                 'allow' => true,
                                 'actions' => ['delete'],
                                 'roles' => ['deleteTournament'],
@@ -64,6 +64,15 @@ class TournamentController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionManagement($id)
+    {
+        $model = $this->findModel($id);
+
+        return $this->render('management', [
+            'model' => $model,
         ]);
     }
 

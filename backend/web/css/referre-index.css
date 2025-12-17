@@ -86,3 +86,68 @@
   color: black;
   padding-bottom: 1rem;
 }
+
+.tournaments {
+  padding: 3rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+} 
+
+.tournament-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.tournament-card {
+  background: rgb(242, 240, 240);
+  border-radius: 15px;
+  border-color: black !important;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.tournament-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.tournament-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tournament-info h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tournament-details {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status.active {
+  background: green;
+  color: white;
+}
+
+.status.pending,
+.status.cancelled,
+.status.completed {
+  background: var(--warning);
+  color: var(--dark-bg);
+}
