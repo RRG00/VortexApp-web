@@ -75,7 +75,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $apiUrl = "http://news.hardcoded.cloud/rtp/news ";
+        $json = file_get_contents($apiUrl);
+        $dados = json_decode($json, true);
+
+        $items = $dados['items'] ?? [];
+        $noticias = array_slice($items, 0, 3);
+
+        return $this->render('index', [
+            'noticias' => $noticias,
+        ]);
     }
 
     /**
