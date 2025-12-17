@@ -46,7 +46,7 @@ AppAsset::register($this);
                 <li><?= Html::a('Torneios', ['/tournament/index']) ?></li>
                 <li><?= Html::a('Rankings', ['/ranking/index']) ?></li>
                 <li><?= Html::a('Equipa', ['/team/index']) ?></li>
-                <li><a href="#news">Notícias</a></li>
+                <li><?= Html::a('Notícias', ['/news/index']) ?></li>
                 <li><a href="#calendar">Calendário</a></li>
             </ul>
             <div class="auth-buttons">
