@@ -15,7 +15,7 @@ $initials = strtoupper(substr($username, 0, 2));
 <!--Video Section -->
 <section class="vortex-video" style="margin-top: 0.5rem;" id="home">
     <video class="vortex-video-bg" autoplay muted loop playsinline>
-        <source src="/VortexApp-web/frontend/web/assets/videos/index-video.mp4" type="video/mp4">
+        <source src="<?= Yii::getAlias('@web') ?>/assets/videos/index-video.mp4" type="video/mp4">
         O teu navegador não suporta vídeo HTML5.
     </video>
     <div class="vortex-video-overlay"></div>
