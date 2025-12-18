@@ -23,6 +23,8 @@ AppAsset::register($this);
     <?php $this->head() ?>
     <link rel="stylesheet" type="text/css"
         href="<?= Yii::$app->request->baseUrl ?>/css/styleTemplate.css" />
+    <link rel="stylesheet"
+          href="<?= Yii::$app->request->baseUrl ?>https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="icon" type="image/x-icon"
         href="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexAPP_Logo_SemTexto.png">
 
