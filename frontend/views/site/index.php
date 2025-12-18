@@ -2,16 +2,24 @@
 
 /** @var yii\web\View $this */
 /** @var array $noticias */
+use yii\helpers\Html;
 
 $this->title = 'VORTEX';
 ?>
- <!-- Hero Section -->
-    <section class="hero" id="home">
-        <h1>Bem-vindo ao Vortex</h1>
-        <p>A plataforma definitiva para competições de eSports</p>
-        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
-            <a href="#tournaments" class="btn btn-primary">Explorar Torneios</a>
-            <a href="#register" class="btn btn-secondary">Criar Equipa</a>
+    <!--Video Section -->
+    <section class="vortex-video" style="margin-top: 0.5rem;" id="home">
+        <video class="vortex-video-bg" autoplay muted loop playsinline>
+        <source src="/VortexApp-web/frontend/web/assets/videos/index-video.mp4" type="video/mp4">
+            O teu navegador não suporta vídeo HTML5.
+        </video>
+        <div class="vortex-video-overlay"></div>
+        <div class="vortex-video-content">
+            <h1>Bem-vindo ao Vortex</h1>
+            <p>A plataforma definitiva para competições de eSports</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <?= Html::a('Explorar Torneios', ['/tournament/index'], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('Criar Equipa', ['/team/index'], ['class' => 'btn btn-primary']) ?>
+            </div>
         </div>
     </section>
 
@@ -19,64 +27,44 @@ $this->title = 'VORTEX';
     <section class="tournaments" id="tournaments">
         <h2 class="section-title">Torneios Ativos</h2>
         <div class="tournament-grid">
-            <div class="tournament-card">
-                <div class="tournament-header">
-                    <span class="game-badge">Counter-Strike 2</span>
-                    <span class="status cancelled">Ativo</span>
-                </div>
-                <div class="tournament-info">
-                    <h3>Vortex Championship 2025</h3>
-                    <div class="tournament-details">
-                        <span class="detail-item">16 Equipas</span>
-                        <span class="detail-item">Eliminatória</span>
-                        <span class="detail-item">€5,000</span>
+            <?php foreach ($tournaments as $tournament): ?>
+                <div class="tournament-card">
+                    <div class="tournament-header">
+                        <span class="status active">
+                            <?= Html::encode($tournament->estado) ?>
+                        </span>
                     </div>
-                    <p style="color: var(--text-secondary); margin: 1rem 0;">
-                        Torneio principal da temporada. As melhores equipas competem pelo título.
-                    </p>
-                    <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Inscrever Equipa</a>
-                </div>
-            </div>
 
-            <div class="tournament-card">
-                <div class="tournament-header">
-                    <span class="game-badge">League of Legends</span>
-                    <span class="status active">Ativo</span>
-                </div>
-                <div class="tournament-info">
-                    <h3>Vortex League Spring 2025</h3>
-                    <div class="tournament-details">
-                        <span class="detail-item">8 Equipas</span>
-                        <span class="detail-item">Liga</span>
-                        <span class="detail-item">€3,000</span>
-                    </div>
-                    <p style="color: var(--text-secondary); margin: 1rem 0;">
-                        Liga de primavera com formato de pontos. Sistema de promoção e despromoção.
-                    </p>
-                    <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Inscrever Equipa</a>
-                </div>
-            </div>
+                    <div class="tournament-info">
+                        <h3><?= Html::encode($tournament->nome) ?></h3>
 
-            <div class="tournament-card">
-                <div class="tournament-header">
-                    <span class="game-badge">Valorant</span>
-                    <span class="status pending">Em Breve</span>
-                </div>
-                <div class="tournament-info">
-                    <h3>Vortex Invitational</h3>
-                    <div class="tournament-details">
-                        <span class="detail-item">12 Equipas</span>
-                        <span class="detail-item">Eliminatória</span>
-                        <span class="detail-item">€2,500</span>
+                        <div class="tournament-details">
+                            <span class="detail-item">
+                                <?= (int)$tournament->limite_inscricoes ?> Equipas
+                            </span>
+                            <span class="detail-item">
+                                Best of <?= Html::encode($tournament->best_of) ?>
+                            </span>
+                            <span class="detail-item">
+                                €<?= Html::encode($tournament->premios) ?>
+                            </span>
+                        </div>
+
+                        <p style="color: var(--text-secondary); margin: 1rem 0;">
+                            <?= Html::encode($tournament->descricao) ?>
+                        </p>
+
+                        <?= Html::a(
+                            'Ver Detalhes',
+                            ['tournament/view/', 'id' => $tournament->id],           
+                            ['class' => 'btn btn-primary', 'style' => 'width: 100%; text-align: center;']
+                        ) ?>
                     </div>
-                    <p style="color: var(--text-secondary); margin: 1rem 0;">
-                        Torneio por convite para as melhores equipas da região.
-                    </p>
-                    <a href="#" class="btn btn-secondary" style="width: 100%; text-align: center;">Ver Detalhes</a>
                 </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
+
 
     <!-- Rankings Section -->
     <section class="rankings" id="rankings">

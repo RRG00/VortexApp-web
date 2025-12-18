@@ -11,10 +11,12 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\Tournament;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\db\Expression;
 
 /**
  * Site controller
@@ -82,8 +84,14 @@ class SiteController extends Controller
         $items = $dados['items'] ?? [];
         $noticias = array_slice($items, 0, 3);
 
+        $tournaments = Tournament::find()
+        ->limit(3)
+        ->orderBy(new Expression('RAND()')) 
+        ->all();
+       
         return $this->render('index', [
             'noticias' => $noticias,
+            'tournaments' => $tournaments,
         ]);
     }
 
