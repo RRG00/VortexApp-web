@@ -2,9 +2,8 @@
 
 namespace common\models;
 
-use Yii;
 use common\models\MembrosEquipa;
-
+use Yii;
 
 /**
  * This is the model class for table "equipa".
@@ -103,8 +102,11 @@ class Equipa extends \yii\db\ActiveRecord
 
     public function getCapitao()
     {
-        return $this->hasOne(MembrosEquipa::class, ['id_utilizador' => 'id_capitao'])
-            ->andWhere(['funcao' => 'capitao'])->andWhere(['id_equipa' => 'id']);
+        return $this->hasOne(MembrosEquipa::class, ['id_equipa' => 'id'])
+            ->andWhere(['funcao' => 'capitao']);
+
+       /* return $this->hasOne(MembrosEquipa::class, ['id_utilizador' => 'id_capitao'])
+            ->andWhere(['funcao' => 'capitao'])->andWhere(['id_equipa' => 'id']);*/
     }
 /*
     public function getCapitao()

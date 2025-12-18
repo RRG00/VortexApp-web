@@ -3,8 +3,10 @@
 namespace frontend\controllers;
 
 use common\models\Equipa;
+use common\models\Inscricao;
 use common\models\InscricaoTorneio;
 use common\models\Tournament;
+use common\models\MembrosEquipa;
 use yii;
 
 
@@ -36,19 +38,20 @@ class TournamentController extends \yii\web\Controller
 
     public function actionInscricao($id)
     {
-        $enrollment = new InscricaoTorneio();
-        $enrollment->id_torneio = $id;
+        $enrollment = new Inscricao();
+        $enrollment-> id_torneio = $id;
+        $enrollment-> id_utilizador = (Yii::$app->user->id);
 
-       // $enrollment->id_equipa = Yii::$app->user->id_equipa;
-        $enrollment->data_inscricao = date('Y-m-d H:i:s');
+        $membroEquipa = MembrosEquipa::findOne(['id_utilizador' => $enrollment-> id_utilizador]);
+
+        $enrollment -> id_equipa = $membroEquipa->id_equipa;
 
         if ($enrollment->save()) {
             Yii::$app->session->setFlash('success', 'Equipa inscrita com sucesso!');
-            return $this->redirect(['tournament/view', 'id' => $id]);
         } else {
             Yii::$app->session->setFlash('error', 'Erro ao inscrever equipa.');
-            return $this->redirect(['tournament/view', 'id' => $id]);
         }
+        return $this->redirect(['tournament/view', 'id' => $id]);
 
     }
 
