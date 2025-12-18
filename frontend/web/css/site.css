@@ -241,63 +241,104 @@ nav {
 }
 
 /* Rankings */
-.rankings {
-    padding: 3rem 5%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
-.ranking-table {
+.ranking-card {
     background: var(--card-bg);
     border-radius: 15px;
-    padding: 2rem;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th {
-    text-align: left;
-    padding: 1rem;
-    color: var(--accent);
-    border-bottom: 2px solid var(--primary-color);
-}
-
-td {
-    padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-tr:hover {
-    background: rgba(108, 92, 231, 0.1);
-}
-
-.rank {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--accent);
-}
-
-.player-info {
+    padding: 2.5rem 3rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
 }
 
-.player-avatar {
-    width: 40px;
-    height: 40px;
+.ranking-card-left {
+    flex: 0 0 160px;
+    display: flex;
+    justify-content: center;
+}
+
+.ranking-avatar {
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     background: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
 }
 
-/* News Section */
+.ranking-initials {
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* bloco da direita mais compacto e centrado verticalmente */
+.ranking-card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    justify-content: center;
+}
+
+.ranking-header-row h3 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.ranking-game {
+    margin: 0.3rem 0 0;
+    color: var(--text-secondary);
+}
+
+/* linha de baixo: stats + botão lado a lado */
+.ranking-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.ranking-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    min-width: 90px;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* botão alinhado com as stats */
+.ranking-btn {
+    padding-inline: 1.75rem;
+    white-space: nowrap;
+}
+
+.ranking-btn-wrapper {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+}
+/* NEWS */
 .news {
     padding: 3rem 5%;
     max-width: 1400px;
@@ -320,6 +361,49 @@ tr:hover {
 .news-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+}
+
+.vortex-video {
+    position: relative;
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    min-height: 60vh;  
+    overflow: hidden;
+}
+
+.vortex-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.vortex-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+    z-index: 1;
+}
+
+.vortex-video-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 9rem 5% 4rem;   
+}
+
+.vortex-video-content h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+.vortex-video-content p {
+    font-size: 1.1rem;
+    color: #f5f5ff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .news-image img {
