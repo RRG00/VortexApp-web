@@ -40,7 +40,7 @@ $this->title = 'Referee Dashboard';
                 <p style="color: var(--text-secondary); margin: 1rem 0;">
                     <?=$torneio->descricao?>
                 </p>
-                <?= Html::a('Gerir Torneio',Url::to(['/tournament/management','id'=> $torneio -> id]),['class' => ['btn btn-primary']])?>
+                <?= Html::a('Gerir Torneio',Url::to(['/referee-dashboard/management','id'=> $torneio -> id]),['class' => ['btn btn-primary']])?>
                 <!-- index.php?r=tournament/view&id=1 -->
             </div>
         </div>

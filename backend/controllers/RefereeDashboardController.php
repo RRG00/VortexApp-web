@@ -35,6 +35,15 @@ class RefereeDashboardController extends Controller{
         ]);
     }
 
+    public function actionManagement($id)
+    {
+        $model = $this->findModel($id);
+
+        return $this->render('management', [
+            'model' => $model,
+        ]);
+    }
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);

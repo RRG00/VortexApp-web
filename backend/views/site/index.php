@@ -74,7 +74,57 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                     <div class="card-body">
                         <canvas id="registrosChart" style="min-height: 250px; height: 250px; max-height: 250px;"></canvas>
                     </div>
-                </div>     
+                </div>
+    </div>
+
+    <!-- Gestão de Estado dos Torneios -->
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="color:black">
+                    Gestão de Estado dos Torneios
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Estado Atual</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($tournaments as $tournament): ?>
+                                <tr>
+                                    <td><?= $tournament->id ?></td>
+                                    <td><?= \yii\helpers\Html::encode($tournament->nome) ?></td>
+                                    <td>
+                                        <span class="badge badge-info"><?= \yii\helpers\Html::encode($tournament->estado) ?></span>
+                                    </td>
+                                    <td>
+                                        <?= \yii\helpers\Html::a('Pendente',
+                                            ['tournament/update-estado', 'id' => $tournament->id, 'estado' => 'Pendente'],
+                                            ['class' => 'btn btn-sm btn-warning', 'data-method' => 'post']) ?>
+                                        <?= \yii\helpers\Html::a('Em Curso',
+                                            ['tournament/update-estado', 'id' => $tournament->id, 'estado' => 'Em Curso'],
+                                            ['class' => 'btn btn-sm btn-primary', 'data-method' => 'post']) ?>
+                                        <?= \yii\helpers\Html::a('Concluído',
+                                            ['tournament/update-estado', 'id' => $tournament->id, 'estado' => 'Concluído'],
+                                            ['class' => 'btn btn-sm btn-success', 'data-method' => 'post']) ?>
+                                        <?= \yii\helpers\Html::a('Cancelado',
+                                            ['tournament/update-estado', 'id' => $tournament->id, 'estado' => 'Cancelado'],
+                                            ['class' => 'btn btn-sm btn-danger', 'data-method' => 'post']) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
    <?php
             $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \yii\web\View::POS_HEAD]);

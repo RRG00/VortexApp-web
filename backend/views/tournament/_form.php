@@ -18,6 +18,13 @@ $status = [
     
 ];
 
+$bestof = [
+    '4' => '4',
+    '8' => '8',
+    '16' => '16',
+    '32' => '32',
+];
+
 $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 ?>
 
@@ -43,9 +50,10 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
                     <div class="col-md-12">
                         <?= $form->field($model, 'best_of')
-                                ->textInput(['maxlength' => true, 'placeholder' => 'Best of do torneio'])
+                                ->dropDownList($bestof, ['prompt' => 'Selecione o formato'])
                                 ->label('Best Of') ?>
                     </div>
+
 
                     <div class="col-md-12">
                         <?= $form->field($model, 'limite_inscricoes')

@@ -45,6 +45,11 @@ class TournamentController extends Controller
                                 'actions' => ['delete'],
                                 'roles' => ['deleteTournament'],
                             ],
+                            [
+                                'allow' => true,
+                                'actions' => ['update-estado'],
+                                'roles' => ['updateTournament'],
+                            ],
                         ],
                     ],
             ]
@@ -64,15 +69,6 @@ class TournamentController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    public function actionManagement($id)
-    {
-        $model = $this->findModel($id);
-
-        return $this->render('management', [
-            'model' => $model,
         ]);
     }
 
@@ -145,6 +141,27 @@ class TournamentController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Updates the estado of a Tournament model.
+     * @param int $id Id Torneio
+     * @param string $estado New estado value
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateEstado($id, $estado)
+    {
+        $model = $this->findModel($id);
+        $model->estado = $estado;
+
+        if ($model->save(false)) {
+            Yii::$app->session->setFlash('success', 'Estado do torneio atualizado com sucesso.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao atualizar o estado do torneio.');
+        }
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
 
     /**
