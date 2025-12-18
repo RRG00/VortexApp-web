@@ -10,15 +10,13 @@ use common\models\Jogo;
 /** @var common\models\Tournament $model */
 /** @var yii\widgets\ActiveForm $form */
 
-$status = [
-    'A decorrer' => 'A decorrer',
-    'Em Breve' => 'Em Breve',
-    'Cancelado' => 'Cancelado',
-    'Concluido' => 'Concluido',
-    
+$bestof = [
+    '1' => '1',
+    '3' => '3',
+    '5' => '5',
 ];
 
-$bestof = [
+$limite_inscricoes = [
     '4' => '4',
     '8' => '8',
     '16' => '16',
@@ -54,11 +52,10 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                                 ->label('Best Of') ?>
                     </div>
 
-
                     <div class="col-md-12">
                         <?= $form->field($model, 'limite_inscricoes')
-                                ->textInput(['maxlength' => true, 'placeholder' => 'Limite de inscrições do torneio'])
-                                ->label('Limite de Inscrições') ?>  
+                                ->dropDownList($limite_inscricoes, ['prompt' => 'Selecione o formato'])
+                                ->label('Limite de Inscrições') ?>
                     </div>
 
                     <div class="col-md-12">
@@ -81,14 +78,8 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
 
                     <div class="col-md-12">
                         <?= $form->field($model, 'premios')
-                                ->textInput(['maxlength' => true, 'placeholder' => 'Prémios do torneio'])
+                                ->textInput(['maxlength' => true, 'placeholder' => 'Prémios do torneio em €'])
                                 ->label('Prémios') ?>
-                    </div>
-
-                    <div class="col-md-12">
-                        <?= $form->field($model, 'estado')
-                                ->dropDownList($status, ['prompt' => 'Selecione um estado'])
-                                ->label('Estado') ?>
                     </div>
 
                     <div class="col-md-6">
@@ -98,7 +89,7 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                     </div>
 
                     <div class="col-md-6">
-                        <?= $form->field($model, 'data_fim')
+                        <?= $form->field($model, 'data_fim')    
                                 ->input('date')
                                 ->label('Data de Fim') ?>
                     </div>
@@ -126,7 +117,7 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                     </div>
                 </div>
 
-                <?= $form->field($model, 'limite_inscricoes')->hiddenInput(['value' => '0'])->label(false) ?>
+                <?= $form->field($model, 'estado')->hiddenInput(['value' => '0'])->label(false) ?>
 
                 <div class="mt-4 text-end">
                     <?= Html::submitButton(

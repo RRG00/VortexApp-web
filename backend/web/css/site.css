@@ -251,3 +251,8 @@ html {
 .user-panel .info small {
   font-size: 0.75rem;
 }
+
+.table-responsive th{
+  color: purple;
+  font-size: 50px;
+}
