@@ -2,21 +2,30 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\models\Images;
+
+/** @var common\models\Equipa $equipa */
+
+$this->title = 'Editar Equipa';
+$initials = strtoupper(substr($equipa->nome, 0, 2));
 
 ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
 <div class="container my-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <!-- Header da equipa -->
-            <div class="card shadow-sm mb-4" style="background-color: #1a1a2e; border: none;">
-                <div class="card-body text-center py-4">
-                    <h1 class="display-4 fw-bold mb-2 text-white"><?=$equipa->nome?></h1>
+            <div class="team-profile-img" >
+                <div class="profile-avatar">
+                    <?php if ($equipa->profileImage): ?>
+                        <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($equipa->profileImage->path) ?>"
+                             alt="<?= Html::encode($equipa->username) ?>"
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <?= $initials ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Logo da equipa -->
+            <!-- Nome da equipa -->
             <div class="card shadow-sm mb-4" style="background-color: #1a1a2e; border: none;">
                 <div class="card-body text-center py-4">
                     <h1 class="display-4 fw-bold mb-2 text-white"><?=$equipa->nome?></h1>

@@ -4,3 +4,5 @@
 # But not the img folder
 !img/
 !img/**
+!videos/
+!videos/**

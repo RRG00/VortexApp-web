@@ -513,6 +513,15 @@ tr:hover {
   letter-spacing: 1px;
 }
 
+.team-profile-img {
+  background-color: #1a1a2e !important;
+  border: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-content: center !important;
+  border-color: pink !important;
+}
+
 /* Games Section */
 .games-section {
   background: var(--gray-800);
