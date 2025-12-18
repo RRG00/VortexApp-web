@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Inscricao;
 use Yii;
 use yii\web\Controller;
 use common\models\Tournament;
@@ -17,6 +18,7 @@ class RefereeDashboardController extends Controller{
     {
         $searchModel = new TournamentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+
 
         if (!Yii::$app->user->isGuest) {
             $auth = Yii::$app->authManager;
@@ -39,8 +41,14 @@ class RefereeDashboardController extends Controller{
     {
         $model = $this->findModel($id);
 
+        $inscricoes = Inscricao::find()
+            ->where(['id_torneio' => $id])
+            ->with('equipa')
+            ->all();
+
         return $this->render('management', [
             'model' => $model,
+            'inscricoes' => $inscricoes,
         ]);
     }
 

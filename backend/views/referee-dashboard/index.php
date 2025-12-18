@@ -14,11 +14,8 @@ $this->title = 'Referee Dashboard';
 ?>
 <!-- Gestão de Estado dos Torneios -->
 <div class="col-12 mt-4">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title" style="color:black">
-                Gestão de Estado dos Torneios
-            </h3>
+    <div class="">
+        <div class="d-flex justify-content-end align-items-center">
             <?= \yii\helpers\Html::a(
                 '<i class="fas fa-sync-alt "></i> Update Estados',
                 ['tournament/update-estado'],
@@ -52,13 +49,11 @@ $this->title = 'Referee Dashboard';
                     <div class="tournament-details">
                         <span class="detail-item"><?= $torneio->limite_inscricoes ?> Equipas</span>
                         <span class="detail-item">Best Of: <?= $torneio->best_of ?></span>
-                        <span class="detail-item"><?= $torneio->premios ?>€</span>
+                        <span class="detail-item"><?= $torneio->premios ?></span>
                     </div>
-                    <p style="color: var(--text-secondary); margin: 1rem 0;">
-                        <?= $torneio->descricao ?>
-                    </p>
-                    <?= Html::a('Gerir Torneio', Url::to(['/referee-dashboard/management', 'id' => $torneio->id]), ['class' => ['btn btn-primary']]) ?>
-                    <!-- index.php?r=tournament/view&id=1 -->
+                    <div class="d-flex justify-content-start align-items-center">
+                        <?= Html::a('Gerir Torneio', Url::to(['/referee-dashboard/management', 'id' => $torneio->id]), ['class' => ['btn btn-primary']]) ?>
+                    </div>
                 </div>
             </div>
         <?php } ?>
