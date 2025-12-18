@@ -1,6 +1,7 @@
 <?php
 
 /** @var yii\web\View $this */
+/** @var array $noticias */
 
 $this->title = 'VORTEX';
 ?>
@@ -164,44 +165,39 @@ $this->title = 'VORTEX';
     </section>
 
     <!-- News Section -->
-    <section class="news" id="news">
+   <section class="news" id="news">
         <h2 class="section-title">Últimas Notícias</h2>
         <div class="news-grid">
-            <div class="news-card">
-                <div class="news-image"></div>
-                <div class="news-content">
-                    <p class="news-date">22 Outubro 2025</p>
-                    <h3 class="news-title">Vortex Championship 2025 Anunciado</h3>
-                    <p class="news-excerpt">
-                        O maior torneio da temporada está de volta com prémios ainda maiores e mais equipas participantes.
-                    </p>
-                    <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Ler Mais</a>
-                </div>
-            </div>
-
-            <div class="news-card">
-                <div class="news-image"></div>
-                <div class="news-content">
-                    <p class="news-date">20 Outubro 2025</p>
-                    <h3 class="news-title">Novos Parceiros Anunciados</h3>
-                    <p class="news-excerpt">
-                        A Vortex anuncia parcerias estratégicas para expandir o alcance dos torneios.
-                    </p>
-                    <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Ler Mais</a>
-                </div>
-            </div>
-
-            <div class="news-card">
-                <div class="news-image"></div>
-                <div class="news-content">
-                    <p class="news-date">18 Outubro 2025</p>
-                    <h3 class="news-title">Atualização da Plataforma</h3>
-                    <p class="news-excerpt">
-                        Novas funcionalidades e melhorias na experiência do utilizador já disponíveis.
-                    </p>
-                    <a href="#" class="btn btn-primary" style="margin-top: 1rem;">Ler Mais</a>
-                </div>
-            </div>
+            <?php if (!empty($noticias)): ?>
+                <?php foreach ($noticias as $n): ?>
+                    <div class="news-card">
+                        <div class="news-image">
+                            <img src="<?= htmlspecialchars($n['small_image'] ?? '') ?>"
+                                alt="<?= htmlspecialchars($n['title'] ?? '') ?>">
+                        </div>
+                        <div class="news-content">
+                            <p class="news-date">
+                                <?= htmlspecialchars($n['category'] ?? '') ?>
+                            </p>
+                            <h3 class="news-title">
+                                <?= htmlspecialchars($n['title'] ?? '') ?>
+                            </h3>
+                            <p class="news-excerpt">
+                                <?= htmlspecialchars($n['category'] ?? '') ?>
+                            </p>
+                           <a href="<?= htmlspecialchars($n['details_link'] ?? '#') ?>"
+                                class="btn btn-primary"
+                                style="margin-top: 1rem;"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                    Ler Mais
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p style="color: var(--text-secondary);">Sem notícias disponíveis de momento.</p>
+            <?php endif; ?>
         </div>
     </section>
 
