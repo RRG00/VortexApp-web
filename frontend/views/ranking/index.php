@@ -9,7 +9,6 @@ use yii\helpers\Html;
 
 $this->title = 'Rankings';
 
-$user = Yii::$app->user->identity;
 $username = $user->username ?? 'User';
 $initials = strtoupper(substr($username, 0, 2));
 ?>

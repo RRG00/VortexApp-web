@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Estatisticas;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -77,6 +78,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
+
         $apiUrl = "http://news.hardcoded.cloud/rtp/news ";
         $json = file_get_contents($apiUrl);
         $dados = json_decode($json, true);
@@ -88,10 +91,15 @@ class SiteController extends Controller
         ->limit(3)
         ->orderBy(new Expression('RAND()')) 
         ->all();
+
+        $topplayer = Estatisticas::find()
+        ->orderBy(['kd' => SORT_DESC])
+        ->one();
        
         return $this->render('index', [
             'noticias' => $noticias,
             'tournaments' => $tournaments,
+            'topplayer' => $topplayer,
         ]);
     }
 
