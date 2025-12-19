@@ -81,17 +81,27 @@ class TeamController extends Controller
      */
     public function actionCreate()
     {
+        $userId = Yii::$app->user->id;
+        // Prevent users who already belong to a team from creating another
+        if (MembrosEquipa::find()->where(['id_utilizador' => $userId])->exists()) {
+            $membro = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+            Yii::$app->session->setFlash('error', 'Já pertence a uma equipa e não pode criar outra.');
+            return $this->redirect(['view', 'id' => $membro->id_equipa]);
+        }
+
         $equipaModel = new Equipa();
         $equipaModel -> data_criacao = date('Y-m-d H:i:s');
-        $equipaModel -> id_capitao = (Yii::$app->user->id);
+        $equipaModel -> id_capitao = $userId;
         if ($this->request->isPost) {
             if ($equipaModel->load($this->request->post()) && $equipaModel->save()) {
 
                 $membroEquipa = new MembrosEquipa();
-                $membroEquipa->create($equipaModel->id,Yii::$app->user->id);
+                $membroEquipa->create($equipaModel->id, $userId);
 
                 if($membroEquipa->save()){
                     return $this->redirect(['view', 'id' => $equipaModel->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Não foi possível adicionar o utilizador à equipa.');
                 }
 
             }

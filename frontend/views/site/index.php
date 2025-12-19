@@ -76,23 +76,27 @@ $initials = strtoupper(substr($username, 0, 2));
 
 
 <!-- Rankings Section -->
-<?php if ($topplayer): ?>
-    <section class="rankings" id="rankings">
-        <h2 class="section-title">Jogador do Momento</h2>
+<section class="rankings" id="rankings">
+    <h2 class="section-title">Jogador do Momento</h2>
+
+    <?php if ($topplayer && $topplayer->utilizador): ?>
         <div class="ranking-card">
             <div class="ranking-card-left">
-                <a href="<?= Url::to(['/profile/view', 'id' => $topplayer->utilizador->id]) ?>" class="player-avatar-link" title="Ver perfil de <?= Html::encode($topplayer->utilizador->username) ?>">
+                <a href="<?= Url::to(['/profile/view', 'id' => $topplayer->utilizador->id]) ?>"
+                    class="player-avatar-link"
+                    title="Ver perfil de <?= Html::encode($topplayer->utilizador->username) ?>">
                     <div class="profile-avatar">
-                        <?php if (isset($topplayer->utilizador->profileImage)): ?>
+                        <?php if ($topplayer->utilizador->profileImage ?? false): ?>
                             <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($topplayer->utilizador->profileImage->path) ?>"
                                 alt="<?= Html::encode($topplayer->utilizador->username) ?>"
                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                         <?php else: ?>
-                            <?= $initials ?>
+                            <?= Html::encode(substr($topplayer->utilizador->username ?? '??', 0, 2)) ?>
                         <?php endif; ?>
                     </div>
                 </a>
             </div>
+
             <div class="ranking-card-right">
                 <div class="ranking-header-row">
                     <div>
@@ -121,54 +125,50 @@ $initials = strtoupper(substr($username, 0, 2));
                     </div>
                 </div>
             </div>
+
             <div class="rankings-button-row">
-                <?= Html::a(
-                    'Ver Rankings',
-                    ['ranking/index'],
-                    ['class' => 'btn btn-primary']
-                ) ?>
+                <?= Html::a('Ver Rankings', ['ranking/index'], ['class' => 'btn btn-primary']) ?>
             </div>
         </div>
-    </section>
-<?php endif; ?>
-
-
-
-
-
-<!-- News Section -->
-<section class="news" id="news">
-    <h2 class="section-title">Últimas Notícias</h2>
-    <div class="news-grid">
-        <?php if (!empty($noticias)): ?>
-            <?php foreach ($noticias as $n): ?>
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="<?= htmlspecialchars($n['small_image'] ?? '') ?>"
-                            alt="<?= htmlspecialchars($n['title'] ?? '') ?>">
-                    </div>
-                    <div class="news-content">
-                        <p class="news-date">
-                            <?= htmlspecialchars($n['category'] ?? '') ?>
-                        </p>
-                        <h3 class="news-title">
-                            <?= htmlspecialchars($n['title'] ?? '') ?>
-                        </h3>
-                        <p class="news-excerpt">
-                            <?= htmlspecialchars($n['category'] ?? '') ?>
-                        </p>
-                        <a href="<?= htmlspecialchars($n['details_link'] ?? '#') ?>"
-                            class="btn btn-primary"
-                            style="margin-top: 1rem;"
-                            target="_blank"
-                            rel="noopener noreferrer">
-                            Ler Mais
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p style="color: var(--text-secondary);">Sem notícias disponíveis de momento.</p>
-        <?php endif; ?>
-    </div>
+    <?php else: ?>
+        <p style="margin-top: 1rem; color: var(--text-secondary);">
+            Indisponível no momento.
+        </p>
+    <?php endif; ?>
 </section>
+    <!-- News Section -->
+    <section class="news" id="news">
+        <h2 class="section-title">Últimas Notícias</h2>
+        <div class="news-grid">
+            <?php if (!empty($noticias)): ?>
+                <?php foreach ($noticias as $n): ?>
+                    <div class="news-card">
+                        <div class="news-image">
+                            <img src="<?= htmlspecialchars($n['small_image'] ?? '') ?>"
+                                alt="<?= htmlspecialchars($n['title'] ?? '') ?>">
+                        </div>
+                        <div class="news-content">
+                            <p class="news-date">
+                                <?= htmlspecialchars($n['category'] ?? '') ?>
+                            </p>
+                            <h3 class="news-title">
+                                <?= htmlspecialchars($n['title'] ?? '') ?>
+                            </h3>
+                            <p class="news-excerpt">
+                                <?= htmlspecialchars($n['category'] ?? '') ?>
+                            </p>
+                            <a href="<?= htmlspecialchars($n['details_link'] ?? '#') ?>"
+                                class="btn btn-primary"
+                                style="margin-top: 1rem;"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                Ler Mais
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p style="color: var(--text-secondary);">Sem notícias disponíveis de momento.</p>
+            <?php endif; ?>
+        </div>
+    </section>

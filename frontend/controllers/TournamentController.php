@@ -35,9 +35,16 @@ class TournamentController extends \yii\web\Controller
     }
 
     //Inscrição
-
     public function actionInscricao($id)
     {
+        $userId = Yii::$app->user->id;
+        $membroEquipa = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+        if ($membroEquipa === null) {
+            Yii::$app->session->setFlash('error', 'Não pertence a nenhuma equipa. Não pode inscrever-se no torneio.');
+            return $this->redirect(['tournament/view', 'id' => $id]);
+        }
+
+
         $enrollment = new Inscricao();
         $enrollment-> id_torneio = $id;
         $enrollment-> id_utilizador = (Yii::$app->user->id);
@@ -49,7 +56,9 @@ class TournamentController extends \yii\web\Controller
         if ($enrollment->save()) {
             Yii::$app->session->setFlash('success', 'Equipa inscrita com sucesso!');
         } else {
-            Yii::$app->session->setFlash('error', 'Erro ao inscrever equipa.');
+        $errors = $enrollment->getFirstErrors();
+        $msg = $errors ? implode(' ', $errors) : 'Erro ao inscrever equipa.';
+        Yii::$app->session->setFlash('error', $msg);
         }
         return $this->redirect(['tournament/view', 'id' => $id]);
 
