@@ -39,6 +39,10 @@ class Inscricao extends \yii\db\ActiveRecord
             [['id_torneio', 'id_equipa'], 'integer'],
             [['id_torneio'], 'exist', 'skipOnError' => true, 'targetClass' => Tournament::class, 'targetAttribute' => ['id_torneio' => 'id']],
             [['id_equipa'], 'exist', 'skipOnError' => true, 'targetClass' => Equipa::class, 'targetAttribute' => ['id_equipa' => 'id']],
+            [['id_torneio', 'id_equipa'], 'unique',
+            'targetAttribute' => ['id_torneio', 'id_equipa'],
+            'message' => 'Esta equipa já está inscrita neste torneio.',
+        ],
         ];
     }
 

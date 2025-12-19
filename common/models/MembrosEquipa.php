@@ -35,6 +35,7 @@ class MembrosEquipa extends \yii\db\ActiveRecord
         return [
             [['id_equipa', 'funcao', 'id_utilizador'], 'required'],
             [['id_equipa', 'id_utilizador'], 'integer'],
+            [['id_utilizador'], 'unique', 'message' => 'Este utilizador já pertence a uma equipa.'],
             [['funcao'], 'string', 'max' => 100],
             [['id_utilizador'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_utilizador' => 'id']],
             [['id_equipa'], 'exist', 'skipOnError' => true, 'targetClass' => Equipa::class, 'targetAttribute' => ['id_equipa' => 'id']],
@@ -89,7 +90,6 @@ class MembrosEquipa extends \yii\db\ActiveRecord
         $this->id_utilizador = $userId;
         $this->funcao = 'capitao';
         $this->id_equipa = $equipaId;
-        $this->save();
     }
 
 }
