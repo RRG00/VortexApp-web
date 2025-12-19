@@ -33,9 +33,9 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => [ 'logout'],
                         'allow' => true,
-                        'roles' => ['@'], 
+                        'roles' => ['admin', 'organizer', 'referee'], 
                     ],
                     [
                         'actions' => ['index'],
@@ -73,26 +73,41 @@ class SiteController extends Controller
     public function actionIndex()
     {
 
+        $db = Yii::$app->db;
 
+        $admins = (new \yii\db\Query())
+            ->from('auth_assignment')
+            ->where(['item_name' => 'admin'])
+            ->count('*', $db);
 
-        $admins = \common\models\User::find()->where(['papel' => 'admin'])->count();
-        $organizers = \common\models\User::find()->where(['papel' => 'organizer'])->count();
-        $players = \common\models\User::find()->where(['papel' => 'player'])->count();
-        $referees = \common\models\User::find()->where(['papel' => 'referre'])->count();
+        $organizers = (new \yii\db\Query())
+            ->from('auth_assignment')
+            ->where(['item_name' => 'organizer'])
+            ->count('*', $db);
 
-        $months = [];
-        $registrations = [];
+        $players = (new \yii\db\Query())
+            ->from('auth_assignment')
+            ->where(['item_name' => 'player'])
+            ->count('*', $db);
 
-        for ($i = 5; $i >= 0; $i--) {
-            $date = date('Y-m', strtotime("-$i months"));
-            $months[] = date('M Y', strtotime($date));
+        $referees = (new \yii\db\Query())
+            ->from('auth_assignment')
+            ->where(['item_name' => 'referee'])
+            ->count('*', $db);
 
-            $count = User::find()
-                ->where(['>=', 'created_at', strtotime("first day of $date")])
-                ->andWhere(['<', 'created_at', strtotime("first day of $date +1 month")])
-                ->count();
+            $months = [];
+            $registrations = [];
 
-            $registrations[] = $count;
+            for ($i = 5; $i >= 0; $i--) {
+                $date = date('Y-m', strtotime("-$i months"));
+                $months[] = date('M Y', strtotime($date));
+
+                $count = User::find()
+                    ->where(['>=', 'created_at', strtotime("first day of $date")])
+                    ->andWhere(['<', 'created_at', strtotime("first day of $date +1 month")])
+                    ->count();
+
+                $registrations[] = $count;
         }
 
         return $this->render('index', [

@@ -139,36 +139,38 @@ class UserController extends Controller
         $auth = Yii::$app->authManager;
         $model = $this->findModel($id);
         $roles = $auth->getRoles();
+        $roleList = [];
+        foreach ($roles as $role) {
+            $roleList[$role->name] = $role->name;
+        }
         
+        $userRoles = $auth->getRolesByUser($model->id);
+        $currentRole = empty($userRoles) ? null : array_key_first($userRoles);
 
-            $roleList = [];
-            foreach ($roles as $role) {
-                $roleList[$role->name] = $role->name;
-            }
+        $model->roleName = $currentRole;
+
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
 
-            $auth = Yii::$app->authManager;
+            // atualizar RBAC
             $auth->revokeAll($model->id);
-            
 
-            if ($model->papel) {
-
-                $role = $auth->getRole($model->papel);
+            if (!empty($model->roleName)) {
+                $role = $auth->getRole($model->roleName);
                 if ($role) {
                     $auth->assign($role, $model->id);
-
                 }
-    
             }
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
 
-       return $this->render('update', [
+            return $this->redirect(['index']);
+    }
+
+    return $this->render('update', [
         'model' => $model,
         'roleList' => $roleList,
-        ]);
+    ]);
     }
+
 
     public function actionVerifyEmail($token)
     {
@@ -187,15 +189,24 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * Soft-deletes an existing User model by setting status to INACTIVE (9).
+     * This preserves the DB row and revokes any RBAC assignments.
+     * If operation is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->status = User::STATUS_INACTIVE;
+
+        if ($model->save(false, ['status'])) {
+            Yii::$app->authManager->revokeAll($model->id);
+            Yii::$app->session->setFlash('success', 'Utilizador marcado como inativo.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao marcar o utilizador como inativo.');
+        }
 
         return $this->redirect(['index']);
     }
