@@ -73,6 +73,23 @@ class RbacController extends Controller
         $banPlayers->description="Banir Players";
         $auth->add($banPlayers);
 
+        //Premissões frontend (player LOGIN)
+        $createTeam = $auth -> createPermission('creatTeam');
+        $createTeam->description="Criar Equipa";
+        $auth->add($createTeam);
+
+        $updateTeam = $auth -> createPermission('updateTeam');
+        $updateTeam->description= "Atualizar Equipa";
+        $auth->add($updateTeam);
+
+        $insTournament = $auth->createPermission('insTournament');
+        $insTournament->description= "Increver equipa";
+        $auth->add($insTournament);
+
+        $deleteTeam = $auth->createPermission('deleteTeam');
+        $deleteTeam->description = "Apagar equipa";
+        $auth->add($deleteTeam);
+
 
         //Roles
         //Admin -> GereUsers
@@ -119,6 +136,11 @@ class RbacController extends Controller
         $player = $auth->createRole('player');
         $player->description="Player";
         $auth->add($player);
+        $auth->addChild($player, $createTeam);
+        $auth->addChild($player, $updateTeam);
+        $auth->addChild($player, $insTournament);
+        $auth->addChild($player, $deleteTeam);
+
 
 
         //Atribuir Roles a utilizadores
