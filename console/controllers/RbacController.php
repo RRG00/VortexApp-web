@@ -145,14 +145,12 @@ class RbacController extends Controller
         $player = $auth->createRole('player');
         $player->description="player";
         $auth->add($player);
-        $auth->addChild($player, $indexFrontend);
 
         //Atribuir Roles a utilizadores
         $auth->assign($admin, 1); 
         $auth->assign($organizer, 26); 
         $auth->assign($referee, 22); 
         $auth->assign($captian, 6); 
-        $auth->assign($player, 16);
 
 
 
