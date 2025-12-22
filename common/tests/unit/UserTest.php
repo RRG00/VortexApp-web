@@ -11,10 +11,7 @@ class UserTest extends \Codeception\Test\Unit
 
     protected UnitTester $tester;
 
-    protected function _before()
-    {
-
-    }
+    protected function _before(){}
 
     public function testUserWithoutCamps()
     {
