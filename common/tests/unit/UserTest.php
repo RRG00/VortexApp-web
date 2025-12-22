@@ -40,4 +40,16 @@ class UserTest extends \Codeception\Test\Unit
         $this->assertFalse($user->validate());
 
     }
+
+    public function testUserCorrectCamps(){
+
+        $user = new User();
+        $user->username = 'username_teste';
+        $user->email= 'test@test.com';
+        $user->auth_key = \Yii::$app->security->generateRandomString();
+        $user->password = 'Password123';
+
+        $this->assertTrue($user->validate());
+    }
+
 }
