@@ -12,6 +12,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
+
 
 /**
  * TeamController implements the CRUD actions for Equipa model.
@@ -32,6 +34,32 @@ class TeamController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                            [
+                                'allow' => true,
+                                'actions' => ['index'],
+                                'roles' => ['?', '@'],  
+                            ],
+                            [ 
+                                'allow' => true,
+                                'actions' => ['create'],
+                                'roles' => ['@'],  
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['update'],
+                                'roles' => ['updateTeam'],
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['delete'],
+                                'roles' => ['deleteTeam'],
+                            ]
+
+                        ]
+                ]
             ]
         );
     }

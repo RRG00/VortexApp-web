@@ -73,10 +73,7 @@ class RbacController extends Controller
         $banPlayers->description="Banir Players";
         $auth->add($banPlayers);
 
-        //Premissões frontend (player LOGIN)
-        $createTeam = $auth -> createPermission('creatTeam');
-        $createTeam->description="Criar Equipa";
-        $auth->add($createTeam);
+        //Premissões frontend (Captian)
 
         $updateTeam = $auth -> createPermission('updateTeam');
         $updateTeam->description= "Atualizar Equipa";
@@ -90,6 +87,10 @@ class RbacController extends Controller
         $deleteTeam->description = "Apagar equipa";
         $auth->add($deleteTeam);
 
+        //Player see Index only
+        $indexFrontend = $auth-> createPermission('indexFrontend');
+        $indexFrontend->description="indexFrontend";
+        $auth->add($indexFrontend);
 
         //Roles
         //Admin -> GereUsers
@@ -132,22 +133,26 @@ class RbacController extends Controller
         $auth->addChild($referee, $viewResults);
         $auth->addChild($referee, $updateResults);
 
-        //Player -> Usar o frontend apenas
+        //Captian -> create team , update etc
+        $captian = $auth->createRole('captian');
+        $captian->description="Captian";
+        $auth->add($captian);
+        $auth->addChild($captian, $updateTeam);
+        $auth->addChild($captian, $insTournament);
+        $auth->addChild($captian, $deleteTeam);
+
+        //Player -> index frontend only
         $player = $auth->createRole('player');
-        $player->description="Player";
+        $player->description="player";
         $auth->add($player);
-        $auth->addChild($player, $createTeam);
-        $auth->addChild($player, $updateTeam);
-        $auth->addChild($player, $insTournament);
-        $auth->addChild($player, $deleteTeam);
-
-
+        $auth->addChild($player, $indexFrontend);
 
         //Atribuir Roles a utilizadores
         $auth->assign($admin, 1); 
         $auth->assign($organizer, 26); 
         $auth->assign($referee, 22); 
-        $auth->assign($player, 6); 
+        $auth->assign($captian, 6); 
+        $auth->assign($player, 16);
 
 
 
