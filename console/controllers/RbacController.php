@@ -3,6 +3,7 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
+use common\models\Equipa;
 
 class RbacController extends Controller
 {
@@ -152,10 +153,12 @@ class RbacController extends Controller
         $auth->assign($referee, 22); 
         $auth->assign($captian, 6); 
 
-
-
-
-
+         $equipes = Equipa::find()->all();
+            foreach ($equipes as $equipa) {
+                if ($equipa->id_capitao) {
+                    $auth->assign($captian, $equipa->id_capitao);
+                }
+            }
 
 
         echo "RBAC Admin criado com sucesso!\n";
