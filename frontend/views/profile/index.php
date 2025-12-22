@@ -55,6 +55,29 @@ $initials = strtoupper(substr($user->username, 0, 2));
         </div>
     </div>
 
+    <!-- Team Information -->
+    <div class="stats-grid">
+        <div class="stat-card" style="grid-column: span 2;">
+            <div class="stat-label">Equipa</div>
+            <div class="stat-value" style="font-size: 1.1em;">
+                <?php if ($userTeam): ?>
+                    <div class="team-info">
+                        <p><strong>Nome:</strong> <?= Html::a(Html::encode($userTeam->nome), ['/team/view', 'id' => $userTeam->id]) ?></p>
+                        <p><strong>Capitão:</strong> <?= $userTeam->capitao ? Html::a(Html::encode($userTeam->capitao->user->username), ['/profile/view', 'id' => $userTeam->capitao->user->id]) : 'N/A' ?></p>
+                        <p><strong>Data de criação:</strong> <?= Yii::$app->formatter->asDate($userTeam->data_criacao, 'short') ?></p>
+                        <a href="<?= Url::to(['/team/view', 'id' => $userTeam->id]) ?>" class="btn btn-primary btn-sm">Ver</a>
+                    </div>
+                <?php else: ?>
+                    <div class="no-team">
+                        <p>Sem equipa.</p>
+                        <a href="<?= Url::to(['/team/create']) ?>" class="btn btn-primary btn-sm">Criar</a>
+                        <p style="font-size: 0.8em; color: #6c757d;">Aguarde convite.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
     <!-- Games Statistics -->
     <div class="games-section">
         <h2>Estatisticas por Jogo</h2>

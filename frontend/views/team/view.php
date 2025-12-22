@@ -13,11 +13,14 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
 <div class="container my-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
+            <?php if ($isUserTeam): ?>
+                <div style="background-color: #007bff; color: white; padding: 10px; border-radius: 5px; font-weight: bold; text-align: center; margin-bottom: 20px;">Esta é a sua equipa</div>
+            <?php endif; ?>
             <div class="team-profile-img" >
                 <div class="profile-avatar">
                     <?php if ($equipa->profileImage): ?>
                         <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($equipa->profileImage->path) ?>"
-                             alt="<?= Html::encode($equipa->username) ?>"
+                             alt="<?= Html::encode($equipa->nome) ?>"
                              style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                     <?php else: ?>
                         <?= $initials ?>

@@ -11,6 +11,7 @@ use common\models\User;
 use common\models\UpdateUserForm;
 use common\models\Estatisticas;
 use yii\web\UploadedFile;
+use common\models\MembrosEquipa;
 
 class ProfileController extends Controller
 {
@@ -58,6 +59,13 @@ class ProfileController extends Controller
         $totalJogos = $totalVitorias + $totalDerrotas;
         $winRate = $totalJogos > 0 ? round(($totalVitorias / $totalJogos) * 100, 1) : 0;
 
+        // Get user's team
+        $userTeam = null;
+        $membro = MembrosEquipa::findOne(['id_utilizador' => $user->id]);
+        if ($membro) {
+            $userTeam = $membro->equipa;
+        }
+
         return $this->render('index', [
             'user' => $user,
             'estatisticas' => $estatisticas,
@@ -65,6 +73,7 @@ class ProfileController extends Controller
             'totalDerrotas' => $totalDerrotas,
             'totalJogos' => $totalJogos,
             'winRate' => $winRate,
+            'userTeam' => $userTeam,
         ]);
     }
 

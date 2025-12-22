@@ -7,11 +7,31 @@ use yii\web\Controller;
 use common\models\Tournament;
 use common\models\TournamentSearch;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 
 /**
  * RefereeDashboard controller
  */
 class RefereeDashboardController extends Controller{
+
+     public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [ 
+                            'allow' => true,
+                            'actions' => ['index', 'update'], 
+                            'roles' => ['viewResults'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
 
     public function actionIndex()
     {

@@ -3,6 +3,7 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
+use common\models\Equipa;
 
 class RbacController extends Controller
 {
@@ -12,7 +13,7 @@ class RbacController extends Controller
         
         $auth->removeAll();
 
-        //acesso do Backend!
+        //acessBackend
         $accessBackend = $auth->createPermission('accessBackend');
         $accessBackend->description = 'Permissão para acessar o backend';
         $auth->add($accessBackend);
@@ -73,6 +74,24 @@ class RbacController extends Controller
         $banPlayers->description="Banir Players";
         $auth->add($banPlayers);
 
+        //Premissões frontend (Captian)
+
+        $updateTeam = $auth -> createPermission('updateTeam');
+        $updateTeam->description= "Atualizar Equipa";
+        $auth->add($updateTeam);
+
+        $insTournament = $auth->createPermission('insTournament');
+        $insTournament->description= "Increver equipa";
+        $auth->add($insTournament);
+
+        $deleteTeam = $auth->createPermission('deleteTeam');
+        $deleteTeam->description = "Apagar equipa";
+        $auth->add($deleteTeam);
+
+        //Player see Index only
+        $indexFrontend = $auth-> createPermission('indexFrontend');
+        $indexFrontend->description="indexFrontend";
+        $auth->add($indexFrontend);
 
         //Roles
         //Admin -> GereUsers
@@ -89,7 +108,10 @@ class RbacController extends Controller
         $auth->addChild($admin, $createTournament);
         $auth->addChild($admin, $updateTournament);
         $auth->addChild($admin, $deleteTournament);
-
+        $auth->addChild($admin, $viewResults);
+        $auth->addChild($admin, $updateResults);
+        $auth->addChild($admin, $managePlayers);
+        $auth->addChild($admin, $banPlayers);
 
         //Organizador -> Gere Torneios
         $organizer = $auth->createRole('organizer');
@@ -100,28 +122,43 @@ class RbacController extends Controller
         $auth->addChild($organizer, $createTournament);
         $auth->addChild($organizer, $updateTournament);
         $auth->addChild($organizer, $deleteTournament);
+        $auth->addChild($organizer, $viewResults);
+        $auth->addChild($organizer, $updateResults);
+
 
         //Arbitro -> Ver e Atualizar Resultados
         $referee = $auth->createRole('referee');
         $referee->description="referee";
         $auth->add($referee);
         $auth->addChild($referee, $accessBackend);
+        $auth->addChild($referee, $viewResults);
+        $auth->addChild($referee, $updateResults);
 
-        //Player -> Usar o frontend apenas
+        //Captian -> create team , update etc
+        $captian = $auth->createRole('captian');
+        $captian->description="Captian";
+        $auth->add($captian);
+        $auth->addChild($captian, $updateTeam);
+        $auth->addChild($captian, $insTournament);
+        $auth->addChild($captian, $deleteTeam);
+
+        //Player -> index frontend only
         $player = $auth->createRole('player');
-        $player->description="Player";
+        $player->description="player";
         $auth->add($player);
-
-
 
         //Atribuir Roles a utilizadores
         $auth->assign($admin, 1); 
-        $auth->assign($organizer, 4); 
-        $auth->assign($referee, 5); 
-        $auth->assign($player, 6); 
+        $auth->assign($organizer, 26); 
+        $auth->assign($referee, 22); 
+        $auth->assign($captian, 6); 
 
-
-
+         $equipes = Equipa::find()->all();
+            foreach ($equipes as $equipa) {
+                if ($equipa->id_capitao) {
+                    $auth->assign($captian, $equipa->id_capitao);
+                }
+            }
 
 
         echo "RBAC Admin criado com sucesso!\n";

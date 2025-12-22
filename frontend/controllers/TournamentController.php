@@ -8,10 +8,31 @@ use common\models\InscricaoTorneio;
 use common\models\Tournament;
 use common\models\MembrosEquipa;
 use yii;
+use yii\filters\AccessControl;
 
 
 class TournamentController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['?', '@'],  
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['inscricao'],
+                        'roles' => ['insTournament'],  
+                    ],
+                ],
+            ],
+        ];
+    }
     public function actionIndex()
     {
         $tournaments = Tournament::find()->all();
@@ -41,6 +62,11 @@ class TournamentController extends \yii\web\Controller
         $membroEquipa = MembrosEquipa::findOne(['id_utilizador' => $userId]);
         if ($membroEquipa === null) {
             Yii::$app->session->setFlash('error', 'Não pertence a nenhuma equipa. Não pode inscrever-se no torneio.');
+            return $this->redirect(['tournament/view', 'id' => $id]);
+        }
+
+        if ($membroEquipa->funcao !== 'capitao') {
+            Yii::$app->session->setFlash('error', 'Apenas o capitão da equipa pode inscrever a equipa no torneio.');
             return $this->redirect(['tournament/view', 'id' => $id]);
         }
 

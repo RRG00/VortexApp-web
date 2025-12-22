@@ -14,7 +14,6 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
-    public $papel;
     public $isNewRecord;
     public $status;
 
@@ -35,7 +34,6 @@ class SignupForm extends Model
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-            ['papel', 'required'],
 
         ];
     }
@@ -54,27 +52,22 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->status = $this->status = 10;
+        $user->status = 10;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        $user->papel = $this->papel;
 
-        
-
-        if (!$user->save()) {                                                                                                       
+        if (!$user->save()) {
             return null;
         }
-      
+
+        // Dar sempre role "player" no RBAC
         $auth = Yii::$app->authManager;
-        $role = $auth->getRole($this->papel);
-        if ($role) {
-            $auth->assign($role, $user->id);
+        $playerRole = $auth->getRole('player');
+        if ($playerRole) {
+            $auth->assign($playerRole, $user->id);
         }
 
-        return $user; 
+        return $user;
     }
-
-
-
 }
