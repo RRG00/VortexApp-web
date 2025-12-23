@@ -62,7 +62,7 @@ class MembrosEquipa extends \yii\db\ActiveRecord
      */
     public function getEquipa()
     {
-        return $this->hasOne(Equipa::class, ['id_equipa' => 'id_equipa']);
+        return $this->hasOne(Equipa::class, ['id' => 'id_equipa']);
     }
 
     /**

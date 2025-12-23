@@ -12,6 +12,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
+
 
 /**
  * TeamController implements the CRUD actions for Equipa model.
@@ -32,6 +34,37 @@ class TeamController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                            [
+                                'allow' => true,
+                                'actions' => ['index'],
+                                'roles' => ['?', '@'],  
+                            ],
+                            [ 
+                                'allow' => true,
+                                'actions' => ['create'],
+                                'roles' => ['@'],  
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['view'],
+                                'roles' => ['?', '@'],
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['update'],
+                                'roles' => ['updateTeam'],
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['delete'],
+                                'roles' => ['deleteTeam'],
+                            ]
+
+                        ]
+                ]
             ]
         );
     }
@@ -46,9 +79,18 @@ class TeamController extends Controller
         $searchModel = new EquipaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $userTeam = null;
+        if (!Yii::$app->user->isGuest) {
+            $membro = MembrosEquipa::findOne(['id_utilizador' => Yii::$app->user->id]);
+            if ($membro) {
+                $userTeam = $membro->equipa;
+            }
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'userTeam' => $userTeam,
         ]);
     }
 
@@ -62,15 +104,24 @@ class TeamController extends Controller
     {
         $equipa = $this->findModel($id);
         $membros = $equipa->membrosEquipas;
-        $index = array_search($id, array_column($membros, 'id_utilizador'));
-        if($membros[$index]->funcao === 'capitao'){
-         $capitao = $membros[$index]->user->username;
+        $capitao = null;
+        foreach ($membros as $membro) {
+            if ($membro->funcao === 'capitao') {
+                $capitao = $membro->user->username;
+                break;
+            }
         }
-        //$capitao = $membros
+
+        $isUserTeam = false;
+        if (!Yii::$app->user->isGuest) {
+            $membro = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => Yii::$app->user->id]);
+            $isUserTeam = $membro !== null;
+        }
 
         return $this->render('view', [
             'equipa' => $equipa,
             'capitao' => $capitao,
+            'isUserTeam' => $isUserTeam,
         ]);
     }
 
@@ -82,7 +133,6 @@ class TeamController extends Controller
     public function actionCreate()
     {
         $userId = Yii::$app->user->id;
-        // Prevent users who already belong to a team from creating another
         if (MembrosEquipa::find()->where(['id_utilizador' => $userId])->exists()) {
             $membro = MembrosEquipa::findOne(['id_utilizador' => $userId]);
             Yii::$app->session->setFlash('error', 'Já pertence a uma equipa e não pode criar outra.');
@@ -99,6 +149,11 @@ class TeamController extends Controller
                 $membroEquipa->create($equipaModel->id, $userId);
 
                 if($membroEquipa->save()){
+                    $auth = Yii::$app->authManager;
+                    $captainRole = $auth->getRole('captain');
+                    if ($captainRole) {
+                        $auth->assign($captainRole, $userId);
+                    }
                     return $this->redirect(['view', 'id' => $equipaModel->id]);
                 } else {
                     Yii::$app->session->setFlash('error', 'Não foi possível adicionar o utilizador à equipa.');
@@ -124,13 +179,21 @@ class TeamController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        //$model->imageFile = "";
+        $userId = Yii::$app->user->id;
+        $isMember = MembrosEquipa::find()->where(['id_equipa' => $id, 'id_utilizador' => $userId])->exists();
+        if (!$isMember) {
+            Yii::$app->session->setFlash('error', 'Esta equipa não é a sua.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+        if ($model->id_capitao !== $userId) {
+            Yii::$app->session->setFlash('error', 'Você não é o capitão da equipa.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
 
         if ($this->request->isPost && $model->load($this->request->post())){
 
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($model->upload()) {
-                // file is uploaded successfully
                 if($model->save()){  
 
                     Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
@@ -144,25 +207,6 @@ class TeamController extends Controller
         ]);
     }
 
-//    public function actionUpdateOld($id)
-//    {
-//        $model = $this->findModel($id);
-//
-//        if ($model->load(Yii::$app->request->post())) {
-//            // Validate current password if trying to change
-//            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-//
-//            if ($model->update()) {
-//                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
-//                return $this->redirect(['index']);
-//            }
-//        }
-//
-//        return $this->render('edit-team', ['model' => $model]);
-//    }
-
-
-
 
     /**
      * Deletes an existing Equipa model.
@@ -173,7 +217,18 @@ class TeamController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $userId = Yii::$app->user->id;
+        $isMember = MembrosEquipa::find()->where(['id_equipa' => $id, 'id_utilizador' => $userId])->exists();
+        if (!$isMember) {
+            Yii::$app->session->setFlash('error', 'Esta equipa não é a sua.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+        if ($model->id_capitao !== $userId) {
+            Yii::$app->session->setFlash('error', 'Você não é o capitão da equipa.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+        $model->delete();
 
         return $this->redirect(['index']);
     }

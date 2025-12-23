@@ -26,7 +26,10 @@ use yii\widgets\LinkPager;
         </div>
         <div class="tournament-grid">
             <?php foreach ($dataProvider->models as $equipa): ?>
-                <div class="tournament-card">
+                <div class="tournament-card <?= $userTeam && $userTeam->id == $equipa->id ? 'user-team' : '' ?>" style="<?= $userTeam && $userTeam->id == $equipa->id ? 'border: 3px solid #007bff; box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);' : '' ?>">
+                    <?php if ($userTeam && $userTeam->id == $equipa->id): ?>
+                        <div class="user-team-badge" style="background-color: #007bff; color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; position: absolute; top: 10px; right: 10px;">Sua Equipa</div>
+                    <?php endif; ?>
 
                     <div class="tournament-info">
                         <h3><?= Html::encode($equipa->nome) ?></h3>

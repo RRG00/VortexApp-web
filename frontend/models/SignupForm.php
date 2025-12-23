@@ -52,11 +52,11 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
+        $user->status = 10; // se usares status
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        $user->papel = 'player';
-        
+
         if ($user->save()) {
             $auth = Yii::$app->authManager;
             $playerRole = $auth->getRole('player');
@@ -68,6 +68,7 @@ class SignupForm extends Model
         
         return null;
     }
+
 
 
     /**

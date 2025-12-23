@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             'status',
             'verification_token',
-            'papel'
         ],
     ])
     ?>

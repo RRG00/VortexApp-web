@@ -44,9 +44,11 @@ $this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4
                         'enableSorting' => false,
                     ],
                     [
-                        'attribute' => 'papel',
                         'label' => 'Role',
-                        'enableSorting' => false,
+                        'value' => function ($model) {
+                            $roles = Yii::$app->authManager->getRolesByUser($model->id);
+                            return empty($roles) ? '-' : implode(', ', array_keys($roles));
+                        },
                     ],
                     [
                         'attribute' => 'status',
