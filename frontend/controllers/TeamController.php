@@ -8,6 +8,8 @@ use common\models\MembrosEquipa;
 use common\models\UpdateTeamForm;
 use common\models\User;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -32,6 +34,7 @@ class TeamController extends Controller
                     'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                        'attach-member' => ['POST'],
                     ],
                 ],
                 'access' => [
@@ -46,6 +49,11 @@ class TeamController extends Controller
                                 'allow' => true,
                                 'actions' => ['create'],
                                 'roles' => ['@'],  
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['add-members', 'attach-member'],
+                                'roles' => ['@'],
                             ],
                             [
                                 'allow' => true,
@@ -113,16 +121,94 @@ class TeamController extends Controller
         }
 
         $isUserTeam = false;
+        $isCaptain = false;
         if (!Yii::$app->user->isGuest) {
             $membro = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => Yii::$app->user->id]);
             $isUserTeam = $membro !== null;
+            $isCaptain = $membro && $membro->funcao === 'capitao';
         }
 
         return $this->render('view', [
             'equipa' => $equipa,
             'capitao' => $capitao,
             'isUserTeam' => $isUserTeam,
+            'isCaptain' => $isCaptain,
         ]);
+    }
+
+    public function actionAddMembers($id)
+    {
+        $equipa = $this->findModel($id);
+
+        $currentUserId = Yii::$app->user->id;
+        $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
+
+        if (!$currentMembership || $currentMembership->funcao !== 'capitao') {
+            Yii::$app->session->setFlash('error', 'Apenas o capitão desta equipa pode adicionar membros.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        $searchTerm = $this->request->get('q');
+
+        $query = User::find()
+            ->alias('u')
+            ->andWhere(['u.status' => User::STATUS_ACTIVE])
+            ->andWhere([
+                'not exists',
+                MembrosEquipa::find()
+                    ->select(new Expression('1'))
+                    ->where('membros_equipa.id_utilizador = u.id'),
+            ]);
+
+        $query->andFilterWhere(['like', 'u.username', $searchTerm]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => ['username' => SORT_ASC],
+            ],
+        ]);
+
+        return $this->render('add-members', [
+            'equipa' => $equipa,
+            'dataProvider' => $dataProvider,
+            'searchTerm' => $searchTerm,
+        ]);
+    }
+
+    public function actionAttachMember($id, $userId)
+    {
+        $equipa = $this->findModel($id);
+
+        $currentUserId = Yii::$app->user->id;
+        $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
+
+        if (!$currentMembership || $currentMembership->funcao !== 'capitao') {
+            Yii::$app->session->setFlash('error', 'Apenas o capitão desta equipa pode adicionar membros.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        $existingMembership = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+        if ($existingMembership) {
+            Yii::$app->session->setFlash('error', 'Este utilizador já pertence a uma equipa.');
+            return $this->redirect(['add-members', 'id' => $id]);
+        }
+
+        $member = new MembrosEquipa();
+        $member->id_equipa = $id;
+        $member->id_utilizador = $userId;
+        $member->funcao = 'membro';
+
+        if ($member->save()) {
+            Yii::$app->session->setFlash('success', 'Utilizador adicionado à equipa.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Não foi possível adicionar o utilizador.');
+        }
+
+        return $this->redirect(['add-members', 'id' => $id]);
     }
 
     /**

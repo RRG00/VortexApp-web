@@ -5,6 +5,8 @@ use yii\helpers\Url;
 use common\models\Images;
 
 /** @var common\models\Equipa $equipa */
+/** @var bool $isUserTeam */
+/** @var bool $isCaptain */
 
 $this->title = 'Editar Equipa';
 $initials = strtoupper(substr($equipa->nome, 0, 2));
@@ -57,28 +59,38 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
                             <h3 class="h5 text-primary mb-3">
                                 <i class="bi bi-file-text-fill me-2"></i>Membros da Equipa
                             </h3>
-                            <?php foreach ($equipa->utilizadors as $membro): ?>
-                                <p class="text-white-50"><?= $membro->user->username ?></p>
-                            <?php endforeach; ?>
+                            <?php if (!empty($equipa->membrosEquipas)): ?>
+                                <?php foreach ($equipa->membrosEquipas as $membro): ?>
+                                    <p class="text-white-50">
+                                        <i class="bi bi-person-fill me-2"></i>
+                                        <?= Html::encode($membro->user->username) ?>
+                                        <?php if ($membro->funcao === 'capitao'): ?>
+                                            <span class="badge bg-primary ms-2">Capitão</span>
+                                        <?php endif; ?>
+                                    </p>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="text-white-50">Nenhum membro na equipa.</p>
+                            <?php endif; ?>
                         </div>
 
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-6 col-xl-4">
+            <?php if ($isCaptain): ?>
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <div class="d-flex justify-content-center gap-2 mb-4">
+                        <?= Html::a('Editar Equipa', ['update','id' => $equipa->id], [
+                            'class' => 'btn btn-primary text-nowrap'
+                        ]) ?>
 
-                <div class="d-flex justify-content-center gap-2 mb-4">
-                    <?= Html::a('Editar Equipa', ['update','id' => $equipa->id], [
-                        'class' => 'btn btn-primary text-nowrap'
-                    ]) ?>
-
-                    <?= Html::a('Adicionar Membros', ['create'], [
-                        'class' => 'btn btn-primary text-nowrap'
-                    ]) ?>
+                        <?= Html::a('Adicionar Membros', ['add-members', 'id' => $equipa->id], [
+                            'class' => 'btn btn-primary text-nowrap'
+                        ]) ?>
+                    </div>
                 </div>
-
-            </div>
+            <?php endif; ?>
 
 
         </div>
