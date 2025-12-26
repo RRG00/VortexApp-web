@@ -6,6 +6,11 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Equipa $model */
 /** @var yii\widgets\ActiveForm $form */
+
+$status = [
+    common\Models\User::STATUS_ACTIVE => 'Ativo',
+    common\Models\User::STATUS_INACTIVE => 'Removido',
+];
 ?>
 
 <div class="equipa-form">
