@@ -1,0 +1,240 @@
+.tournament-bracket {
+    display: flex;
+    gap: 40px;
+    padding: 20px;
+    min-width: fit-content;
+}
+
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.round-title {
+    color: #7a8699;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.bracket-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: space-around;
+    flex: 1;
+}
+
+.bracket-match {
+    background: #364968;
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 280px;
+    border-left: 3px solid transparent;
+}
+
+.bracket-match.final {
+    border: 2px solid #ffd700;  
+}
+
+.match-team {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    gap: 10px;
+    color: #8896ab;
+    transition: all 0.3s;
+}
+
+.clickable-match {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.clickable-match:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.match-team.winner {
+    background: #3d5270;
+    border-left: 3px solid #4ade80;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.match-team:first-child {
+    border-bottom: 1px solid #2c3e5a;
+}
+
+.team-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.team-name {
+    flex: 1;
+    font-size: 14px;
+}
+
+.team-score {
+    font-size: 18px;
+    font-weight: bold;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Modal Styles */
+.match-selector {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-selector {
+    flex: 1;
+    padding: 20px;
+    background: #364968;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.team-header {
+    margin-bottom: 20px;
+}
+
+.team-icon-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.vs-divider {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.map-results h6 {
+    color: #7a8699;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.map-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.map-btn {
+    padding: 8px 16px;
+    background: #2c3e5a;
+    border: 2px solid #4a5f7f;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.map-btn:hover {
+    border-color: #4ade80;
+}
+
+.map-btn.active {
+    background: #4ade80;
+    border-color: #4ade80;
+    color: #1a1f2e;
+    font-weight: bold;
+}
+
+.score-display {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    padding: 10px;
+    background: #2c3e5a;
+    border-radius: 4px;
+}
+
+/* Stats Modal Styles */
+.team-stats-section {
+    background: #364968;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.player-stats-row {
+    background: #2c3e5a;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.player-stats-row h6 {
+    margin-bottom: 8px;
+    color: #4ade80;
+}
+
+.stats-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+.stat-input-group {
+    flex: 1;
+}
+
+.stat-input-group label {
+    display: block;
+    font-size: 12px;
+    color: #7a8699;
+    margin-bottom: 4px;
+}
+
+.stat-input-group input {
+    width: 100%;
+    background: #1a1f2e;
+    border: 1px solid #4a5f7f;
+    color: white;
+    padding: 6px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.stat-input-group input:focus {
+    outline: none;
+    border-color: #4ade80;
+}
+
+/* Bracket connector lines */
+.bracket-round:not(:last-child) .bracket-match::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    width: 40px;
+    height: 2px;
+    background: #4a5f7f;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tournament-bracket {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .bracket-match {
+        min-width: 100%;
+    }
+}

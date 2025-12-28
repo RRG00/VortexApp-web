@@ -40,10 +40,15 @@ class TournamentController extends Controller
                                 'actions' => ['update'],
                                 'roles' => ['updateTournament'],
                             ],
-                            [ 
+                            [
                                 'allow' => true,
                                 'actions' => ['delete'],
                                 'roles' => ['deleteTournament'],
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['update-estado'],
+                                'roles' => ['updateTournament'],
                             ],
                         ],
                     ],
@@ -136,6 +141,52 @@ class TournamentController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Updates the estado of all tournaments based on their dates.
+     * - 15 days before start: "Em breve"
+     * - Between start and end date: "Em andamento"
+     * - After end date: "Concluído"
+     * @return \yii\web\Response
+     */
+    public function actionUpdateEstado()
+    {
+        $tournaments = Tournament::find()->all();
+        $updatedCount = 0;
+        $today = new \DateTime();
+
+        foreach ($tournaments as $tournament) {
+            $dataInicio = new \DateTime($tournament->data_inicio);
+            $dataFim = new \DateTime($tournament->data_fim);
+            $interval = $today->diff($dataInicio);
+            $daysUntilStart = (int)$interval->format('%r%a');
+
+            $newEstado = null;
+
+            if ($today > $dataFim) {
+                $newEstado = 'Concluído';
+            } elseif ($today >= $dataInicio && $today <= $dataFim) {
+                $newEstado = 'Em andamento';
+            } elseif ($daysUntilStart <= 15 && $daysUntilStart >= 0) {
+                $newEstado = 'Em breve';
+            }
+
+            if ($newEstado !== null && $tournament->estado !== $newEstado) {
+                $tournament->estado = $newEstado;
+                if ($tournament->save(false)) {
+                    $updatedCount++;
+                }
+            }
+        }
+
+        if ($updatedCount > 0) {
+            Yii::$app->session->setFlash('success', "Estados de $updatedCount torneio(s) atualizados com sucesso.");
+        } else {
+            Yii::$app->session->setFlash('info', 'Nenhum torneio necessitou atualização de estado.');
+        }
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
 
     /**

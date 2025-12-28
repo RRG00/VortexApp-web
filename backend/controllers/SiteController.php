@@ -9,6 +9,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use common\models\User;
+use common\models\Tournament;
 
 /**
  * Site controller
@@ -110,6 +111,8 @@ class SiteController extends Controller
                 $registrations[] = $count;
         }
 
+        $tournaments = Tournament::find()->all();
+
         return $this->render('index', [
             'admins' => $admins,
             'organizers' => $organizers,
@@ -117,6 +120,7 @@ class SiteController extends Controller
             'referees' => $referees,
             'months' => $months,
             'registrations' => $registrations,
+            'tournaments' => $tournaments,
         ]);
     }
 
