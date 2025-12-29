@@ -16,6 +16,7 @@ class SignupForm extends Model
     public $password;
     public $isNewRecord;
     public $status;
+    public $roleName;
 
 
     /**
@@ -28,12 +29,15 @@ class SignupForm extends Model
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
-
+            ['password', 'required'],
+            ['password', 'string', 'min' => 6],
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['status', 'integer'],
+            ['roleName', 'string'],
 
         ];
     }
@@ -48,7 +52,7 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
@@ -61,13 +65,15 @@ class SignupForm extends Model
             return null;
         }
 
-        // Dar sempre role "player" no RBAC
-        $auth = Yii::$app->authManager;
-        $playerRole = $auth->getRole('player');
-        if ($playerRole) {
-            $auth->assign($playerRole, $user->id);
-        }
 
+        $auth = Yii::$app->authManager;
+
+        if (!empty($this->roleName)) {
+            $role = $auth->getRole($this->roleName);
+            if ($role !== null) {
+                $auth->assign($role, $user->id);
+            }
+        }
         return $user;
     }
 }

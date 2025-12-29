@@ -54,8 +54,12 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
                                 ->dropDownList($status, ['prompt' => 'Selecione um estado'])
                                 ->label('Estado') ?>
                     </div>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'password')
+                                ->passwordInput(['maxlength' => true, 'placeholder' => 'Password'])
+                                ->label('Password') ?>
                 </div>
-
+                </div>
                 <div class="mt-4 text-end">
                     <?= Html::submitButton(
                             $model->isNewRecord ? 'Criar' : 'Guardar',

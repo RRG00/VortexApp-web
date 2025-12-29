@@ -107,8 +107,6 @@ class UserController extends Controller
     }
 
     if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
-        $model -> password = Yii::$app->getSecurity()->generateRandomString(10);
-
         $user = $model->signup();
         if (!$user instanceof \common\models\User) {
             Yii::$app->session->setFlash('error', 'Erro ao criar o utilizador.');
@@ -117,7 +115,7 @@ class UserController extends Controller
                                 'roleList' => $roleList
                                 ]);
         }
-       return $this->redirect(['view', 'id' => $user->id]);
+       return $this->redirect(['index']);
     }
 
     return $this->render('create', [
@@ -200,6 +198,7 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
         $model->status = User::STATUS_INACTIVE;
+        $model->status = 9;
 
         if ($model->save(false, ['status'])) {
             Yii::$app->authManager->revokeAll($model->id);

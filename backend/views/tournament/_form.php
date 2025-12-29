@@ -98,7 +98,7 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                         <?= $form->field($model, 'arbitro_id')->dropDownList(
                             ArrayHelper::map($referees, 'id', 'username'),
                             ['prompt' => 'Selecione um árbitro']
-                        )->label('Árbitro') ?>
+                            )->label('Árbitro') ?>
                     </div>
 
                     <div class="col-md-6">

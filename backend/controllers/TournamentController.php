@@ -3,6 +3,7 @@
 namespace backend\controllers;
 use common\models\Tournament;
 use common\models\TournamentSearch;
+use common\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -92,6 +93,10 @@ class TournamentController extends Controller
      */
     public function actionCreate()
     {
+        $auth = Yii::$app->authManager;
+        $refereesIds = $auth->getUserIdsByRole('referee'); 
+        $referees = User::find()->where(['id' => $refereesIds])->all();
+
         $model = new Tournament();
         $model->organizador_id = Yii::$app->user->id;
         $model->aprovado_por = Yii::$app->user->id;
@@ -105,7 +110,8 @@ class TournamentController extends Controller
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model'    => $model,
+            'referees' => $referees,
         ]);
     }
 
