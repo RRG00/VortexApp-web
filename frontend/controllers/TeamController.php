@@ -40,38 +40,38 @@ class TeamController extends Controller
                 'access' => [
                     'class' => AccessControl::class,
                     'rules' => [
-                            [
-                                'allow' => true,
-                                'actions' => ['index'],
-                                'roles' => ['?', '@'],  
-                            ],
-                            [ 
-                                'allow' => true,
-                                'actions' => ['create'],
-                                'roles' => ['@'],  
-                            ],
-                            [
-                                'allow' => true,
-                                'actions' => ['add-members', 'attach-member'],
-                                'roles' => ['@'],
-                            ],
-                            [
-                                'allow' => true,
-                                'actions' => ['view'],
-                                'roles' => ['?', '@'],
-                            ],
-                            [
-                                'allow' => true,
-                                'actions' => ['update'],
-                                'roles' => ['updateTeam'],
-                            ],
-                            [
-                                'allow' => true,
-                                'actions' => ['delete'],
-                                'roles' => ['deleteTeam'],
-                            ]
-
+                        [
+                            'allow' => true,
+                            'actions' => ['index'],
+                            'roles' => ['?', '@'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['create'],
+                            'roles' => ['@'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['add-members', 'attach-member'],
+                            'roles' => ['@'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['view'],
+                            'roles' => ['?', '@'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['update'],
+                            'roles' => ['updateTeam'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['delete'],
+                            'roles' => ['deleteTeam'],
                         ]
+
+                    ]
                 ]
             ]
         );
@@ -219,32 +219,40 @@ class TeamController extends Controller
     public function actionCreate()
     {
         $userId = Yii::$app->user->id;
-        if (MembrosEquipa::find()->where(['id_utilizador' => $userId])->exists()) {
-            $membro = MembrosEquipa::findOne(['id_utilizador' => $userId]);
-            Yii::$app->session->setFlash('error', 'Já pertence a uma equipa e não pode criar outra.');
-            return $this->redirect(['view', 'id' => $membro->id_equipa]);
+        $membro = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+
+        if ($membro !== null) {
+            $equipa = Equipa::findOne($membro->id_equipa);
+
+            if ($equipa !== null) {
+
+                Yii::$app->session->setFlash('error', 'Já pertence a uma equipa e não pode criar outra.');
+                return $this->redirect(['view', 'id' => $equipa->id]);
+            } else {
+                $membro->delete();
+            }
         }
 
         $equipaModel = new Equipa();
-        $equipaModel -> data_criacao = date('Y-m-d H:i:s');
-        $equipaModel -> id_capitao = $userId;
+        $equipaModel->data_criacao = date('Y-m-d H:i:s');
+        $equipaModel->id_capitao = $userId;
+
         if ($this->request->isPost) {
             if ($equipaModel->load($this->request->post()) && $equipaModel->save()) {
 
                 $membroEquipa = new MembrosEquipa();
                 $membroEquipa->create($equipaModel->id, $userId);
 
-                if($membroEquipa->save()){
+                if ($membroEquipa->save()) {
                     $auth = Yii::$app->authManager;
-                    $captainRole = $auth->getRole('captain');
-                    if ($captainRole) {
+                    $captainRole = $auth->getRole('captian'); // nome igual ao RBAC
+                    if ($captainRole && !$auth->getAssignment('captian', $userId)) {
                         $auth->assign($captainRole, $userId);
                     }
                     return $this->redirect(['view', 'id' => $equipaModel->id]);
                 } else {
                     Yii::$app->session->setFlash('error', 'Não foi possível adicionar o utilizador à equipa.');
                 }
-
             }
         } else {
             $equipaModel->loadDefaultValues();
@@ -254,6 +262,7 @@ class TeamController extends Controller
             'model' => $equipaModel,
         ]);
     }
+
 
     /**
      * Updates an existing Equipa model.
@@ -276,17 +285,16 @@ class TeamController extends Controller
             return $this->redirect(['view', 'id' => $id]);
         }
 
-        if ($this->request->isPost && $model->load($this->request->post())){
+        if ($this->request->isPost && $model->load($this->request->post())) {
 
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($model->upload()) {
-                if($model->save()){  
+                if ($model->save()) {
 
                     Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
                     return $this->redirect(['index']);
                 }
             }
-
         }
         return $this->render('edit-team', [
             'model' => $model,

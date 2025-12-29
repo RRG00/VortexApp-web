@@ -16,6 +16,17 @@ $this->registerJsFile('@web/js/tournament-management.js', [
 ]);
 
 $this->title = 'Tournament Management | Vortex';
+
+$csrfParam = Yii::$app->request->csrfParam;
+$csrfToken = Yii::$app->request->csrfToken;
+
+$this->registerJs("
+    window.csrfParam = '{$csrfParam}';
+    window.csrfToken = '{$csrfToken}';
+", \yii\web\View::POS_HEAD);
+?>
+
+
 ?>
 <div class="container-fluid">
     <div class="row mb-3">
@@ -95,18 +106,18 @@ $this->title = 'Tournament Management | Vortex';
                                                  data-match-id="<?= $match['match_id'] ?? '' ?>"
                                                  data-partida-id="<?= $match['partida_id'] ?? '' ?>"
                                                  data-team1-id="<?= $match['team1']['id'] ?>"
-                                                 data-team1-name="<?= Html::encode($match['team1']['nome']) ?>"
+                                                 data-team1-name="<?= Html::encode($match['team1']['name']) ?>"
                                                  data-team2-id="<?= $match['team2']['id'] ?>"
-                                                 data-team2-name="<?= Html::encode($match['team2']['nome']) ?>"
+                                                 data-team2-name="<?= Html::encode($match['team2']['name']) ?>"
                                                  onclick="openMatchModal(this)">
                                                 <div class="match-team <?= $match['winner'] === 1 ? 'winner' : '' ?>">
                                                     <img src="/img/team-icon.png" alt="" class="team-icon" onerror="this.style.display='none'">
-                                                    <span class="team-name"><?= Html::encode($match['team1']['nome']) ?></span>
+                                                    <span class="team-name"><?= Html::encode($match['team1']['name']) ?></span>
                                                     <span class="team-score"><?= $match['score1'] ?></span>
                                                 </div>
                                                 <div class="match-team <?= $match['winner'] === 2 ? 'winner' : '' ?>">
                                                     <img src="/img/team-icon.png" alt="" class="team-icon" onerror="this.style.display='none'">
-                                                    <span class="team-name"><?= Html::encode($match['team2']['nome']) ?></span>
+                                                    <span class="team-name"><?= Html::encode($match['team2']['name']) ?></span>
                                                     <span class="team-score"><?= $match['score2'] ?></span>
                                                 </div>
                                             </div>

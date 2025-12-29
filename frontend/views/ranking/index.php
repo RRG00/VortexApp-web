@@ -8,9 +8,6 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $this->title = 'Rankings';
-
-$username = $user->username ?? 'User';
-$initials = strtoupper(substr($username, 0, 2));
 ?>
 
 <section class="rankings" id="rankings">
@@ -30,22 +27,32 @@ $initials = strtoupper(substr($username, 0, 2));
             <tbody>
                 <?php if (!empty($rankings)): ?>
                     <?php foreach ($rankings as $index => $ranking): ?>
+                        <?php
+                        $user = $ranking->utilizador ?? null;
+                        if ($user === null) {
+                            continue; 
+                        }
+                        $username = $user->username ?? 'User';
+                        $initials = strtoupper(substr($username, 0, 2));
+                        ?>
                         <tr>
                             <td><span class="rank"><?= $index + 1 ?></span></td>
                             <td>
                                 <div class="player-info">
-                                    <a href="<?= Url::to(['/profile/view', 'id' => $ranking->utilizador->id]) ?>" class="player-avatar-link" title="Ver perfil de <?= Html::encode($ranking->utilizador->username) ?>">
+                                    <a href="<?= Url::to(['/profile/view', 'id' => $user->id]) ?>"
+                                        class="player-avatar-link"
+                                        title="Ver perfil de <?= Html::encode($username) ?>">
                                         <div class="player-avatar">
-                                            <?php if (isset($ranking->utilizador->profileImage)): ?>
-                                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($ranking->utilizador->profileImage->path) ?>"
-                                                    alt="<?= Html::encode($ranking->utilizador->username) ?>"
+                                            <?php if (isset($user->profileImage)): ?>
+                                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                                                    alt="<?= Html::encode($username) ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                             <?php else: ?>
                                                 <?= $initials ?>
                                             <?php endif; ?>
                                         </div>
                                     </a>
-                                    <span><?= Html::encode($ranking->utilizador->username ?? 'Unknown') ?></span>
+                                    <span><?= Html::encode($username) ?></span>
                                 </div>
                             </td>
                             <td><?= Html::encode($ranking->jogo->nome ?? 'Unknown Game') ?></td>
@@ -56,7 +63,7 @@ $initials = strtoupper(substr($username, 0, 2));
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" style="text-align: center;">Nenhum ranking disponível</td>
+                        <td colspan="6" style="text-align: center;">Nenhum ranking disponível</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

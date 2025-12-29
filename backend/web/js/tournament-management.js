@@ -373,7 +373,7 @@ function saveBrackets() {
         const teams = match.querySelectorAll('.match-team');
         const scores = match.querySelectorAll('.team-score');
 
-        const matchData = {
+        bracketData.push({
             round: parseInt(round),
             match: parseInt(matchIndex),
             match_id: matchId ? parseInt(matchId) : null,
@@ -390,36 +390,47 @@ function saveBrackets() {
             },
             winner: teams[0].classList.contains('winner') ? 1 :
                     (teams[1].classList.contains('winner') ? 2 : null)
-        };
-
-        bracketData.push(matchData);
+        });
     });
 
-    // Send to server
     fetch(window.location.href, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-Token': window.csrfToken
         },
         body: JSON.stringify({
             brackets: bracketData,
             tournament_id: window.tournamentId
         })
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => response.text())
+    .then(text => {
+        console.log('RAW response:', text);
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            alert('Resposta não é JSON: ' + text);
+            return;
+        }
+
         if (data.success) {
-            alert('Resultados guardados com sucesso!');
+            alert(data.message || 'Resultados guardados com sucesso!');
         } else {
             alert('Erro ao guardar resultados: ' + (data.message || 'Erro desconhecido'));
+            console.log('Errors:', data.errors);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Erro ao guardar resultados.');
+        console.error('Fetch error:', error);
+        alert('Erro ao guardar resultados: ' + error.message);
     });
 }
+
+
 
 // Initialize event listeners when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {

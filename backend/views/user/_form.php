@@ -26,21 +26,21 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
 
             <div class="user-card-body">
                 <?php $form = ActiveForm::begin([
-                        'options' => ['class' => 'needs-validation'],
-                        'enableClientValidation' => true,
+                    'options' => ['class' => 'needs-validation'],
+                    'enableClientValidation' => true,
                 ]); ?>
 
                 <div class="row g-3">
                     <div class="col-md-6">
                         <?= $form->field($model, 'username')
-                                ->textInput(['maxlength' => true, 'placeholder' => 'Nome de utilizador'])
-                                ->label('Utilizador') ?>
+                            ->textInput(['maxlength' => true, 'placeholder' => 'Nome de utilizador'])
+                            ->label('Utilizador') ?>
                     </div>
 
                     <div class="col-md-6">
                         <?= $form->field($model, 'email')
-                                ->textInput(['maxlength' => true, 'placeholder' => 'exemplo@dominio.com'])
-                                ->label('E-mail') ?>
+                            ->textInput(['maxlength' => true, 'placeholder' => 'exemplo@dominio.com'])
+                            ->label('E-mail') ?>
                     </div>
 
                     <div class="col-md-6">
@@ -51,19 +51,22 @@ $this->registerCssFile('@web/css/user-form.css', ['depends' => [\yii\bootstrap4\
                     </div>
                     <div class="col-md-6">
                         <?= $form->field($model, 'status')
-                                ->dropDownList($status, ['prompt' => 'Selecione um estado'])
-                                ->label('Estado') ?>
+                            ->dropDownList($status, ['prompt' => 'Selecione um estado'])
+                            ->label('Estado') ?>
                     </div>
-                    <div class="col-md-6">
-                        <?= $form->field($model, 'password')
+                    <?php if ($model instanceof \backend\models\SignupForm): ?>
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'password')
                                 ->passwordInput(['maxlength' => true, 'placeholder' => 'Password'])
                                 ->label('Password') ?>
-                </div>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
                 <div class="mt-4 text-end">
                     <?= Html::submitButton(
-                            $model->isNewRecord ? 'Criar' : 'Guardar',
-                            ['class' => 'btn btn-primary-custom']
+                        $model->isNewRecord ? 'Criar' : 'Guardar',
+                        ['class' => 'btn btn-primary-custom']
                     ) ?>
                     <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-outline-light ms-2']) ?>
                 </div>

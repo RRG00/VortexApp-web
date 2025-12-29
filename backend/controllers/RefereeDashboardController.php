@@ -17,9 +17,13 @@ use yii\filters\AccessControl;
 /**
  * RefereeDashboard controller
  */
-class RefereeDashboardController extends Controller{
+class RefereeDashboardController extends Controller
+{
 
-     public function behaviors()
+    public $enableCsrfValidation = false;
+
+
+    public function behaviors()
     {
         return array_merge(
             parent::behaviors(),
@@ -27,9 +31,9 @@ class RefereeDashboardController extends Controller{
                 'access' => [
                     'class' => AccessControl::class,
                     'rules' => [
-                        [ 
+                        [
                             'allow' => true,
-                            'actions' => ['index', 'update'], 
+                            'actions' => ['index', 'update', 'management', 'get-team-players', 'save-stats'],
                             'roles' => ['viewResults'],
                         ],
                     ],
@@ -72,28 +76,29 @@ class RefereeDashboardController extends Controller{
             $data = json_decode(Yii::$app->request->rawBody, true);
 
             if (isset($data['brackets']) && isset($data['tournament_id'])) {
-                // Save bracket data to database
                 $savedCount = 0;
+                $errors = [];
                 $transaction = Yii::$app->db->beginTransaction();
 
                 try {
                     foreach ($data['brackets'] as $matchData) {
                         // Skip matches without valid teams
-                        if (!isset($matchData['team1']['id']) || !isset($matchData['team2']['id']) ||
+                        if (
+                            !isset($matchData['team1']['id']) || !isset($matchData['team2']['id']) ||
                             $matchData['team1']['id'] === null || $matchData['team2']['id'] === null ||
                             $matchData['team1']['id'] === 'null' || $matchData['team2']['id'] === 'null' ||
-                            empty($matchData['team1']['id']) || empty($matchData['team2']['id'])) {
+                            empty($matchData['team1']['id']) || empty($matchData['team2']['id'])
+                        ) {
                             continue;
                         }
 
                         // Find existing partida or create new one
                         $partida = null;
-                        if (isset($matchData['partida_id']) && $matchData['partida_id']) {
+                        if (!empty($matchData['partida_id'])) {
                             $partida = Partida::findOne($matchData['partida_id']);
                         }
 
                         if (!$partida) {
-                            // Check if partida exists for these teams in this tournament
                             $partida = Partida::find()
                                 ->where([
                                     'id_torneio' => $id,
@@ -111,49 +116,91 @@ class RefereeDashboardController extends Controller{
                             $partida->estado = Partida::ESTADO_PENDENTE;
                         }
 
-                        // Update scores
-                        $partida->vitorias_a = $matchData['team1']['score'] ?? 0;
-                        $partida->vitorias_b = $matchData['team2']['score'] ?? 0;
+                        // Scores
+                        $partida->vitorias_a = (int)($matchData['team1']['score'] ?? 0);
+                        $partida->vitorias_b = (int)($matchData['team2']['score'] ?? 0);
 
-                        // Update estado based on winner
-                        if (isset($matchData['winner']) && $matchData['winner'] !== null) {
+                        // Estado
+                        if (!empty($matchData['winner'])) {
                             $partida->estado = Partida::ESTADO_CONCLUIDA;
                         } elseif ($partida->vitorias_a > 0 || $partida->vitorias_b > 0) {
                             $partida->estado = Partida::ESTADO_EM_ANDAMENTO;
                         }
-
                         if ($partida->save()) {
-                            // Update match data with partida_id for session backup
                             $matchData['partida_id'] = $partida->id_partida;
                             $savedCount++;
+
+                       
+                            if ($partida->estado == Partida::ESTADO_CONCLUIDA && !empty($matchData['winner'])) {
+                                $winnerTeamId = ($matchData['winner'] == 1) ? $partida->equipa_a : $partida->equipa_b;
+                                $loserTeamId  = ($matchData['winner'] == 1) ? $partida->equipa_b : $partida->equipa_a;
+
+                          
+                                $winnerMembers = MembrosEquipa::find()->where(['id_equipa' => $winnerTeamId])->all();
+                                $loserMembers  = MembrosEquipa::find()->where(['id_equipa' => $loserTeamId])->all();
+                 
+                                $gameId = $model->id_jogo;
+
+                    
+                                foreach ($winnerMembers as $membro) {
+                                    $estat = Estatisticas::findOne([
+                                        'id_utilizador' => $membro->id_utilizador,
+                                        'id_jogo'       => $gameId,
+                                    ]);
+                                    if (!$estat) {
+                                        $estat = new Estatisticas();
+                                        $estat->id_utilizador = $membro->id_utilizador;
+                                        $estat->id_jogo = $gameId;
+                                        $estat->vitorias = 0;
+                                        $estat->derrotas = 0;
+                                    }
+                                    $estat->vitorias++;
+                                    $estat->save(false);
+                                }
+
+                                foreach ($loserMembers as $membro) {
+                                    $estat = Estatisticas::findOne([
+                                        'id_utilizador' => $membro->id_utilizador,
+                                        'id_jogo'       => $gameId,
+                                    ]);
+                                    if (!$estat) {
+                                        $estat = new Estatisticas();
+                                        $estat->id_utilizador = $membro->id_utilizador;
+                                        $estat->id_jogo = $gameId;
+                                        $estat->vitorias = 0;
+                                        $estat->derrotas = 0;
+                                    }
+                                    $estat->derrotas++;
+                                    $estat->save(false);
+                                }
+                            }
                         } else {
-                            // Log validation errors
-                            Yii::error('Failed to save partida: ' . json_encode($partida->getErrors()));
+                            $errors[] = $partida->getErrors();
                         }
                     }
 
-                    // Also save to session as backup
                     Yii::$app->session->set('tournament_brackets_' . $id, $data['brackets']);
-
                     $transaction->commit();
 
                     return [
-                        'success' => true,
-                        'message' => "$savedCount partida(s) guardada(s) com sucesso!"
+                        'success' => empty($errors),
+                        'message' => empty($errors)
+                            ? "$savedCount partida(s) guardada(s) com sucesso!"
+                            : 'Algumas partidas não foram guardadas.',
+                        'errors' => $errors,
                     ];
                 } catch (\Exception $e) {
                     $transaction->rollBack();
-                    Yii::error('Exception saving brackets: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
                     return [
                         'success' => false,
-                        'message' => 'Erro ao guardar partidas: ' . $e->getMessage()
+                        'message' => 'Erro ao guardar partidas: ' . $e->getMessage(),
                     ];
                 }
             }
 
             return [
                 'success' => false,
-                'message' => 'Dados inválidos'
+                'message' => 'Dados inválidos',
             ];
         }
 
@@ -162,17 +209,12 @@ class RefereeDashboardController extends Controller{
             ->with('equipa')
             ->all();
 
-        // Generate bracket structure
         $brackets = $this->generateBrackets($inscricoes);
 
-        // Load saved brackets from database first
         $savedBrackets = $this->loadBracketsFromDatabase($id);
-
-        // If no database records, try session as fallback
         if (empty($savedBrackets)) {
             $savedBrackets = Yii::$app->session->get('tournament_brackets_' . $id);
         }
-
         if ($savedBrackets) {
             $brackets = $this->mergeSavedBrackets($brackets, $savedBrackets);
         }
@@ -183,6 +225,7 @@ class RefereeDashboardController extends Controller{
             'brackets' => $brackets,
         ]);
     }
+
 
     /**
      * Generate tournament brackets based on registered teams
@@ -507,8 +550,4 @@ class RefereeDashboardController extends Controller{
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-
 }
-
-?>

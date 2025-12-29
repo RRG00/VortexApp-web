@@ -125,6 +125,9 @@ class TournamentController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $auth = Yii::$app->authManager;
+        $refereesIds = $auth->getUserIdsByRole('referee');
+        $referees = User::find()->where(['id' => $refereesIds])->all();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -132,6 +135,7 @@ class TournamentController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'referees' => $referees,
         ]);
     }
 

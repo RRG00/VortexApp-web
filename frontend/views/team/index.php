@@ -37,10 +37,11 @@ use yii\widgets\LinkPager;
 
                             <span class="detail-item">
                                 Capitão:
-                                 <?= $equipa->capitao && $equipa->capitao
+                                <?= ($equipa->capitao && $equipa->capitao->user)
                                     ? Html::encode($equipa->capitao->user->username)
                                     : 'N/A' ?>
                             </span>
+
 
                             <span class="detail-item">
                                 <?= Yii::$app->formatter->asDate($equipa->data_criacao, 'short') ?>
