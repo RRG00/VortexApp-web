@@ -12,6 +12,7 @@ use common\models\UpdateUserForm;
 use common\models\Estatisticas;
 use yii\web\UploadedFile;
 use common\models\MembrosEquipa;
+use app\models\Convite;
 
 class ProfileController extends Controller
 {
@@ -20,7 +21,7 @@ class ProfileController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'edit-profile', 'delete-account'],
+                'only' => ['index', 'edit-profile', 'delete-account', 'accept-invite', 'decline-invite'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -32,6 +33,8 @@ class ProfileController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete-account' => ['post'],
+                    'accept-invite' => ['post'],
+                    'decline-invite' => ['post'],
                 ],
             ],
         ];
@@ -66,6 +69,11 @@ class ProfileController extends Controller
             $userTeam = $membro->equipa;
         }
 
+        // Get pending invitations
+        $invitations = Convite::find()
+            ->where(['id_utilizador' => $user->id])
+            ->all();
+
         return $this->render('index', [
             'user' => $user,
             'estatisticas' => $estatisticas,
@@ -74,6 +82,7 @@ class ProfileController extends Controller
             'totalJogos' => $totalJogos,
             'winRate' => $winRate,
             'userTeam' => $userTeam,
+            'invitations' => $invitations,
         ]);
     }
 
@@ -155,6 +164,68 @@ class ProfileController extends Controller
             Yii::$app->session->setFlash('error', 'Não foi possível desativar sua conta. Por favor, tente novamente.');
             return $this->redirect(['edit-profile']);
         }
+    }
+
+    public function actionAcceptInvite($id)
+    {
+        $userId = Yii::$app->user->id;
+        $convite = Convite::findOne(['id_notificacao' => $id]);
+
+        if (!$convite || $convite->id_utilizador != $userId) {
+            Yii::$app->session->setFlash('error', 'Convite inválido.');
+            return $this->redirect(['index']);
+        }
+
+        $data = json_decode($convite->convite, true);
+        $teamId = $data['team_id'] ?? null;
+
+        if (!$teamId) {
+            Yii::$app->session->setFlash('error', 'Dados do convite inválidos.');
+            return $this->redirect(['index']);
+        }
+
+        // Check if user is already member
+        $existing = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+        if ($existing) {
+            // remove convite as user already has a team
+            $convite->delete();
+            Yii::$app->session->setFlash('error', 'Já pertence a uma equipa.');
+            return $this->redirect(['index']);
+        }
+
+        $member = new MembrosEquipa();
+        $member->id_equipa = $teamId;
+        $member->id_utilizador = $userId;
+        $member->funcao = 'membro';
+
+        if ($member->save()) {
+            // remove convite after successful acceptance
+            $convite->delete();
+            Yii::$app->session->setFlash('success', 'Aceitou o convite e foi adicionado à equipa.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Não foi possível adicionar à equipa.');
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionDeclineInvite($id)
+    {
+        $userId = Yii::$app->user->id;
+        $convite = Convite::findOne(['id_notificacao' => $id]);
+
+        if (!$convite || $convite->id_utilizador != $userId) {
+            Yii::$app->session->setFlash('error', 'Convite inválido.');
+            return $this->redirect(['index']);
+        }
+
+        if ($convite->delete()) {
+            Yii::$app->session->setFlash('success', 'Convite recusado.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Não foi possível recusar o convite.');
+        }
+
+        return $this->redirect(['index']);
     }
 
     /**
