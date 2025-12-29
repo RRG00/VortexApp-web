@@ -7,5 +7,12 @@ return [
             'class' => \yii\web\User::class,
             'identityClass' => 'common\models\User',
         ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=vortexdb_test', 
+            'username' => 'root',      
+            'password' => '',          
+            'charset' => 'utf8',
+        ],
     ],
 ];
