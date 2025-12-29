@@ -82,7 +82,6 @@ class RefereeDashboardController extends Controller
 
                 try {
                     foreach ($data['brackets'] as $matchData) {
-                        // Skip matches without valid teams
                         if (
                             !isset($matchData['team1']['id']) || !isset($matchData['team2']['id']) ||
                             $matchData['team1']['id'] === null || $matchData['team2']['id'] === null ||
@@ -92,7 +91,6 @@ class RefereeDashboardController extends Controller
                             continue;
                         }
 
-                        // Find existing partida or create new one
                         $partida = null;
                         if (!empty($matchData['partida_id'])) {
                             $partida = Partida::findOne($matchData['partida_id']);
@@ -120,7 +118,6 @@ class RefereeDashboardController extends Controller
                         $partida->vitorias_a = (int)($matchData['team1']['score'] ?? 0);
                         $partida->vitorias_b = (int)($matchData['team2']['score'] ?? 0);
 
-                        // Estado
                         if (!empty($matchData['winner'])) {
                             $partida->estado = Partida::ESTADO_CONCLUIDA;
                         } elseif ($partida->vitorias_a > 0 || $partida->vitorias_b > 0) {
