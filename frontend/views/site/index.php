@@ -79,20 +79,14 @@ $initials = strtoupper(substr($username, 0, 2));
 <section class="rankings" id="rankings">
     <h2 class="section-title">Jogador do Momento</h2>
 
-    <?php if ($topplayer && $topplayer->utilizador): ?>
+    <?php if ($topplayer): ?>
         <div class="ranking-card">
             <div class="ranking-card-left">
-                <a href="<?= Url::to(['/profile/view', 'id' => $topplayer->utilizador->id]) ?>"
+                <a href="<?= $playerUser ? Url::to(['/profile/view', 'id' => $playerUser->id]) : '#' ?>"
                     class="player-avatar-link"
-                    title="Ver perfil de <?= Html::encode($topplayer->utilizador->username) ?>">
+                    title="Ver perfil de <?= Html::encode($playerUser->username ?? 'Desconhecido') ?>">
                     <div class="profile-avatar">
-                        <?php if ($topplayer->utilizador->profileImage ?? false): ?>
-                            <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($topplayer->utilizador->profileImage->path) ?>"
-                                alt="<?= Html::encode($topplayer->utilizador->username) ?>"
-                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                        <?php else: ?>
-                            <?= Html::encode(substr($topplayer->utilizador->username ?? '??', 0, 2)) ?>
-                        <?php endif; ?>
+                        <?= Html::encode(substr($playerUser->username ?? '??', 0, 2)) ?>
                     </div>
                 </a>
             </div>
@@ -100,9 +94,9 @@ $initials = strtoupper(substr($username, 0, 2));
             <div class="ranking-card-right">
                 <div class="ranking-header-row">
                     <div>
-                        <h3><?= Html::encode($topplayer->utilizador->username ?? 'Desconhecido') ?></h3>
+                        <h3><?= Html::encode($playerUser->username ?? 'Desconhecido') ?></h3>
                         <p class="ranking-game">
-                            <?= Html::encode($topplayer->jogo->nome ?? 'Sem jogo') ?>
+                            <?= Html::encode($playerGame->nome ?? 'Sem jogo') ?>
                         </p>
                     </div>
                 </div>
@@ -136,39 +130,40 @@ $initials = strtoupper(substr($username, 0, 2));
         </p>
     <?php endif; ?>
 </section>
-    <!-- News Section -->
-    <section class="news" id="news">
-        <h2 class="section-title">Últimas Notícias</h2>
-        <div class="news-grid">
-            <?php if (!empty($noticias)): ?>
-                <?php foreach ($noticias as $n): ?>
-                    <div class="news-card">
-                        <div class="news-image">
-                            <img src="<?= htmlspecialchars($n['small_image'] ?? '') ?>"
-                                alt="<?= htmlspecialchars($n['title'] ?? '') ?>">
-                        </div>
-                        <div class="news-content">
-                            <p class="news-date">
-                                <?= htmlspecialchars($n['category'] ?? '') ?>
-                            </p>
-                            <h3 class="news-title">
-                                <?= htmlspecialchars($n['title'] ?? '') ?>
-                            </h3>
-                            <p class="news-excerpt">
-                                <?= htmlspecialchars($n['category'] ?? '') ?>
-                            </p>
-                            <a href="<?= htmlspecialchars($n['details_link'] ?? '#') ?>"
-                                class="btn btn-primary"
-                                style="margin-top: 1rem;"
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                Ler Mais
-                            </a>
-                        </div>
+
+<!-- News Section -->
+<section class="news" id="news">
+    <h2 class="section-title">Últimas Notícias</h2>
+    <div class="news-grid">
+        <?php if (!empty($noticias)): ?>
+            <?php foreach ($noticias as $n): ?>
+                <div class="news-card">
+                    <div class="news-image">
+                        <img src="<?= htmlspecialchars($n['small_image'] ?? '') ?>"
+                            alt="<?= htmlspecialchars($n['title'] ?? '') ?>">
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p style="color: var(--text-secondary);">Sem notícias disponíveis de momento.</p>
-            <?php endif; ?>
-        </div>
-    </section>
+                    <div class="news-content">
+                        <p class="news-date">
+                            <?= htmlspecialchars($n['category'] ?? '') ?>
+                        </p>
+                        <h3 class="news-title">
+                            <?= htmlspecialchars($n['title'] ?? '') ?>
+                        </h3>
+                        <p class="news-excerpt">
+                            <?= htmlspecialchars($n['category'] ?? '') ?>
+                        </p>
+                        <a href="<?= htmlspecialchars($n['details_link'] ?? '#') ?>"
+                            class="btn btn-primary"
+                            style="margin-top: 1rem;"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            Ler Mais
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p style="color: var(--text-secondary);">Sem notícias disponíveis de momento.</p>
+        <?php endif; ?>
+    </div>
+</section>

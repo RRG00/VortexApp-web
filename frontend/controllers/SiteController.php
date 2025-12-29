@@ -17,7 +17,9 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\User;
 use yii\db\Expression;
+use common\models\Jogo;
 
 /**
  * Site controller
@@ -88,18 +90,23 @@ class SiteController extends Controller
         $noticias = array_slice($items, 0, 3);
 
         $tournaments = Tournament::find()
-        ->limit(3)
-        ->orderBy(new Expression('RAND()')) 
-        ->all();
+            ->limit(3)
+            ->orderBy(new Expression('RAND()'))
+            ->all();
 
         $topplayer = Estatisticas::find()
-        ->orderBy(['kd' => SORT_DESC])
-        ->one();
-       
+            ->orderBy(['kd' => SORT_DESC])
+            ->one();
+
+        $playerUser = $topplayer ? User::findOne($topplayer->id_utilizador) : null;
+        $playerGame = $topplayer ? Jogo::findOne($topplayer->id_jogo) : null;
+
         return $this->render('index', [
             'noticias' => $noticias,
             'tournaments' => $tournaments,
             'topplayer' => $topplayer,
+            'playerUser' => $playerUser,
+            'playerGame' => $playerGame,
         ]);
     }
 

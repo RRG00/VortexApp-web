@@ -24,7 +24,7 @@ AppAsset::register($this);
     <link rel="stylesheet" type="text/css"
         href="<?= Yii::$app->request->baseUrl ?>/css/styleTemplate.css" />
     <link rel="stylesheet"
-          href="<?= Yii::$app->request->baseUrl ?>https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        href="<?= Yii::$app->request->baseUrl ?>https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="icon" type="image/x-icon"
         href="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexAPP_Logo_SemTexto.png">
 
@@ -55,11 +55,22 @@ AppAsset::register($this);
                 <?php if (Yii::$app->user->isGuest): ?>
                     <?= Html::a('Login', ['/site/login'], ['class' => ['btn btn-secondary']]) ?>
                     <?= Html::a('Registar', ['/site/signup'], ['class' => ['btn btn-primary']]) ?>
+
+
+
                 <?php else: ?>
                     <?php
                     $user = Yii::$app->user->identity;
                     $username = $user->username ?? 'User';
                     $initials = strtoupper(substr($username, 0, 2));
+
+                    // TODO: quando criares o modelo de convites, trocar por algo assim:
+                    // use common\models\TeamInvite;
+                    // $hasInvites = TeamInvite::find()
+                    //     ->where(['id_utilizador' => $user->id, 'estado' => 'pendente'])
+                    //     ->exists();
+
+                    $hasInvites = true; // por agora, sem convites
                     ?>
                     <a href="<?= Url::to(['/profile/index']) ?>" class="player-avatar-link" title="<?= Html::encode($username) ?>">
                         <div class="player-avatar">
@@ -68,15 +79,21 @@ AppAsset::register($this);
                                     alt="<?= Html::encode($username) ?>"
                                     style="width: 100%; height: 100%; object-fit: cover;">
                             <?php else: ?>
-                                <span style="color: white; font-weight: bold; font-size: 16px;"><?= $initials ?></span>
+                                <span class="avatar-initials"><?= $initials ?></span>
+                            <?php endif; ?>
+
+                            <?php if ($hasInvites): ?>
+                                <span class="avatar-notify-dot"></span>
                             <?php endif; ?>
                         </div>
                     </a>
+
                     <?= Html::a('Logout', ['/site/logout'], [
                         'class' => ['btn btn-secondary'],
                         'data' => ['method' => 'post']
                     ]) ?>
                 <?php endif; ?>
+
             </div>
         </nav>
     </header>

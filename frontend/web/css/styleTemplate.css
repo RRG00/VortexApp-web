@@ -63,6 +63,32 @@ nav {
   height: 100px;
 }
 
+.player-avatar {
+    position: relative;
+    width: 48px;   
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #1f2a3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #303b5a; 
+}
+
+.avatar-notify-dot {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    width: 8px;   
+    height: 8px;
+    border-radius: 50%;
+    background: #e74c3c;
+    border: 2px solid #0b1020; 
+}
+
+
+
 .login-logo {
   display: flex;
   align-items: center;
