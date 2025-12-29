@@ -71,7 +71,31 @@ $initials = strtoupper(substr($user->username, 0, 2));
                     <div class="no-team">
                         <p>Sem equipa.</p>
                         <a href="<?= Url::to(['/team/create']) ?>" class="btn btn-primary btn-sm">Criar</a>
-                        <p style="font-size: 0.8em; color: #6c757d;">Aguarde convite.</p>
+                        <?php if (!empty($invitations)): ?>
+                            <div class="mt-3">
+                                <h5>Convites pendentes</h5>
+                                <?php foreach ($invitations as $invite): ?>
+                                    <?php $data = json_decode($invite->convite, true); $team = \common\models\Equipa::findOne($data['team_id'] ?? null); ?>
+                                    <div class="card p-2 mb-2">
+                                        <div>
+                                            <strong><?= Html::encode($team->nome ?? 'Equipa desconhecida') ?></strong>
+                                            <div class="small text-muted">Convite enviado por <?= Html::encode($data['inviter_username'] ?? ''); ?></div>
+                                        </div>
+                                        <div class="mt-2">
+                                            <?= Html::beginForm(['/profile/accept-invite', 'id' => $invite->id_notificacao], 'post', ['style' => 'display:inline-block;']) ?>
+                                            <?= Html::submitButton('Aceitar', ['class' => 'btn btn-success btn-sm', 'data-confirm' => 'Aceitar convite?']) ?>
+                                            <?= Html::endForm() ?>
+
+                                            <?= Html::beginForm(['/profile/decline-invite', 'id' => $invite->id_notificacao], 'post', ['style' => 'display:inline-block; margin-left:8px;']) ?>
+                                            <?= Html::submitButton('Recusar', ['class' => 'btn btn-danger btn-sm', 'data-confirm' => 'Recusar convite?']) ?>
+                                            <?= Html::endForm() ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p style="font-size: 0.8em; color: #6c757d;">Aguarde convite.</p>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             </div>

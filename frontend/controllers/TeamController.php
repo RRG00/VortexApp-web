@@ -7,6 +7,7 @@ use common\models\EquipaSearch;
 use common\models\MembrosEquipa;
 use common\models\UpdateTeamForm;
 use common\models\User;
+use app\models\Convite;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
@@ -197,15 +198,52 @@ class TeamController extends Controller
             return $this->redirect(['add-members', 'id' => $id]);
         }
 
-        $member = new MembrosEquipa();
-        $member->id_equipa = $id;
-        $member->id_utilizador = $userId;
-        $member->funcao = 'membro';
+        // Create an invitation record in the convite table
+        $inviter = User::findOne($currentUserId);
+        $inviterUsername = $inviter ? $inviter->username : null;
 
-        if ($member->save()) {
-            Yii::$app->session->setFlash('success', 'Utilizador adicionado à equipa.');
+        $convite = new Convite();
+        $convite->id_utilizador = $userId;
+        $convite->convite = json_encode([
+            'team_id' => $id,
+            'inviter_id' => $currentUserId,
+            'inviter_username' => $inviterUsername,
+        ]);
+        $convite->data_envio = date('Y-m-d H:i:s');
+
+        if ($convite->save()) {
+            Yii::$app->session->setFlash('success', 'Convite enviado ao utilizador.');
+
+            // Publish MQTT message to notify the user in real-time (requires mosquitto with websockets for browser clients)
+            try {
+                $mqttFile = Yii::getAlias('@app') . '/../../mosquitto/phpMQTT.php';
+                if (file_exists($mqttFile)) {
+                    require_once($mqttFile);
+
+                    $server = '127.0.0.1'; // broker host
+                    $port = 1883; // broker port (use 1883 for server publishing)
+                    $clientId = 'vortex-server-' . uniqid();
+
+                    $mqtt = new \phpMQTT($server, $port, $clientId);
+                    if ($mqtt->connect(true, NULL, null, null)) {
+                        $topic = "invites/{$userId}";
+                        $payload = json_encode([
+                            'type' => 'team_invite',
+                            'team_id' => $id,
+                            'inviter_id' => $currentUserId,
+                            'inviter_username' => $inviterUsername,
+                            'convite_id' => $convite->id_notificacao,
+                        ]);
+                        $mqtt->publish($topic, $payload, 0);
+                        $mqtt->close();
+                    }
+                }
+            } catch (\Throwable $e) {
+                // don't break user flow on mqtt error; optionally log
+                Yii::error('MQTT publish error: ' . $e->getMessage(), __METHOD__);
+            }
         } else {
-            Yii::$app->session->setFlash('error', 'Não foi possível adicionar o utilizador.');
+            Yii::$app->session->setFlash('error', 'Não foi possível enviar o convite.');
         }
 
         return $this->redirect(['add-members', 'id' => $id]);
