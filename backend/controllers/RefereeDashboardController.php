@@ -68,8 +68,6 @@ class RefereeDashboardController extends Controller
     public function actionManagement($id)
     {
         $model = $this->findModel($id);
-
-        // Handle AJAX save request
         if (Yii::$app->request->isAjax && Yii::$app->request->isPost) {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
