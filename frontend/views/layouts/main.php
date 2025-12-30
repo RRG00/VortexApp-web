@@ -8,6 +8,8 @@ use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\helpers\Url;
+use app\Models\Convite;
+use PHPUnit\Framework\MockObject\Builder\Identity;
 
 AppAsset::register($this);
 ?>
@@ -64,13 +66,10 @@ AppAsset::register($this);
                     $username = $user->username ?? 'User';
                     $initials = strtoupper(substr($username, 0, 2));
 
-                    // TODO: quando criares o modelo de convites, trocar por algo assim:
-                    // use common\models\TeamInvite;
-                    // $hasInvites = TeamInvite::find()
-                    //     ->where(['id_utilizador' => $user->id, 'estado' => 'pendente'])
-                    //     ->exists();
+                    $hasInvites = Convite::find()
+                        ->where(['id_utilizador' => $user->id])
+                        ->exists();
 
-                    $hasInvites = true; // por agora, sem convites
                     ?>
                     <a href="<?= Url::to(['/profile/index']) ?>" class="player-avatar-link" title="<?= Html::encode($username) ?>">
                         <div class="player-avatar">

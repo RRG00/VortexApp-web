@@ -84,7 +84,8 @@ nav {
     height: 8px;
     border-radius: 50%;
     background: #e74c3c;
-    border: 2px solid #0b1020; 
+    border: 2px solid #0b1020;
+    display: none;
 }
 
 
