@@ -53,10 +53,11 @@
                 'errorAction' => 'site/error',
             ],
             'urlManager' => [
-                'enablePrettyUrl' => true,
-                //'showScriptName' => false,
+                'enablePrettyUrl' => false,
+                //'showScriptName' => true,
                 'rules' => [
                     'POST api/login' => 'api/login/login',
+                    'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
                 ],
             ],
 
