@@ -12,13 +12,13 @@
         'controllerNamespace' => 'backend\controllers',
         'bootstrap' => ['log'],
         'modules' => [
-        'api' => [
-            'class' => 'backend\modules\api\ModuleAPI',
-            'controllerNamespace' => 'backend\modules\api\controllers',
+            'api' => [
+                'class' => 'backend\modules\api\ModuleAPI',
+                'controllerNamespace' => 'backend\modules\api\controllers',
             ]
         ],
         'components' => [
-        /* 'view' => [
+            /* 'view' => [
                 'theme' => [
                     'pathMap' => [
                         '@app/views' => '@app/views'
@@ -53,14 +53,22 @@
                 'errorAction' => 'site/error',
             ],
             'urlManager' => [
-                'enablePrettyUrl' => false,
-                //'showScriptName' => true,
+                'enablePrettyUrl' => true,
+                'enableStrictParsing' => false,
+                'showScriptName' => false,
                 'rules' => [
+                    [
+                        'class' => 'yii\rest\UrlRule',
+                        'controller' => [
+                            'api/user',  
+                            'api/team',
+                        ],
+                    ],
                     'POST api/login' => 'api/login/login',
                     'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
                 ],
             ],
-
         ],
+
         'params' => $params,
     ];
