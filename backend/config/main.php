@@ -67,6 +67,12 @@
                     'POST api/team/create' => 'api/team/create',
                     'PUT api/team/update/<id>' => 'api/team/update',
                     'DELETE api/team/delete/<id>' => 'api/team/delete',
+
+                    //ENDPOINTS API -> USER
+                    'GET api/user/find' => 'api/user/find-user',
+                    'PUT api/user/update/<id>' => 'api/user/update-user',
+                    'POST api/user/create' => 'api/user/create',
+                    'DELETE api/user/delete/<id>' => 'api/user/delete',
                 ],
             ],
         ],
