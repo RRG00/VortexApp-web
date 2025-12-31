@@ -5,6 +5,7 @@ namespace backend\modules\api\controllers;
 use yii\web\Controller;
 use common\models\Equipa;
 use common\models\User;
+use common\models\MembrosEquipa;
 use Yii;
 
 class TeamController extends Controller
@@ -19,59 +20,53 @@ class TeamController extends Controller
 
 
     //READ 
-    public function actionFindTeam($id)
-    {
-        $team = $this->modelClass::findOne($id);
-        if (!$team) {
-            Yii::$app->response->statusCode = 404;
-            return ['status' => 'error', 'message' => 'No teams found'];
-        }
-
-        return [
-            'id'           => $team->id,
-            'nome'         => $team->nome,
-            'id_capitao'   => $team->id_capitao,
-            'data_criacao' => $team->data_criacao,
-            'username'     => $team->capitaoUsername ? $team->capitaoUsername->username : null,
-        ];
-    }
-    //CREATE
     public function actionCreate()
     {
-        $model   = new $this->modelClass;
+        $model   = new Equipa();
         $request = Yii::$app->request;
+        $data    = $request->bodyParams;
 
-        $model->load($request->post(), '');
-        $userId = $request->post('id_user');
-
-        
-        $user = User::findOne($userId);   
-
+        $userId = $data['id_user'] ?? null;
+        $user   = User::findOne($userId);
         if (!$user) {
             Yii::$app->response->statusCode = 400;
-            return [
-                'status'  => 'error',
-                'message' => 'User not exists', 
-            ];
+            return ['status' => 'error', 'message' => 'User not exists'];
         }
 
-        // 3) user existe → passa a capitão desta equipa
-        $model->id_capitao = $user->id;
 
-        if ($model->validate() && $model->save()) {
+        $model->load($data, '');
+        $model->data_criacao = $data['data_criacao'] ?? date('Y-m-d H:i:s');
+        $model->id_capitao   = $userId;
+
+        $tx = Yii::$app->db->beginTransaction();
+        try {
+            if (!$model->validate() || !$model->save()) {
+                Yii::$app->response->statusCode = 400;
+                return ['status' => 'error', 'message' => 'Validation failed', 'errors' => $model->errors];
+            }
+
+            $membroEquipa = new MembrosEquipa();
+            $membroEquipa->id_equipa     = $model->id;
+            $membroEquipa->id_utilizador = $userId;
+            $membroEquipa->funcao        = 'capitao';
+
+            if (!$membroEquipa->save()) {
+                Yii::$app->response->statusCode = 400;
+                return ['status' => 'error', 'message' => 'Failed to add captain to team', 'errors' => $membroEquipa->errors];
+            }
+
+            $tx->commit();
+            Yii::$app->response->statusCode = 201;
             return [
                 'status'  => 'success',
                 'message' => 'Team created successfully',
                 'team_id' => $model->id,
             ];
+        } catch (\Throwable $e) {
+            $tx->rollBack();
+            Yii::$app->response->statusCode = 500;
+            return ['status' => 'error', 'message' => 'Internal server error'];
         }
-
-        Yii::$app->response->statusCode = 400;
-        return [
-            'status'  => 'error',
-            'message' => 'Validation failed',
-            'errors'  => $model->errors,
-        ];
     }
 
 
@@ -79,22 +74,39 @@ class TeamController extends Controller
     //Update
     public function actionUpdate($id)
     {
-
-        $model = $this->modelClass::findOne($id);
-
+        $model = Equipa::findOne($id);
         if (!$model) {
-            Yii::$app->response->statuscode = 404;
+            Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'Team not found'];
         }
 
-        $model->load(Yii::$app->request->bodyParams, '');
+        $data = Yii::$app->request->bodyParams;
+
+  
+        $userId = $data['id_user'] ?? null;
+        if (!$userId || !User::findOne($userId)) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Only captian can edit the Team'];
+        }
+
+        $membro = MembrosEquipa::findOne([
+            'id_equipa'     => $id,
+            'id_utilizador' => $userId,
+        ]);
+
+        if (!$membro || $membro->funcao !== 'capitao') {
+            Yii::$app->response->statusCode = 403;
+            return ['status' => 'error', 'message' => 'Only the captain can update the team'];
+        }
+
+        $model->load($data, '');
 
         if ($model->validate() && $model->save()) {
             return ['status' => 'success', 'message' => 'Team updated successfully'];
-        } else {
-            Yii::$app->response->statuscode = 400;
-            return ['status' => 'error', 'message' => 'Validation failed', 'errors' => $model->errors];
         }
+
+        Yii::$app->response->statusCode = 400;
+        return ['status' => 'error', 'message' => 'Validation failed', 'errors' => $model->errors];
     }
 
     //DELETE

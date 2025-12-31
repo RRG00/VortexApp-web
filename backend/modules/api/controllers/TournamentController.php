@@ -66,18 +66,18 @@ class TournamentController extends Controller
             Yii::$app->response->statuscode = 400;
             return ['status' => 'error', 'message' => 'Organizer doesnt exists'];
         }
-
-        //Veririficar se existe o arbrito
-        $refereeId = $data['arbrito_id'] ?? null;
-        $referee = $refereeId ? User::findOne($refereeId) : null;
+        //vERIFICA O REFEREE
+        $refereeId = $data['arbitro_id'] ?? null;
+        $referee   = $refereeId ? User::findOne($refereeId) : null;
 
         if (!$referee) {
-            Yii::$app->response->statuscode = 400;
-            return ['status' => 'error', 'message' => 'Referee doesnt exixts'];
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Referee doesnt exists'];
         }
 
+        $model->load($data, '');
         $model->organizador_id = $organizer->id;
-        $model->arbrito_id = $referee->id;
+        $model->arbitro_id = $referee->id;
 
         if ($model->validate() && $model->save()) {
             Yii::$app->response->statuscode = 201;
@@ -98,6 +98,9 @@ class TournamentController extends Controller
 
     public function actionUpdateTournament($id)
     {
+        $data = Yii::$app->request->bodyParams;
+        var_dump($data);
+        die;
 
         $model = Tournament::find($id);
 
@@ -125,6 +128,7 @@ class TournamentController extends Controller
                 }
             }
         }
+
 
         $model->load($data, '');
 

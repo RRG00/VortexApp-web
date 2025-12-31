@@ -54,8 +54,8 @@
             ],
             'urlManager' => [
                 'enablePrettyUrl' => true,
-                'enableStrictParsing' => false,
-                'showScriptName' => false,
+                //'enableStrictParsing' => false,
+                //'showScriptName' => false,
                 'rules' => [
 
                     //ENDPOINTS API -> NOTIFICAÇÕES
