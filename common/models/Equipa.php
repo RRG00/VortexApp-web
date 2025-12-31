@@ -124,6 +124,13 @@ class Equipa extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Images::class, ['id' => 'id']);
     }
+    
+    public function getCapitaoUsername()
+    {
+        return $this->hasOne(\common\models\User::class, ['id' => 'id_capitao']);
+    }
+    
+
 
     public function upload()
     {

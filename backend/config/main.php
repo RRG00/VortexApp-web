@@ -66,6 +66,8 @@
                     ],
                     'POST api/login' => 'api/login/login',
                     'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
+                    'GET api/team/find' => 'api/team/find-team',
+                    'POST api/team/create' => 'api/team/create',
                 ],
             ],
         ],
