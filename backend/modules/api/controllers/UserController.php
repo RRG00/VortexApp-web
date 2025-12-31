@@ -20,12 +20,12 @@ class UserController extends Controller
     }
 
 
-    //GET USER
+    //READ
     public function actionFindUser($id)
     {
         $user = User::findOne($id);
         if (!$user) {
-            \Yii::$app->response->statusCode = 404;
+            \Yii::$app->response->statuscode = 404;
             return ['status' => 'error', 'message' => 'No users found'];
         }
 
@@ -49,12 +49,12 @@ class UserController extends Controller
         ];
     }
 
-    //PUT USER (EDIT)
+    //PUT 
     public function actionUpdateUser($id){
 
         $user = User::findOne($id);
         if (!$user) {
-            Yii::$app->response->statusCode = 404;
+            Yii::$app->response->statuscode = 404;
             return ['status' => 'error', 'message' => 'User not found'];
         }
 
@@ -71,9 +71,65 @@ class UserController extends Controller
         if ($user->save()) {
             return ['status' => 'success', 'message' => 'User updated successfully'];
         } else {
-            Yii::$app->response->statusCode = 400;
+            Yii::$app->response->statuscode = 400;
             return ['status' => 'error', 'message' => 'Failed to update user', 'errors' => $user->errors];
         }
+    }
+
+    //CREATE
+    public function actionCreate(){
+
+        $user = new User();
+        $resquest = Yii::$app->request;
+
+        $data = $resquest->bodyParams;
+
+        $user->username = $data['username'] ?? null;
+        $user->email = $data['email'] ?? null;
+
+        if(empty($data['password'])){
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Passoword is requeired'];
+
+        }
+
+        $user->setPassword($data['password']);
+        $user->generateAuthKey();
+
+        if($user->validate() && $user->save()){
+            Yii::$app->response->statuscode = 201;
+            return [
+                'status' => 'sucess',
+                'message' => 'User created sucessfully',
+                'user_id' => $user->id
+            ];
+        }
+
+        Yii::$app -> response -> statusCode = 400;
+        return [
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'erros' => $user->errors,
+        ];
+    }
+
+    //DELETE
+    public function actionDelete($id){  
+
+        $user = User::findOne($id);
+        if(!$user){
+            Yii::$app-> response -> statuscode = 404;
+            return ['status' => 'error', 'message' => 'User not found'];
+        }
+
+        $user->status = 9;
+
+        if($user->save(false)){
+            return ['status' => 'sucess', 'message' => 'User deleted'];
+        }
+
+        Yii::$app->response->statusCode = 400;
+        return ['status' => 'error', 'message' => 'Failed to delete user', 'errors' => $user->errors];
     }
 
    

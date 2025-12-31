@@ -57,17 +57,16 @@
                 'enableStrictParsing' => false,
                 'showScriptName' => false,
                 'rules' => [
-                    [
-                        'class' => 'yii\rest\UrlRule',
-                        'controller' => [
-                            'api/user',  
-                            'api/team',
-                        ],
-                    ],
+
+                    //ENDPOINTS API -> NOTIFICAÇÕES
                     'POST api/login' => 'api/login/login',
                     'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
+
+                    //ENDPOINTS API -> EQUIPAS
                     'GET api/team/find' => 'api/team/find-team',
                     'POST api/team/create' => 'api/team/create',
+                    'PUT api/team/update/<id>' => 'api/team/update',
+                    'DELETE api/team/delete/<id>' => 'api/team/delete',
                 ],
             ],
         ],
