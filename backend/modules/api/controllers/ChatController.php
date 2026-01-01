@@ -35,7 +35,7 @@ class ChatController extends Controller
 
         try {
             $rows = (new \yii\db\Query())
-                ->select(['id', 'id_equipa', 'id_user', 'mensagem', 'created_at']) // exemplo
+                ->select(['id', 'id_equipa', 'id_user', 'mensagem', 'created_at'])
                 ->from('chat_mensagens')
                 ->where(['id_equipa' => (int)$teamId])
                 ->orderBy(['created_at' => SORT_ASC])
@@ -63,7 +63,6 @@ class ChatController extends Controller
         $userId = $request->post('userId');
         $message = $request->post('message');
 
-        // Validação
         if (!$teamId || !$userId || !$message) {
             Yii::$app->response->statusCode = 400;
             return [
@@ -75,7 +74,7 @@ class ChatController extends Controller
         try {
             $result = Yii::$app->db->createCommand()->insert('chat_mensagens', [
                 'id_equipa' => (int)$teamId,
-                'id_utilizador' => (int)$userId,
+                'id_user' => (int)$userId,
                 'mensagem' => $message,
                 'created_at' => date('Y-m-d H:i:s'),
             ])->execute();
