@@ -63,7 +63,8 @@
                     'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
 
                     //ENDPOINTS API -> EQUIPAS
-                    'GET api/team/find' => 'api/team/find-team',
+                    'GET api/team/find'  => 'api/team/find',
+                    'GET api/team/by-user' => 'api/team/by-user',
                     'POST api/team/create' => 'api/team/create',
                     'PUT api/team/update/<id>' => 'api/team/update',
                     'DELETE api/team/delete/<id>' => 'api/team/delete',
@@ -79,7 +80,11 @@
                     'GET api/tournaments/find' => 'api/tournament/find-tournament',
                     'POST api/tournament/create' => 'api/create-tournament',
                     'PUT api/tournament/update/<id>' => 'api/tournament/update-tournament',
-                    'DELETE api/tournament/delete/<id>' => 'api/tournament/deleteTournament'
+                    'DELETE api/tournament/delete/<id>' => 'api/tournament/deleteTournament',
+
+                    //ENDPOINTS API -> User Profile
+                    'GET api/profile/view-user-profile'   => 'api/profile/view-user-profile',
+                    'PUT api/profile/update-user-profile' => 'api/profile/update-user-profile',
                 ],
             ],
         ],
