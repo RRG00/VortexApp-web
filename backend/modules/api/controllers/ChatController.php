@@ -50,7 +50,7 @@ class ChatController extends Controller
 
         try {
             $rows = (new \yii\db\Query())
-                ->select(['id', 'id_equipa', 'id_utilizador', 'mensagem', 'created_at'])
+                ->select(['id', 'id_equipa', 'id_user', 'mensagem', 'created_at']) // exemplo
                 ->from('chat_mensagens')
                 ->where(['id_equipa' => (int)$teamId])
                 ->orderBy(['created_at' => SORT_ASC])
