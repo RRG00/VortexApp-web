@@ -6,6 +6,7 @@ use yii\web\Controller;
 use common\models\Images;
 use common\models\User;
 use Yii;
+use yii\filters\auth\QueryParamAuth;
 
 
 class UserController extends Controller
@@ -19,6 +20,17 @@ class UserController extends Controller
         return parent::beforeAction($action);
     }
 
+    public function behaviors()
+{
+    $behaviors = parent::behaviors();
+
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+
+    return $behaviors;
+}
 
     //READ
     public function actionFindUser($id)
@@ -42,10 +54,13 @@ class UserController extends Controller
         }
 
         return [
-            'id' => $user->id,
-            'username' => $user->username,
-            'email' => $user->email,
-            'photo' => $photoUrl,
+            'status' => 'success',
+            'user' => [
+                'id'       => $user->id,
+                'username' => $user->username,
+                'email'    => $user->email,
+                'photo'    => $photoUrl,
+            ],
         ];
     }
 
@@ -98,9 +113,9 @@ class UserController extends Controller
         if ($user->validate() && $user->save()) {
 
             $auth = Yii::$app->authManager;
-            $role = $auth->getRole('player'); 
+            $role = $auth->getRole('player');
             if ($role && !$auth->getAssignment('player', $user->id)) {
-                $auth->assign($role, $user->id);   
+                $auth->assign($role, $user->id);
             }
 
             Yii::$app->response->statusCode = 201;

@@ -4,18 +4,78 @@ namespace backend\modules\api\controllers;
 
 use yii\web\Controller;
 use common\models\Equipa;
+
 use common\models\User;
 use common\models\MembrosEquipa;
 use Yii;
+use yii\filters\auth\QueryParamAuth;
 
 class TeamController extends Controller
 {
     public $modelClass = Equipa::class;
 
+    public function behaviors()
+{
+    $behaviors = parent::behaviors();
+
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+
+    return $behaviors;
+}
+
     public function beforeAction($action)
     {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
+    }
+
+    public function actionFind($id)
+    {
+        $team = Equipa::findOne($id);
+        if (!$team) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Team not found'];
+        }
+
+        return [
+            'status' => 'success',
+            'team' => [
+                'id'          => $team->id,
+                'nome'        => $team->nome,
+                'id_capitao'  => $team->id_capitao,
+                'data_criacao' => $team->data_criacao,
+            ],
+        ];
+    }
+
+    public function actionByUser($id_user)
+    {
+        $user = User::findOne($id_user);
+        if (!$user) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'User not found'];
+        }
+
+        $membro = MembrosEquipa::findOne(['id_utilizador' => $user->id]);
+        if (!$membro || !$membro->equipa) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'User has no team'];
+        }
+
+        $team = $membro->equipa;
+
+        return [
+            'status' => 'success',
+            'team' => [
+                'id'          => $team->id,
+                'nome'        => $team->nome,
+                'id_capitao'  => $team->id_capitao,
+                'data_criacao' => $team->data_criacao,
+            ],
+        ];
     }
 
 
@@ -69,8 +129,6 @@ class TeamController extends Controller
         }
     }
 
-
-
     //Update
     public function actionUpdate($id)
     {
@@ -82,7 +140,7 @@ class TeamController extends Controller
 
         $data = Yii::$app->request->bodyParams;
 
-  
+
         $userId = $data['id_user'] ?? null;
         if (!$userId || !User::findOne($userId)) {
             Yii::$app->response->statusCode = 400;
