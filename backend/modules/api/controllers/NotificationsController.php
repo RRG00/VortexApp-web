@@ -24,7 +24,8 @@ class NotificationsController extends Controller
         $server = isset(Yii::$app->params['mqttHost']) ? Yii::$app->params['mqttHost'] : '127.0.0.1';
         $port = isset(Yii::$app->params['mqttPort']) ? Yii::$app->params['mqttPort'] : 1883;
 
-        $mqttFile = Yii::getAlias('@app') . '/../../mosquitto/phpMQTT.php';
+        $mqttFile = Yii::getAlias('@app') . '/../mosquitto/phpMQTT.php';
+
         if (!file_exists($mqttFile)) {
             Yii::$app->response->statusCode = 500;
             return ['status' => 'error', 'message' => 'phpMQTT client not found'];
