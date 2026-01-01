@@ -20,6 +20,6 @@ class ModuleAPI extends \yii\base\Module
         parent::init();
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        // custom initialization code goes here
+    
     }
 }

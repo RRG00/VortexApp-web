@@ -85,6 +85,10 @@
                     //ENDPOINTS API -> User Profile
                     'GET api/profile/view-user-profile'   => 'api/profile/view-user-profile',
                     'PUT api/profile/update-user-profile' => 'api/profile/update-user-profile',
+
+                    //ENDPOINTS CHAT(ANDROID)
+                   'POST api/chat/send' => 'api/chat/send',
+                   'GET api/chat/history' => 'api/chat/history',
                 ],
             ],
         ],
