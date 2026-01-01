@@ -11,9 +11,22 @@ use common\models\Estatisticas;
 use common\models\MembrosEquipa;
 use app\models\Convite;
 use common\models\Images;
+use yii\filters\auth\QueryParamAuth;
 
 class ProfileController extends Controller
 {
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
+  
+        ];
+
+        return $behaviors;
+    }
 
     public function actionViewUserProfile($id_user)
     {

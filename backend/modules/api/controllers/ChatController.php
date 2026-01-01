@@ -22,21 +22,6 @@ class ChatController extends Controller
 
         return $behaviors;
     }
-    /**
-     * Teste simples para verificar se a API funciona
-     * GET /api/chat/test
-     */
-    public function actionTest()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        return [
-            'status' => 'success',
-            'message' => 'API está funcionando!',
-            'timestamp' => date('Y-m-d H:i:s'),
-            'module' => 'api/chat',
-        ];
-    }
 
     public function actionHistory($teamId = null)
     {

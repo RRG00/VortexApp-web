@@ -4,9 +4,11 @@ namespace backend\modules\api\controllers;
 
 use yii\web\Controller;
 use common\models\Tournament;
+
 use common\models\User;
 use common\models\Inscricao;
 use Yii;
+use yii\filters\auth\QueryParamAuth;
 
 class TournamentController extends Controller
 {
@@ -17,6 +19,19 @@ class TournamentController extends Controller
     {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
+    }
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
+           
+        ];
+
+        return $behaviors;
     }
 
     public function actionFindTeamTournament($id_equipa)

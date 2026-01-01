@@ -6,6 +6,7 @@ use yii\web\Controller;
 use common\models\Images;
 use common\models\User;
 use Yii;
+use yii\filters\auth\QueryParamAuth;
 
 
 class UserController extends Controller
@@ -19,6 +20,17 @@ class UserController extends Controller
         return parent::beforeAction($action);
     }
 
+    public function behaviors()
+{
+    $behaviors = parent::behaviors();
+
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+
+    return $behaviors;
+}
 
     //READ
     public function actionFindUser($id)
