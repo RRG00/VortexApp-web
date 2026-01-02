@@ -36,6 +36,7 @@ class TeamController extends Controller
                     'actions' => [
                         'delete' => ['POST'],
                         'attach-member' => ['POST'],
+~~~~                        'remove-member' => ['POST'],
                     ],
                 ],
                 'access' => [
@@ -53,7 +54,7 @@ class TeamController extends Controller
                         ],
                         [
                             'allow' => true,
-                            'actions' => ['add-members', 'attach-member'],
+                            'actions' => ['add-members', 'attach-member', 'delete-members', 'remove-member'],
                             'roles' => ['@'],
                         ],
                         [
@@ -63,13 +64,8 @@ class TeamController extends Controller
                         ],
                         [
                             'allow' => true,
-                            'actions' => ['update'],
-                            'roles' => ['updateTeam'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['delete'],
-                            'roles' => ['deleteTeam'],
+                            'actions' => ['update', 'delete'],
+                            'roles' => ['@'],
                         ]
 
                     ]
@@ -317,12 +313,18 @@ class TeamController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
 
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                if ($model->save()) {
-
-                    Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
-                    return $this->redirect(['index']);
-                }
+            
+            // If there's an image file, try to upload it
+            if ($model->imageFile) {
+                $model->upload();
+            }
+            
+            // Save the model
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
+                return $this->redirect(['view', 'id' => $id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Erro ao atualizar a equipa.');
             }
         }
         return $this->render('edit-team', [
@@ -351,9 +353,88 @@ class TeamController extends Controller
             Yii::$app->session->setFlash('error', 'Você não é o capitão da equipa.');
             return $this->redirect(['view', 'id' => $id]);
         }
-        $model->delete();
+        
+        // Delete all relations before deleting the team
+        try {
+            // Delete all team members
+            MembrosEquipa::deleteAll(['id_equipa' => $id]);
+            
+            // Delete team inscriptions
+            \common\models\Inscricao::deleteAll(['id_equipa' => $id]);
+            
+            // Delete team image if exists
+            if ($model->profileImage) {
+                $model->profileImage->delete();
+            }
+            
+            // Delete the team
+            $model->delete();
+            
+            Yii::$app->session->setFlash('success', 'Equipa apagada com sucesso.');
+        } catch (\Exception $e) {
+            Yii::$app->session->setFlash('error', 'Erro ao apagar equipa: ' . $e->getMessage());
+            return $this->redirect(['view', 'id' => $id]);
+        }
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteMembers($id)
+    {
+        $equipa = $this->findModel($id);
+        $currentUserId = Yii::$app->user->id;
+        
+        // Check if user is the captain
+        $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
+        if (!$currentMembership || $currentMembership->funcao !== 'capitao') {
+            Yii::$app->session->setFlash('error', 'Apenas o capitão desta equipa pode remover membros.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        // Get all team members except the captain
+        $membros = MembrosEquipa::find()
+            ->where(['id_equipa' => $id])
+            ->andWhere(['<>', 'id_utilizador', $currentUserId])
+            ->with('user')
+            ->all();
+
+        return $this->render('delete-members', [
+            'equipa' => $equipa,
+            'membros' => $membros,
+        ]);
+    }
+
+    public function actionRemoveMember($id, $userId)
+    {
+        $equipa = $this->findModel($id);
+        $currentUserId = Yii::$app->user->id;
+        
+        // Check if user is the captain
+        $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
+        if (!$currentMembership || $currentMembership->funcao !== 'capitao') {
+            Yii::$app->session->setFlash('error', 'Apenas o capitão desta equipa pode remover membros.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        // Cannot remove the captain
+        if ($userId === $currentUserId) {
+            Yii::$app->session->setFlash('error', 'Não pode remover a si próprio da equipa.');
+            return $this->redirect(['delete-members', 'id' => $id]);
+        }
+
+        // Find and delete the member
+        $membro = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $userId]);
+        if ($membro) {
+            if ($membro->delete()) {
+                Yii::$app->session->setFlash('success', 'Membro removido com sucesso.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Não foi possível remover o membro.');
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Membro não encontrado.');
+        }
+
+        return $this->redirect(['delete-members', 'id' => $id]);
     }
 
     /**

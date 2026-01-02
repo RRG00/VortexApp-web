@@ -26,7 +26,6 @@ class MembrosEquipa extends \yii\db\ActiveRecord
     {
         return 'membros_equipa';
     }
-
     /**
      * {@inheritdoc}
      */
