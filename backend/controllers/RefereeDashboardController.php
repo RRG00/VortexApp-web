@@ -33,8 +33,8 @@ class RefereeDashboardController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'actions' => ['index', 'update', 'management', 'get-team-players', 'save-stats'],
-                            'roles' => ['viewResults'],
+                            'actions' => ['index', 'update', 'management', 'get-team-players', 'save-stats', 'start-tournament'],
+                            'roles' => ['viewResults', 'updateResults', 'startTournament'],
                         ],
                     ],
                 ],
@@ -67,234 +67,241 @@ class RefereeDashboardController extends Controller
 
     public function actionManagement($id)
     {
-        $model = $this->findModel($id);
+        // HANDLE SAVING (POST REQUEST)
         if (Yii::$app->request->isAjax && Yii::$app->request->isPost) {
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-            $data = json_decode(Yii::$app->request->rawBody, true);
-
-            if (isset($data['brackets']) && isset($data['tournament_id'])) {
-                $savedCount = 0;
-                $errors = [];
-                $transaction = Yii::$app->db->beginTransaction();
-
-                try {
-                    foreach ($data['brackets'] as $matchData) {
-                        if (
-                            !isset($matchData['team1']['id']) || !isset($matchData['team2']['id']) ||
-                            $matchData['team1']['id'] === null || $matchData['team2']['id'] === null ||
-                            $matchData['team1']['id'] === 'null' || $matchData['team2']['id'] === 'null' ||
-                            empty($matchData['team1']['id']) || empty($matchData['team2']['id'])
-                        ) {
-                            continue;
-                        }
-
-                        $partida = null;
-                        if (!empty($matchData['partida_id'])) {
-                            $partida = Partida::findOne($matchData['partida_id']);
-                        }
-
-                        if (!$partida) {
-                            $partida = Partida::find()
-                                ->where([
-                                    'id_torneio' => $id,
-                                    'equipa_a' => $matchData['team1']['id'],
-                                    'equipa_b' => $matchData['team2']['id'],
-                                ])
-                                ->one();
-                        }
-
-                        if (!$partida) {
-                            $partida = new Partida();
-                            $partida->id_torneio = $id;
-                            $partida->equipa_a = $matchData['team1']['id'];
-                            $partida->equipa_b = $matchData['team2']['id'];
-                            $partida->estado = Partida::ESTADO_PENDENTE;
-                        }
-
-                        // Scores
-                        $partida->vitorias_a = (int)($matchData['team1']['score'] ?? 0);
-                        $partida->vitorias_b = (int)($matchData['team2']['score'] ?? 0);
-
-                        if (!empty($matchData['winner'])) {
-                            $partida->estado = Partida::ESTADO_CONCLUIDA;
-                        } elseif ($partida->vitorias_a > 0 || $partida->vitorias_b > 0) {
-                            $partida->estado = Partida::ESTADO_EM_ANDAMENTO;
-                        }
-                        if ($partida->save()) {
-                            $matchData['partida_id'] = $partida->id_partida;
-                            $savedCount++;
-
-                       
-                            if ($partida->estado == Partida::ESTADO_CONCLUIDA && !empty($matchData['winner'])) {
-                                $winnerTeamId = ($matchData['winner'] == 1) ? $partida->equipa_a : $partida->equipa_b;
-                                $loserTeamId  = ($matchData['winner'] == 1) ? $partida->equipa_b : $partida->equipa_a;
-
-                          
-                                $winnerMembers = MembrosEquipa::find()->where(['id_equipa' => $winnerTeamId])->all();
-                                $loserMembers  = MembrosEquipa::find()->where(['id_equipa' => $loserTeamId])->all();
-                 
-                                $gameId = $model->id_jogo;
-
-                    
-                                foreach ($winnerMembers as $membro) {
-                                    $estat = Estatisticas::findOne([
-                                        'id_utilizador' => $membro->id_utilizador,
-                                        'id_jogo'       => $gameId,
-                                    ]);
-                                    if (!$estat) {
-                                        $estat = new Estatisticas();
-                                        $estat->id_utilizador = $membro->id_utilizador;
-                                        $estat->id_jogo = $gameId;
-                                        $estat->vitorias = 0;
-                                        $estat->derrotas = 0;
-                                    }
-                                    $estat->vitorias++;
-                                    $estat->save(false);
-                                }
-
-                                foreach ($loserMembers as $membro) {
-                                    $estat = Estatisticas::findOne([
-                                        'id_utilizador' => $membro->id_utilizador,
-                                        'id_jogo'       => $gameId,
-                                    ]);
-                                    if (!$estat) {
-                                        $estat = new Estatisticas();
-                                        $estat->id_utilizador = $membro->id_utilizador;
-                                        $estat->id_jogo = $gameId;
-                                        $estat->vitorias = 0;
-                                        $estat->derrotas = 0;
-                                    }
-                                    $estat->derrotas++;
-                                    $estat->save(false);
-                                }
-                            }
-                        } else {
-                            $errors[] = $partida->getErrors();
-                        }
-                    }
-
-                    Yii::$app->session->set('tournament_brackets_' . $id, $data['brackets']);
-                    $transaction->commit();
-
-                    return [
-                        'success' => empty($errors),
-                        'message' => empty($errors)
-                            ? "$savedCount partida(s) guardada(s) com sucesso!"
-                            : 'Algumas partidas não foram guardadas.',
-                        'errors' => $errors,
-                    ];
-                } catch (\Exception $e) {
-                    $transaction->rollBack();
-                    return [
-                        'success' => false,
-                        'message' => 'Erro ao guardar partidas: ' . $e->getMessage(),
-                    ];
-                }
-            }
-
-            return [
-                'success' => false,
-                'message' => 'Dados inválidos',
-            ];
+            return $this->processMatchUpdate($id);
         }
 
-        $inscricoes = Inscricao::find()
+        // HANDLE VIEWING (GET REQUEST)
+        $model = $this->findModel($id);
+
+        // 1. Fetch ALL matches from DB ordered by structure
+        $matches = Partida::find()
             ->where(['id_torneio' => $id])
-            ->with('equipa')
+            ->orderBy(['round' => SORT_ASC, 'match_index' => SORT_ASC])
+            ->with(['equipaA', 'equipaB']) // Optimization: Eager Load
             ->all();
 
-        $brackets = $this->generateBrackets($inscricoes);
+        // 2. Format for the View
+        $rounds = [];
+        foreach ($matches as $match) {
+            $rIndex = $match->round;
 
-        $savedBrackets = $this->loadBracketsFromDatabase($id);
-        if (empty($savedBrackets)) {
-            $savedBrackets = Yii::$app->session->get('tournament_brackets_' . $id);
-        }
-        if ($savedBrackets) {
-            $brackets = $this->mergeSavedBrackets($brackets, $savedBrackets);
+            // Initialize round if not exists
+            if (!isset($rounds[$rIndex])) {
+                $rounds[$rIndex] = [
+                    'name' => $this->getRoundName($rIndex, count($matches)), // Helper method below
+                    'matches' => []
+                ];
+            }
+
+            // Determine winner for UI class
+            $winner = null;
+            if ($match->estado === Partida::ESTADO_CONCLUIDA) {
+                if ($match->vitorias_a > $match->vitorias_b) $winner = 1;
+                elseif ($match->vitorias_b > $match->vitorias_a) $winner = 2;
+            }
+
+            $rounds[$rIndex]['matches'][] = [
+                'match_id' => $match->match_index, // Visual Index
+                'partida_id' => $match->id_partida, // DATABASE ID (Vital)
+                'score1' => $match->vitorias_a,
+                'score2' => $match->vitorias_b,
+                'winner' => $winner,
+                'team1' => [
+                    'id' => $match->equipa_a,
+                    'name' => $match->equipaA ? $match->equipaA->nome : 'TBD'
+                ],
+                'team2' => [
+                    'id' => $match->equipa_b,
+                    'name' => $match->equipaB ? $match->equipaB->nome : 'TBD'
+                ]
+            ];
         }
 
         return $this->render('management', [
             'model' => $model,
-            'inscricoes' => $inscricoes,
-            'brackets' => $brackets,
+            'inscricoes' => Inscricao::findAll(['id_torneio' => $id]),
+            'brackets' => ['rounds' => $rounds], // Pass the structure
         ]);
     }
 
-
-    /**
-     * Generate tournament brackets based on registered teams
-     * @param array $inscricoes Array of Inscricao models
-     * @return array Bracket structure with rounds
-     */
-    private function generateBrackets($inscricoes)
+    // Helper for round names
+    private function getRoundName($roundIndex, $totalMatches)
     {
+        // Logic to name rounds (Quarter Finals, Semi Finals, etc)
+        // You can keep your existing getRoundNames logic or simplify:
+        return "Round " . ($roundIndex + 1);
+    }
+
+    // Add this to your behaviors/access rules if needed
+    public function actionStartTournament($id)
+    {
+        $tournament = Tournament::findOne($id);
+        $inscricoes = Inscricao::findAll(['id_torneio' => $id]);
+
+        // 1. Shuffle and prep teams
+        shuffle($inscricoes);
         $teams = [];
-        foreach ($inscricoes as $inscricao) {
-            $teams[] = [
-                'id' => $inscricao->equipa->id,
-                'nome' => $inscricao->equipa->nome,
-            ];
-        }
+        foreach ($inscricoes as $ins) $teams[] = $ins->id_equipa;
 
         $teamCount = count($teams);
+        if ($teamCount < 2) return $this->redirect(['management', 'id' => $id]);
 
-        // If less than 2 teams, can't create brackets
-        if ($teamCount < 2) {
-            return ['rounds' => []];
-        }
+        // Calculate Bracket Size (2, 4, 8, 16...)
+        $numRounds = ceil(log($teamCount, 2));
+        $bracketSize = pow(2, $numRounds);
 
-        // Pad teams to next power of 2
-        $bracketSize = pow(2, ceil(log($teamCount, 2)));
-        while (count($teams) < $bracketSize) {
-            $teams[] = ['id' => null, 'nome' => 'TBD'];
-        }
+        // Clear existing matches for this tournament to avoid duplicates
+        Partida::deleteAll(['id_torneio' => $id]);
 
-        $rounds = [];
-        $matchIdCounter = 0; // Track match IDs across rounds
+        // 2. Generate Empty Bracket Tree
+        for ($round = 0; $round < $numRounds; $round++) {
+            $matchesInRound = $bracketSize / pow(2, $round + 1);
 
-        // Create first round (Quarter-finals, Round of 16, etc.)
-        $currentRound = [];
-        for ($i = 0; $i < count($teams); $i += 2) {
-            $currentRound[] = [
-                'match_id' => $matchIdCounter++,
-                'team1' => $teams[$i],
-                'team2' => $teams[$i + 1],
-                'score1' => 0,
-                'score2' => 0,
-                'winner' => null,
-            ];
-        }
+            for ($i = 0; $i < $matchesInRound; $i++) {
+                $match = new Partida();
+                $match->id_torneio = $id;
+                $match->round = $round;     // 0 = Round 1 (First Round)
+                $match->match_index = $i;   // Vertical position (0, 1, 2...)
+                $match->estado = Partida::ESTADO_PENDENTE;
+                $match->vitorias_a = 0;
+                $match->vitorias_b = 0;
 
-        // Determine round names
-        $roundNames = $this->getRoundNames($bracketSize);
-        $rounds[] = [
-            'name' => $roundNames[0],
-            'matches' => $currentRound,
-        ];
+                // Populate Round 1 with real teams
+                if ($round == 0) {
+                    $teamA_Index = $i * 2;
+                    $teamB_Index = ($i * 2) + 1;
 
-        // Generate subsequent rounds
-        for ($r = 1; $r < log($bracketSize, 2); $r++) {
-            $nextRound = [];
-            for ($i = 0; $i < count($currentRound); $i += 2) {
-                $nextRound[] = [
-                    'match_id' => $matchIdCounter++,
-                    'team1' => ['id' => null, 'nome' => 'TBD'],
-                    'team2' => ['id' => null, 'nome' => 'TBD'],
-                    'score1' => 0,
-                    'score2' => 0,
-                    'winner' => null,
-                ];
+                    $match->equipa_a = $teams[$teamA_Index] ?? null; // Null means "Bye"
+                    $match->equipa_b = $teams[$teamB_Index] ?? null;
+
+                    // Auto-advance if a team has a "Bye" (no opponent)
+                    if ($match->equipa_a && !$match->equipa_b) {
+                        $match->estado = Partida::ESTADO_CONCLUIDA;
+                        $match->vitorias_a = 1; // Auto win
+                        // We will handle the propagation in the save logic or recursivley here, 
+                        // but for simplicity, let's just save the match first.
+                    }
+                } else {
+                    // Future rounds start empty
+                    $match->equipa_a = null;
+                    $match->equipa_b = null;
+                }
+
+                $match->save();
             }
-            $rounds[] = [
-                'name' => $roundNames[$r] ?? 'Round ' . ($r + 1),
-                'matches' => $nextRound,
-            ];
-            $currentRound = $nextRound;
         }
 
-        return ['rounds' => $rounds];
+        // Optional: Update tournament status
+        // $tournament->status = 'started';
+        // $tournament->save();
+
+        return $this->redirect(['management', 'id' => $id]);
     }
+
+    private function processMatchUpdate($tournamentId)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = json_decode(Yii::$app->request->rawBody, true);
+
+        if (!isset($data['brackets'])) return ['success' => false];
+
+        // Get the tournament to find the Game ID (needed for statistics)
+        $tournament = Tournament::findOne($tournamentId);
+        if (!$tournament) return ['success' => false, 'message' => 'Torneio não encontrado'];
+        $gameId = $tournament->id_jogo;
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($data['brackets'] as $matchData) {
+                if (empty($matchData['partida_id'])) continue;
+
+                $partida = Partida::findOne($matchData['partida_id']);
+                if (!$partida) continue;
+
+                // 1. Capture the "Previous State" to prevent double-counting stats
+                $wasConcluded = ($partida->estado === Partida::ESTADO_CONCLUIDA);
+
+                // 2. Update Scores
+                $partida->vitorias_a = (int)$matchData['team1']['score'];
+                $partida->vitorias_b = (int)$matchData['team2']['score'];
+
+                // 3. Check for Winner
+                if ($matchData['winner'] !== null) {
+                    $partida->estado = Partida::ESTADO_CONCLUIDA;
+
+                    // --- A. PROGRESSION LOGIC (Move winner to next round) ---
+                    $winnerId = ($matchData['winner'] == 1) ? $partida->equipa_a : $partida->equipa_b;
+                    $loserId  = ($matchData['winner'] == 1) ? $partida->equipa_b : $partida->equipa_a;
+
+                    $nextRound = $partida->round + 1;
+                    $nextMatchIndex = floor($partida->match_index / 2);
+
+                    $nextMatch = Partida::findOne([
+                        'id_torneio' => $tournamentId,
+                        'round' => $nextRound,
+                        'match_index' => $nextMatchIndex
+                    ]);
+
+                    if ($nextMatch) {
+                        if ($partida->match_index % 2 == 0) {
+                            $nextMatch->equipa_a = $winnerId;
+                        } else {
+                            $nextMatch->equipa_b = $winnerId;
+                        }
+                        $nextMatch->save();
+                    }
+
+                    // --- B. STATS LOGIC (Wins/Defeats) ---
+                    // We only run this if the match is JUST NOW finishing (was not concluded before)
+                    if (!$wasConcluded) {
+                        // Update Winners (+1 Win)
+                        $winnerMembers = MembrosEquipa::findAll(['id_equipa' => $winnerId]);
+                        foreach ($winnerMembers as $membro) {
+                            $estat = Estatisticas::findOne(['id_utilizador' => $membro->id_utilizador, 'id_jogo' => $gameId]);
+                            if (!$estat) {
+                                $estat = new Estatisticas();
+                                $estat->id_utilizador = $membro->id_utilizador;
+                                $estat->id_jogo = $gameId;
+                                $estat->vitorias = 0;
+                                $estat->derrotas = 0;
+                            }
+                            $estat->vitorias++;
+                            $estat->save(false);
+                        }
+
+                        // Update Losers (+1 Defeat)
+                        $loserMembers = MembrosEquipa::findAll(['id_equipa' => $loserId]);
+                        foreach ($loserMembers as $membro) {
+                            $estat = Estatisticas::findOne(['id_utilizador' => $membro->id_utilizador, 'id_jogo' => $gameId]);
+                            if (!$estat) {
+                                $estat = new Estatisticas();
+                                $estat->id_utilizador = $membro->id_utilizador;
+                                $estat->id_jogo = $gameId;
+                                $estat->vitorias = 0;
+                                $estat->derrotas = 0;
+                            }
+                            $estat->derrotas++;
+                            $estat->save(false);
+                        }
+                    }
+                } else {
+                    // If user removed the winner (resetting match), set back to In Progress
+                    $partida->estado = Partida::ESTADO_EM_ANDAMENTO;
+                }
+
+                $partida->save();
+            }
+
+            $transaction->commit();
+            return ['success' => true, 'message' => 'Resultados e estatísticas guardados!'];
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
 
     /**
      * Get round names based on bracket size
@@ -323,80 +330,6 @@ class RefereeDashboardController extends Controller
         }
 
         return $names;
-    }
-
-    /**
-     * Merge saved bracket data with generated brackets
-     * Load from Partida table in database
-     */
-    private function mergeSavedBrackets($brackets, $savedData)
-    {
-        if (empty($savedData) || empty($brackets['rounds'])) {
-            return $brackets;
-        }
-
-        foreach ($savedData as $savedMatch) {
-            $round = $savedMatch['round'];
-            $matchIndex = $savedMatch['match'];
-
-            if (isset($brackets['rounds'][$round]['matches'][$matchIndex])) {
-                $brackets['rounds'][$round]['matches'][$matchIndex] = [
-                    'match_id' => $savedMatch['match_id'] ?? null,
-                    'partida_id' => $savedMatch['partida_id'] ?? null,
-                    'team1' => $savedMatch['team1'],
-                    'team2' => $savedMatch['team2'],
-                    'score1' => $savedMatch['team1']['score'],
-                    'score2' => $savedMatch['team2']['score'],
-                    'winner' => $savedMatch['winner'],
-                ];
-            }
-        }
-
-        return $brackets;
-    }
-
-    /**
-     * Load bracket data from Partida table
-     * @param int $tournamentId
-     * @return array Saved bracket data
-     */
-    private function loadBracketsFromDatabase($tournamentId)
-    {
-        $partidas = Partida::find()
-            ->where(['id_torneio' => $tournamentId])
-            ->all();
-
-        $savedData = [];
-        foreach ($partidas as $partida) {
-            // Extract round and match index from saved data (will be added to Partida table)
-            // For now, we'll reconstruct from session if available
-            $sessionData = Yii::$app->session->get('tournament_brackets_' . $tournamentId);
-            if ($sessionData) {
-                foreach ($sessionData as $match) {
-                    if (isset($match['partida_id']) && $match['partida_id'] == $partida->id_partida) {
-                        $savedData[] = [
-                            'round' => $match['round'],
-                            'match' => $match['match'],
-                            'match_id' => $match['match_id'] ?? null,
-                            'partida_id' => $partida->id_partida,
-                            'team1' => [
-                                'id' => $partida->equipa_a,
-                                'nome' => $partida->equipaA ? $partida->equipaA->nome : 'TBD',
-                                'score' => $partida->vitorias_a,
-                            ],
-                            'team2' => [
-                                'id' => $partida->equipa_b,
-                                'nome' => $partida->equipaB ? $partida->equipaB->nome : 'TBD',
-                                'score' => $partida->vitorias_b,
-                            ],
-                            'winner' => ($partida->vitorias_a >= 2) ? 1 : (($partida->vitorias_b >= 2) ? 2 : null),
-                        ];
-                    }
-                }
-            }
-        }
-
-        return $savedData;
     }
 
     public function actionUpdate($id)

@@ -14,7 +14,6 @@ function openMatchModal(matchElement) {
     // Reset scores and buttons
     mapWins = {team1: 0, team2: 0};
     selectedMaps = [];
-    updateScores();
     document.querySelectorAll('.map-btn').forEach(btn => btn.classList.remove('active'));
 
     // Show modal
@@ -55,15 +54,8 @@ document.addEventListener('click', function(e) {
             e.target.classList.add('active');
             mapWins[`team${team}`]++;
         }
-
-        updateScores();
     }
 });
-
-function updateScores() {
-    document.getElementById('team1Score').textContent = mapWins.team1;
-    document.getElementById('team2Score').textContent = mapWins.team2;
-}
 
 // Confirm match result
 function confirmMatchResult() {
@@ -72,13 +64,13 @@ function confirmMatchResult() {
         return;
     }
 
-    // Determine winner (needs 2 maps to win in BO3)
+    // Determine winner (needs 1 maps to win in BO1)
     let winner = null;
-    if (mapWins.team1 >= 2) winner = 1;
-    else if (mapWins.team2 >= 2) winner = 2;
-
+    if (mapWins.team1 == 1) winner = 1;
+    else if (mapWins.team2 == 1) winner = 2;
+    
     if (winner === null) {
-        alert('Um dos times precisa vencer 2 mapas para ser declarado vencedor (BO3)!');
+        alert('Um dos times precisa vencer 1 mapa para ser declarado vencedor (BO1)!');
         return;
     }
 

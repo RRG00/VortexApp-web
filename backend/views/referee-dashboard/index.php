@@ -49,7 +49,7 @@ $this->title = 'Referee Dashboard';
                     <div class="tournament-details">
                         <span class="detail-item"><?= $torneio->limite_inscricoes ?> Equipas</span>
                         <span class="detail-item">Best Of: <?= $torneio->best_of ?></span>
-                        <span class="detail-item"><?= $torneio->premios ?></span>
+                        <span class="detail-item">Prémio: <?= $torneio->premios ?></span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center">
                         <?= Html::a('Gerir Torneio', Url::to(['/referee-dashboard/management', 'id' => $torneio->id]), ['class' => ['btn btn-primary']]) ?>

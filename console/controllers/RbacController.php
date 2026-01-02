@@ -49,6 +49,10 @@ class RbacController extends Controller
         $createTournament->description="Criar Torneios";
         $auth->add($createTournament);
 
+        $startTournament = $auth->createPermission('startTournament');
+        $startTournament->description="Comecar Torneios";
+        $auth->add($startTournament);
+
         $updateTournament = $auth->createPermission('updateTournament');
         $updateTournament->description="Atualizar Torneios";
         $auth->add($updateTournament);
@@ -106,6 +110,7 @@ class RbacController extends Controller
         $auth->addChild($admin, $deleteUsers);
         $auth->addChild($admin, $viewTournament);
         $auth->addChild($admin, $createTournament);
+        $auth->addChild($admin, $startTournament);
         $auth->addChild($admin, $updateTournament);
         $auth->addChild($admin, $deleteTournament);
         $auth->addChild($admin, $viewResults);
@@ -120,6 +125,7 @@ class RbacController extends Controller
         $auth->addChild($organizer, $accessBackend);
         $auth->addChild($organizer, $viewTournament);
         $auth->addChild($organizer, $createTournament);
+        $auth->addChild($organizer, $startTournament);
         $auth->addChild($organizer, $updateTournament);
         $auth->addChild($organizer, $deleteTournament);
         $auth->addChild($organizer, $viewResults);
@@ -134,6 +140,7 @@ class RbacController extends Controller
         $auth->addChild($referee, $viewResults);
         $auth->addChild($referee, $updateResults);
         $auth->addChild($referee, $updateTournament);
+        $auth->addChild($referee, $startTournament);
 
         //Captian -> create team , update etc
         $captian = $auth->createRole('captian');

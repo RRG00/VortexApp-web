@@ -10,17 +10,10 @@ use common\models\Jogo;
 /** @var common\models\Tournament $model */
 /** @var yii\widgets\ActiveForm $form */
 
-$bestof = [
-    '1' => '1',
-    '3' => '3',
-    '5' => '5',
-];
-
 $limite_inscricoes = [
     '4' => '4',
     '8' => '8',
     '16' => '16',
-    '32' => '32',
 ];
 
 $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
@@ -44,12 +37,6 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                         <?= $form->field($model, 'nome')
                                 ->textInput(['maxlength' => true, 'placeholder' => 'Nome do torneio'])
                                 ->label('Nome') ?>
-                    </div>
-
-                    <div class="col-md-12">
-                        <?= $form->field($model, 'best_of')
-                                ->dropDownList($bestof, ['prompt' => 'Selecione o formato'])
-                                ->label('Best Of') ?>
                     </div>
 
                     <div class="col-md-12">
@@ -113,7 +100,8 @@ $this->registerCssFile('@web/css/tournament-form.css', ['depends' => [\yii\boots
                     </div>
                 </div>
 
-                <?= $form->field($model, 'estado')->hiddenInput(['value' => '0'])->label(false) ?>
+                <?= $form->field($model, 'estado')->hiddenInput(['value' => 'Dar Update'])->label(false) ?>
+                <?= $form->field($model, 'best_of')->hiddenInput(['value' => '1'])->label(false) ?>
 
                 <div class="mt-4 text-end">
                     <?= Html::submitButton(

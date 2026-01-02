@@ -26,8 +26,6 @@ $this->registerJs("
 ", \yii\web\View::POS_HEAD);
 ?>
 
-
-?>
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-12">
@@ -77,46 +75,46 @@ $this->registerJs("
                     <h3 class="card-title text-white">Tournament Brackets</h3>
                 </div>
                 <div class="card-body" style="background-color: #2c3e5a; overflow-x: auto;">
-                    <?php if (empty($brackets['rounds'])): ?>
-                        <div class="alert alert-warning text-center">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            É necessário pelo menos 2 equipas inscritas para gerar os brackets.
-                        </div>
-                    <?php else: ?>
+
+                    <?php
+                    // CASE 1: Brackets already exist (Tournament is live)
+                    if (!empty($brackets['rounds'])):
+                    ?>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="text-white">
-                                <small><i class="fas fa-info-circle"></i> Clique numa partida para definir o vencedor (BO3)</small>
+                                <small><i class="fas fa-info-circle"></i> Clique numa partida para definir o vencedor</small>
                             </div>
+                            <?= Html::a('<i class="fas fa-redo"></i> Reset', ['start-tournament', 'id' => $model->id], [
+                                'class' => 'btn btn-outline-danger btn-sm',
+                                'data-confirm' => 'Tem a certeza? Isso apagará todos os resultados atuais.'
+                            ]) ?>
                             <button class="btn btn-success btn-sm" id="saveBrackets">
                                 <i class="fas fa-save"></i> Guardar Resultados
                             </button>
                         </div>
+
                         <div class="tournament-bracket" id="tournamentBracket">
                             <?php foreach ($brackets['rounds'] as $roundIndex => $round): ?>
                                 <div class="bracket-round" data-round="<?= $roundIndex ?>">
                                     <h4 class="round-title"><?= Html::encode($round['name']) ?></h4>
                                     <div class="bracket-matches">
                                         <?php foreach ($round['matches'] as $matchIndex => $match): ?>
-                                            <?php
-                                                $isFinal = ($roundIndex === count($brackets['rounds']) - 1);
-                                            ?>
+                                            <?php $isFinal = ($roundIndex === count($brackets['rounds']) - 1); ?>
                                             <div class="bracket-match <?= $isFinal ? 'final' : '' ?> clickable-match"
-                                                 data-round="<?= $roundIndex ?>"
-                                                 data-match="<?= $matchIndex ?>"
-                                                 data-match-id="<?= $match['match_id'] ?? '' ?>"
-                                                 data-partida-id="<?= $match['partida_id'] ?? '' ?>"
-                                                 data-team1-id="<?= $match['team1']['id'] ?>"
-                                                 data-team1-name="<?= Html::encode($match['team1']['name']) ?>"
-                                                 data-team2-id="<?= $match['team2']['id'] ?>"
-                                                 data-team2-name="<?= Html::encode($match['team2']['name']) ?>"
-                                                 onclick="openMatchModal(this)">
+                                                data-round="<?= $roundIndex ?>"
+                                                data-match="<?= $matchIndex ?>"
+                                                data-match-id="<?= $match['match_id'] ?? '' ?>"
+                                                data-partida-id="<?= $match['partida_id'] ?? '' ?>"
+                                                data-team1-id="<?= $match['team1']['id'] ?>"
+                                                data-team1-name="<?= Html::encode($match['team1']['name']) ?>"
+                                                data-team2-id="<?= $match['team2']['id'] ?>"
+                                                data-team2-name="<?= Html::encode($match['team2']['name']) ?>"
+                                                onclick="openMatchModal(this)">
                                                 <div class="match-team <?= $match['winner'] === 1 ? 'winner' : '' ?>">
-                                                    <img src="/img/team-icon.png" alt="" class="team-icon" onerror="this.style.display='none'">
                                                     <span class="team-name"><?= Html::encode($match['team1']['name']) ?></span>
                                                     <span class="team-score"><?= $match['score1'] ?></span>
                                                 </div>
                                                 <div class="match-team <?= $match['winner'] === 2 ? 'winner' : '' ?>">
-                                                    <img src="/img/team-icon.png" alt="" class="team-icon" onerror="this.style.display='none'">
                                                     <span class="team-name"><?= Html::encode($match['team2']['name']) ?></span>
                                                     <span class="team-score"><?= $match['score2'] ?></span>
                                                 </div>
@@ -126,7 +124,31 @@ $this->registerJs("
                                 </div>
                             <?php endforeach; ?>
                         </div>
+
+                    <?php
+                    // CASE 2: No brackets yet, but enough teams (Ready to Start)
+                    elseif (count($inscricoes) >= 2):
+                    ?>
+                        <div class="text-center py-5">
+                            <h4 class="text-white mb-3">O torneio está pronto para começar!</h4>
+                            <p class="text-white-50 mb-4">Existem <?= count($inscricoes) ?> equipas inscritas. Gere bracket para iniciar.</p>
+
+                            <?= Html::a('<i class="fas fa-play"></i> Gerar Brackets e Iniciar', ['start-tournament', 'id' => $model->id], [
+                                'class' => 'btn btn-lg btn-warning font-weight-bold',
+                                'data-method' => 'post' // Use POST for state-changing actions
+                            ]) ?>
+                        </div>
+
+                    <?php
+                    // CASE 3: Not enough teams
+                    else:
+                    ?>
+                        <div class="alert alert-warning text-center">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            É necessário pelo menos 2 equipas inscritas para gerar os brackets.
+                        </div>
                     <?php endif; ?>
+
                 </div>
             </div>
         </div>
@@ -153,11 +175,6 @@ $this->registerJs("
                             <h6>Mapas Vencidos</h6>
                             <div class="map-buttons">
                                 <button class="map-btn" data-team="1" data-map="1">Mapa 1</button>
-                                <button class="map-btn" data-team="1" data-map="2">Mapa 2</button>
-                                <button class="map-btn" data-team="1" data-map="3">Mapa 3</button>
-                            </div>
-                            <div class="score-display">
-                                Pontos: <span id="team1Score">0</span>
                             </div>
                         </div>
                     </div>
@@ -173,11 +190,6 @@ $this->registerJs("
                             <h6>Mapas Vencidos</h6>
                             <div class="map-buttons">
                                 <button class="map-btn" data-team="2" data-map="1">Mapa 1</button>
-                                <button class="map-btn" data-team="2" data-map="2">Mapa 2</button>
-                                <button class="map-btn" data-team="2" data-map="3">Mapa 3</button>
-                            </div>
-                            <div class="score-display">
-                                Pontos: <span id="team2Score">0</span>
                             </div>
                         </div>
                     </div>
