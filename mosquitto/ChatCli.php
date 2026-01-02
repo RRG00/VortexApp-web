@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/ChatPublisher.php';
 
-
 $idEquipa = 5;
 $idUser   = 24;
 $username = 'player_api';
