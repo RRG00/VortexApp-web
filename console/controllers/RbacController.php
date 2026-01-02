@@ -112,6 +112,8 @@ class RbacController extends Controller
         $auth->addChild($admin, $updateResults);
         $auth->addChild($admin, $managePlayers);
         $auth->addChild($admin, $banPlayers);
+        $auth->addChild($admin, $updateResults);
+        $auth->addChild($admin, $updateTournament);
 
         //Organizador -> Gere Torneios
         $organizer = $auth->createRole('organizer');
@@ -133,6 +135,7 @@ class RbacController extends Controller
         $auth->addChild($referee, $accessBackend);
         $auth->addChild($referee, $viewResults);
         $auth->addChild($referee, $updateResults);
+        $auth->addChild($referee, $updateTournament);
 
         //Captian -> create team , update etc
         $captian = $auth->createRole('captian');
