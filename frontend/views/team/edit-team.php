@@ -52,10 +52,6 @@ $initials = strtoupper(substr($model->nome, 0, 2));
                 ])->label('Nome da Equipa') ?>
             </div>
 
-            <div class="form-row">
-                <?= $form->field($model, 'imageFile')->fileInput();
-                ?>
-            </div>
         </div>
 
         <div class="form-actions">
@@ -77,7 +73,7 @@ $initials = strtoupper(substr($model->nome, 0, 2));
         <div class="danger-zone">
             <p><strong>Zona de Perigo</strong></p>
             <p>Uma vez que você excluir a sua equipa, não há como voltar atrás.</p>
-            <?= Html::a('Excluir Equipa', ['/equipa/delete'], [
+            <?= Html::a('Apagar Equipa', ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Tem certeza que deseja excluir a sua equipa? Esta ação não pode ser desfeita.',
