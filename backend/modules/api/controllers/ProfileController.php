@@ -9,7 +9,7 @@ use Yii;
 use common\models\User;
 use common\models\Estatisticas;
 use common\models\MembrosEquipa;
-use app\models\Convite;
+use frontend\models\Convite;
 use common\models\Images;
 use yii\filters\auth\QueryParamAuth;
 
