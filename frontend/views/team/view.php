@@ -31,14 +31,14 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
             </div>
 
             <!-- Nome da equipa -->
-            <div class="card shadow-sm mb-4" style="background-color: #31313dff; border: none;">
+            <div class="card shadow-sm mb-4" style="background-color: #252541; border: none;">
                 <div class="card-body text-center py-4">
                     <h1 class="display-4 fw-bold mb-2 text-white"><?=$equipa->nome?></h1>
                 </div>
             </div>
 
             <!-- Informações da equipa -->
-            <div class="card shadow-sm mb-4" style="background-color: #31313dff; border: none;">
+            <div class="card shadow-sm mb-4" style="background-color: #252541; border: none;">
                 <div class="card-body">
                     <div class="row g-4">
                         <!-- Detalhes -->
@@ -87,6 +87,14 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
 
                         <?= Html::a('Adicionar Membros', ['add-members', 'id' => $equipa->id], [
                             'class' => 'btn btn-primary text-nowrap'
+                        ]) ?>
+
+                    </div>
+
+                    
+                    <div class="d-flex justify-content-center gap-2 mb-4">
+                         <?= Html::a('Remover Membros', ['delete-members', 'id' => $equipa->id], [
+                            'class' => 'btn btn-danger text-nowrap'
                         ]) ?>
 
                     </div>

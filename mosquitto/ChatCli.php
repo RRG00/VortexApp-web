@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/chatPublish.php';
+require_once __DIR__ . '/ChatPublisher.php';
 
 $idEquipa = 5;
 $idUser   = 24;
