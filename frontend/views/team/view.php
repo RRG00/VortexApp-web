@@ -21,7 +21,7 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
             <div class="team-profile-img" >
                 <div class="profile-avatar">
                     <?php if ($equipa->profileImage): ?>
-                        <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($equipa->profileImage->path) ?>"
+                        <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($equipa->profileImage->path) ?>.<?= Html::encode($equipa->profileImage->extension) ?>"
                              alt="<?= Html::encode($equipa->nome) ?>"
                              style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                     <?php else: ?>

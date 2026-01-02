@@ -18,7 +18,7 @@ $initials = strtoupper(substr($model->nome, 0, 2));
     <div class="profile-header">
         <div class="profile-avatar">
             <?php if ($model->profileImage): ?>
-                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($model->profileImage->path) ?>"
+                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($model->profileImage->path) ?>.<?= Html::encode($model->profileImage->extension) ?>"
                      alt="<?= Html::encode($model->nome) ?>"
                      style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
             <?php else: ?>

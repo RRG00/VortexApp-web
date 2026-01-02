@@ -74,7 +74,7 @@ AppAsset::register($this);
                     <a href="<?= Url::to(['/profile/index']) ?>" class="player-avatar-link" title="<?= Html::encode($username) ?>">
                         <div class="player-avatar">
                             <?php if ($user->profileImage): ?>
-                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>.<?= Html::encode($user->profileImage->extension) ?>"
                                     alt="<?= Html::encode($username) ?>"
                                     style="width: 100%; height: 100%; object-fit: cover;">
                             <?php else: ?>

@@ -44,7 +44,7 @@ $this->title = 'Rankings';
                                         title="Ver perfil de <?= Html::encode($username) ?>">
                                         <div class="player-avatar">
                                             <?php if (isset($user->profileImage)): ?>
-                                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>"
+                                                <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($user->profileImage->path) ?>.<?= Html::encode($user->profileImage->extension) ?>"
                                                     alt="<?= Html::encode($username) ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                             <?php else: ?>
