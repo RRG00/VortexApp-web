@@ -8,7 +8,7 @@ use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\helpers\Url;
-use app\Models\Convite;
+use frontend\models\Convite;
 use PHPUnit\Framework\MockObject\Builder\Identity;
 
 AppAsset::register($this);
