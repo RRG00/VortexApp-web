@@ -20,21 +20,13 @@ $this->title = 'Adicionar Membros - ' . $equipa->nome;
         </div>
         <?= Html::a('Voltar à equipa', ['view', 'id' => $equipa->id], ['class' => 'btn btn-outline-light']) ?>
     </div>
-
     <div class="card shadow-sm mb-4" style="background-color: #1a1a2e; border: none;">
         <div class="card-body">
-            <form class="row g-2" method="get" action="<?= Url::to(['add-members', 'id' => $equipa->id]) ?>">
-                <div class="col-md-8">
-                    <input type="text" name="q" value="<?= Html::encode($searchTerm) ?>" class="form-control" placeholder="Pesquisar por nome de utilizador">
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <button type="submit" class="btn btn-primary me-2">Pesquisar</button>
-                    <a href="<?= Url::to(['add-members', 'id' => $equipa->id]) ?>" class="btn btn-secondary">Limpar</a>
-                </div>
+            <form class="row g-2" method="get"
+                action="/VortexApp-web/frontend/web/index.php?r=team/add-members&id=<?= $equipa->id ?>">
             </form>
         </div>
     </div>
-
     <?php if ($dataProvider->getTotalCount() === 0): ?>
         <div class="alert alert-info">Não existem utilizadores sem equipa que correspondam à pesquisa.</div>
     <?php else: ?>

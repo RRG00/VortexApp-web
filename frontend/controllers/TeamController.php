@@ -138,47 +138,38 @@ class TeamController extends Controller
     }
 
     public function actionAddMembers($id)
-    {
-        $equipa = $this->findModel($id);
+{
+    $equipa = $this->findModel($id);
 
-        $currentUserId = Yii::$app->user->id;
-        $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
+    $searchTerm = Yii::$app->request->get('q');
 
-        if (!$currentMembership || $currentMembership->funcao !== 'capitao') {
-            Yii::$app->session->setFlash('error', 'Apenas o capitão desta equipa pode adicionar membros.');
-            return $this->redirect(['view', 'id' => $id]);
-        }
+    $query = User::find()
+        ->alias('u')
+        ->innerJoin('auth_assignment aa', 'aa.user_id = u.id')
+        ->andWhere(['aa.item_name' => 'player'])
+        ->andWhere(['u.status' => User::STATUS_ACTIVE])
+        ->andWhere([
+            'not exists',
+            MembrosEquipa::find()
+                ->select(new Expression('1'))
+                ->where('membros_equipa.id_utilizador = u.id'),
+        ])
+        ->andFilterWhere(['like', 'u.username', $searchTerm]);
 
-        $searchTerm = $this->request->get('q');
+    $dataProvider = new ActiveDataProvider([
+        'query' => $query,
+        'pagination' => ['pageSize' => 10],
+        'sort' => ['defaultOrder' => ['username' => SORT_ASC]],
+    ]);
 
-        $query = User::find()
-            ->alias('u')
-            ->andWhere(['u.status' => User::STATUS_ACTIVE])
-            ->andWhere([
-                'not exists',
-                MembrosEquipa::find()
-                    ->select(new Expression('1'))
-                    ->where('membros_equipa.id_utilizador = u.id'),
-            ]);
+    return $this->render('add-members', [
+        'equipa' => $equipa,
+        'dataProvider' => $dataProvider,
+        'searchTerm' => $searchTerm,
+    ]);
+}
+    
 
-        $query->andFilterWhere(['like', 'u.username', $searchTerm]);
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'defaultOrder' => ['username' => SORT_ASC],
-            ],
-        ]);
-
-        return $this->render('add-members', [
-            'equipa' => $equipa,
-            'dataProvider' => $dataProvider,
-            'searchTerm' => $searchTerm,
-        ]);
-    }
 
     public function actionAttachMember($id, $userId)
     {
