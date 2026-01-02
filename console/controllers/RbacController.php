@@ -112,7 +112,6 @@ class RbacController extends Controller
         $auth->addChild($admin, $updateResults);
         $auth->addChild($admin, $managePlayers);
         $auth->addChild($admin, $banPlayers);
-        $auth->addChild($admin, $updateResults);
         $auth->addChild($admin, $updateTournament);
 
         //Organizador -> Gere Torneios
