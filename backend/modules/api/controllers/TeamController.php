@@ -75,7 +75,7 @@ class TeamController extends Controller
                 'id_capitao'  => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
-        ];
+        ];  
     }
 
 

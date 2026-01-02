@@ -58,8 +58,10 @@
                 //'showScriptName' => false,
                 'rules' => [
 
-                    //ENDPOINTS API -> NOTIFICAÇÕES
+                    //ENDPOINT -> LOGIN
                     'POST api/login' => 'api/login/login',
+
+                    //ENDPOINTS API -> NOTIFICAÇÕES
                     'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
 
                     //ENDPOINTS API -> EQUIPAS
