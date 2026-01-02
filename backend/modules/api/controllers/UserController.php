@@ -21,16 +21,16 @@ class UserController extends Controller
     }
 
     public function behaviors()
-{
-    $behaviors = parent::behaviors();
+    {
+        $behaviors = parent::behaviors();
 
-    $behaviors['authenticator'] = [
-        'class' => QueryParamAuth::class,
-        'tokenParam' => 'access-token',
-    ];
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
+        ];
 
-    return $behaviors;
-}
+        return $behaviors;
+    }
 
     //READ
     public function actionFindUser($id)
@@ -46,11 +46,11 @@ class UserController extends Controller
             ->orderBy(['id' => SORT_DESC])
             ->one();
 
-
         $photoUrl = null;
         if ($image) {
-            $baseUrl = Yii::$app->request->hostInfo . \Yii::$app->request->baseUrl;
-            $photoUrl = $baseUrl . '/uploads/users/' . $image->path . '.' . $image->extension;
+            $baseUrl  = Yii::$app->request->hostInfo; 
+            $photoUrl = $baseUrl . '/VortexApp-web/frontend/web/uploads/'
+                . $image->path . '.' . $image->extension;
         }
 
         return [

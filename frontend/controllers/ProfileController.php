@@ -12,7 +12,7 @@ use common\models\UpdateUserForm;
 use common\models\Estatisticas;
 use yii\web\UploadedFile;
 use common\models\MembrosEquipa;
-use app\models\Convite;
+use frontend\models\Convite;
 
 class ProfileController extends Controller
 {

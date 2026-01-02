@@ -9,7 +9,7 @@ use Yii;
 use common\models\User;
 use common\models\Estatisticas;
 use common\models\MembrosEquipa;
-use app\models\Convite;
+use frontend\models\Convite;
 use common\models\Images;
 use yii\filters\auth\QueryParamAuth;
 
@@ -22,7 +22,7 @@ class ProfileController extends Controller
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::class,
             'tokenParam' => 'access-token',
-  
+
         ];
 
         return $behaviors;
@@ -53,16 +53,20 @@ class ProfileController extends Controller
         }
 
         //Photo_url
+        //Photo_url
         $image = Images::find()
             ->where(['id_user' => $user->id])
             ->orderBy(['id' => SORT_DESC])
             ->one();
 
         if ($image) {
-            $photoUrl = Yii::$app->request->hostInfo . '/uploads/' . $image->path . '.' . $image->extension;
+            $photoUrl = Yii::$app->request->hostInfo
+                . '/VortexApp-web/frontend/web/uploads/'
+                . $image->path . '.' . $image->extension;
         } else {
             $photoUrl = 'DONT HAVE IMG';
         }
+
 
         return [
             'status' => 'success',
