@@ -310,3 +310,9 @@ hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,yii2,composer,phpstorm,visualstudiocode
 nul
+
+phpstan-config.php
+
+phpstan.neon
+
+runtime

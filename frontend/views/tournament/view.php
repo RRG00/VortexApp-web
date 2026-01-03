@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+
+$formatter = \Yii::$app->formatter;
+
 ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
@@ -56,8 +59,8 @@ use yii\helpers\Url;
                             <div class="text-center p-3 rounded" style="background-color: #252542;">
                                 <h5 class="text-info mb-1">Período</h5>
                                 <p class="small mb-0 fw-semibold text-white-50">
-                                    <?=date('d/m/Y', strtotime($torneio->data_inicio))?><br>
-                                    <?=date('d/m/Y', strtotime($torneio->data_fim))?>
+                                    Data Início: <?=$formatter->asDate($torneio->data_inicio, "long")?><br>
+                                    Data Fim: <?=$formatter->asDate($torneio->data_fim, "long")?>
                                 </p>
                             </div>
                         </div>

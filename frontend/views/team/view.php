@@ -47,7 +47,7 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
                                 <i class="bi bi-info-circle-fill me-2"></i>Nome do Capitão
                             </h3>
                             <p class="text-white-50">
-                                <?= $capitao ? $capitao : 'Sem capitão'?>
+                                <?= $capitao ?? 'Sem capitão'?>
                             </p>
 
 
