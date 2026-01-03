@@ -9,7 +9,6 @@ use common\models\ChatMensagem;
 use common\models\User;
 use common\models\MembrosEquipa;
 use common\models\Equipa;
-use app\mosquitto\ChatPublisher;
 
 
 
@@ -33,10 +32,13 @@ class ChatController extends Controller
 
     public function actionTeam($id)
     {
+        require_once Yii::getAlias('@app/../mosquitto/ChatPublisher.php');
+
         $db     = Yii::$app->db;
         $userId = Yii::$app->user->id;
 
         if (Yii::$app->request->isPost) {
+
             $text = trim(Yii::$app->request->post('message', ''));
 
             if ($text !== '') {
@@ -46,13 +48,21 @@ class ChatController extends Controller
                     'mensagem'   => $text,
                     'created_at' => date('Y-m-d H:i:s'),
                 ])->execute();
-                
-                ChatPublisher::publish($id, $userId, $text);
+
+
+                $topic   = "vortex/chat/team/$id";
+                $payload = json_encode([
+                    'teamId'  => (int)$id,
+                    'userId'  => (int)$userId,
+                    'message' => $text,
+                    'time'    => date('Y-m-d H:i:s'),
+                ]);
+
+                FazPublishNoMosquitto($topic, $payload);
             }
 
             return $this->redirect(['team', 'id' => $id]);
         }
-
 
         $messages = $db->createCommand(
             'SELECT * FROM chat_mensagens WHERE id_equipa = :id ORDER BY created_at ASC'
@@ -62,7 +72,7 @@ class ChatController extends Controller
         foreach ($messages as &$m) {
             $member = MembrosEquipa::find()
                 ->where([
-                    'id_equipa'    => (int)$id,
+                    'id_equipa'     => (int)$id,
                     'id_utilizador' => (int)$m['id_user'],
                 ])
                 ->one();
@@ -70,7 +80,8 @@ class ChatController extends Controller
             $m['funcao'] = $member ? $member->funcao : 'player';
         }
         unset($m);
-        $equipa = Equipa::findOne((int)$id);
+
+        $equipa   = Equipa::findOne((int)$id);
         $teamName = $equipa ? $equipa->nome : ('Equipa #' . $id);
 
         return $this->render('team', [
