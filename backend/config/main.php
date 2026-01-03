@@ -72,7 +72,7 @@
                     'DELETE api/team/delete/<id>' => 'api/team/delete',
 
                     //ENDPOINTS API -> USER
-                    'GET api/user/find' => 'api/user/find-user',
+                    'GET api/user/find/<id>' => 'api/user/find-user',
                     'PUT api/user/update/<id>' => 'api/user/update-user',
                     'POST api/user/create' => 'api/user/create',
                     'DELETE api/user/delete/<id>' => 'api/user/delete',
@@ -89,8 +89,8 @@
                     'PUT api/profile/update-user-profile' => 'api/profile/update-user-profile',
 
                     //ENDPOINTS CHAT(ANDROID)
-                   'POST api/chat/send' => 'api/chat/send',
-                   'GET api/chat/history' => 'api/chat/history',
+                    'POST api/chat/send' => 'api/chat/send',
+                    'GET api/chat/history' => 'api/chat/history',
                 ],
             ],
         ],
