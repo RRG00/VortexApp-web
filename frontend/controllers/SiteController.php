@@ -20,6 +20,7 @@ use frontend\models\ContactForm;
 use common\models\User;
 use yii\db\Expression;
 use common\models\Jogo;
+use common\models\MembrosEquipa;
 
 /**
  * Site controller
@@ -55,6 +56,31 @@ class SiteController extends Controller
                 ],
             ],
         ];
+    }
+    public function beforeAction($action)
+    {
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+
+        $teamId = null;
+
+        if (!Yii::$app->user->isGuest) {
+            $user = Yii::$app->user->identity;
+
+            $member = MembrosEquipa::find()
+                ->where(['id_utilizador' => $user->id])
+                ->one();
+
+            if ($member) {
+                $teamId = $member->id_equipa;
+            }
+        }
+
+        // disponível no layout
+        Yii::$app->view->params['teamId'] = $teamId;
+
+        return true;
     }
 
     /**

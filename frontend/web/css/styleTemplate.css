@@ -64,16 +64,10 @@ nav {
 }
 
 .player-avatar {
-    position: relative;
-    width: 48px;   
-    height: 48px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     overflow: hidden;
-    background: #1f2a3d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #303b5a; 
 }
 
 .avatar-notify-dot {
@@ -120,6 +114,37 @@ nav {
   color: var(--accent);
 }
 
+.player-avatar-link .player-avatar {
+    width: 36px;
+    height: 36px;
+}
+
+.chat-icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.chat-icon-link i {
+    font-size: 1.2rem;
+}
+
+.chat-icon-link:hover {
+    background: #0d6efd;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.6);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+.auth-buttons .btn.btn-secondary {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+
 .nav-links a::after {
   content: "";
   position: absolute;
@@ -135,7 +160,6 @@ nav {
   width: 100%;
 }
 
-/* Avatar Components */
 .player-avatar-link {
   text-decoration: none;
   color: inherit;
@@ -205,10 +229,11 @@ nav {
   height: 48px;
 }
 
-/* Buttons */
+
 .auth-buttons {
-  display: flex;
-  gap: 1rem;
+    display: flex;
+    align-items: center;  
+    gap: 8px;
 }
 
 .btn {

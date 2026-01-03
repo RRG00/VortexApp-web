@@ -12,6 +12,7 @@ use frontend\models\Convite;
 use PHPUnit\Framework\MockObject\Builder\Identity;
 
 AppAsset::register($this);
+$teamId = Yii::$app->view->params['teamId'] ?? null;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -29,6 +30,9 @@ AppAsset::register($this);
         href="<?= Yii::$app->request->baseUrl ?>https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="icon" type="image/x-icon"
         href="<?= Yii::$app->request->baseUrl ?>/assets/img/VortexAPP_Logo_SemTexto.png">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
 
 </head>
 
@@ -68,7 +72,6 @@ AppAsset::register($this);
                     $hasInvites = Convite::find()
                         ->where(['id_utilizador' => $user->id])
                         ->exists();
-
                     ?>
                     <a href="<?= Url::to(['/profile/index']) ?>" class="player-avatar-link" title="<?= Html::encode($username) ?>">
                         <div class="player-avatar">
@@ -85,6 +88,14 @@ AppAsset::register($this);
                             <?php endif; ?>
                         </div>
                     </a>
+
+                    <?php if ($teamId): ?>
+                        <a href="<?= Url::to(['/chat/team', 'id' => $teamId]) ?>"
+                            class="chat-icon-link"
+                            title="Chat da equipa">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </a>
+                    <?php endif; ?>
 
                     <?= Html::a('Logout', ['/site/logout'], [
                         'class' => ['btn btn-secondary'],
