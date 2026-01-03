@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/phpMQTT.php';
 
-$server   = '127.0.0.1';
+$server   = '172.22.21.245';
 $port     = 1883;
 $clientId = 'vortex_chat_subscriber_' . uniqid();
 
