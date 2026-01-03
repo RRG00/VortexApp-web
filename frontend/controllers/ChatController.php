@@ -40,11 +40,13 @@ class ChatController extends Controller
         if (Yii::$app->request->isPost) {
 
             $text = trim(Yii::$app->request->post('message', ''));
+            $username = Yii::$app->user->identity->username ?? '';
 
             if ($text !== '') {
                 $db->createCommand()->insert('chat_mensagens', [
                     'id_equipa'  => (int)$id,
                     'id_user'    => (int)$userId,
+                    'username'   => $username,
                     'mensagem'   => $text,
                     'created_at' => date('Y-m-d H:i:s'),
                 ])->execute();
