@@ -7,7 +7,7 @@ use common\models\EquipaSearch;
 use common\models\MembrosEquipa;
 use common\models\UpdateTeamForm;
 use common\models\User;
-use frontend\models\Convite;
+use app\models\Convite;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
@@ -313,18 +313,12 @@ class TeamController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
 
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            
-            // If there's an image file, try to upload it
-            if ($model->imageFile) {
-                $model->upload();
-            }
-            
-            // Save the model
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
-                return $this->redirect(['view', 'id' => $id]);
-            } else {
-                Yii::$app->session->setFlash('error', 'Erro ao atualizar a equipa.');
+            if ($model->upload()) {
+                if ($model->save()) {
+
+                    Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
+                    return $this->redirect(['index']);
+                }
             }
         }
         return $this->render('edit-team', [
