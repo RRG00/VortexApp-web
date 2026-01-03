@@ -31,14 +31,12 @@ use yii\helpers\Html;
                     $auth = Yii::$app->authManager;
                     $roles = $auth->getRolesByUser(Yii::$app->user->id);
 
-                    // Map roles to their respective images
                     $roleImageMap = [
                         'admin' => 'administrator.png',
                         'organizer' => 'organizer.png',
                         'referee' => 'referre.png',
                     ];
 
-                    // Find the first matching role
                     foreach ($roleImageMap as $role => $image) {
                         if (isset($roles[$role])) {
                             $roleImage = $image;
@@ -58,7 +56,7 @@ use yii\helpers\Html;
                 <?php endif; ?>
             </div>
             <div class="info">
-                <a href="<?= Url::to(['/user/profile']) ?>" class="d-block">
+                <a href="<?= Url::to(['/user/edit-profile']) ?>" class="d-block">
                     <?= Html::encode($username) ?>
                 </a>
                 <?php if (!empty($user->email)): ?>

@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var app\Models\UserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Gestão de Utilizadores';    
+$this->title = 'Gestão de Utilizadores';
 $this->params['breadcrumbs'][] = $this->title;
 
 // Importa o CSS externo
@@ -51,9 +51,13 @@ $this->registerCssFile('@web/css/user-index.css', ['depends' => [\yii\bootstrap4
                         },
                     ],
                     [
-                        'attribute' => 'status',
-                        'label' => 'Status',
-                        'enableSorting' => false,
+                            'attribute' => 'status',
+                            'label' => 'Status',
+                            'enableSorting' => false,
+                            'value' => function ($model) {
+                                return $model->status == 10 ? 'Ativado' : 'Desativado';
+                            },
+
                     ],
 
 

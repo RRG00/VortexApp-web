@@ -8,7 +8,7 @@ use frontend\models\VerifyEmailForm;
 use InvalidArgumentException;
 use Yii;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller; 
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use backend\Models\SignupForm;
@@ -28,33 +28,38 @@ class UserController extends Controller
             [
                 'access' => [
                     'class' => AccessControl::class,
-                        'rules' => [
-                            [ 
-                                'allow' => true,
-                                'actions' => ['index'],
-                                'roles' => ['viewUsers'],
-                            ],
-                            [ 
-                                'allow' => true,
-                                'actions' => ['view'],
-                                'roles' => ['viewUser'],
-                            ],
-                            [ 
-                                'allow' => true,
-                                'actions' => ['create'],
-                                'roles' => ['createUsers'],
-                            ],
-                            [ 
-                                'allow' => true,
-                                'actions' => ['update'],
-                                'roles' => ['updateUsers'],
-                            ],
-                            [ 
-                                'allow' => true,
-                                'actions' => ['delete'],
-                                'roles' => ['deleteUsers'],
-                            ],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index'],
+                            'roles' => ['viewUsers'],
                         ],
+                        [
+                            'allow' => true,
+                            'actions' => ['view'],
+                            'roles' => ['viewUser'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['create'],
+                            'roles' => ['createUsers'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['update'],
+                            'roles' => ['updateUsers'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['delete'],
+                            'roles' => ['deleteUsers'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['edit-profile'],
+                            'roles' => ['@'],
+                        ]
+                    ],
                 ]
             ]
         );
@@ -96,33 +101,32 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-    $model = new SignupForm();
+        $model = new SignupForm();
 
-    $auth = Yii::$app->authManager;
-    $roles = $auth->getRoles();
+        $auth = Yii::$app->authManager;
+        $roles = $auth->getRoles();
 
-    $roleList = [];
-    foreach ($roles as $role) {
-        $roleList[$role->name] = $role->name;
-    }
-
-    if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
-        $user = $model->signup();
-        if (!$user instanceof \common\models\User) {
-            Yii::$app->session->setFlash('error', 'Erro ao criar o utilizador.');
-            return $this->render('create', [
-                                'model' => $model,
-                                'roleList' => $roleList
-                                ]);
+        $roleList = [];
+        foreach ($roles as $role) {
+            $roleList[$role->name] = $role->name;
         }
-       return $this->redirect(['index']);
-    }
 
-    return $this->render('create', [
-        'model' => $model,
-        'roleList' => $roleList 
-    ]);
+        if ($this->request->isPost && $model->load(Yii::$app->request->post())) {
+            $user = $model->signup();
+            if (!$user instanceof \common\models\User) {
+                Yii::$app->session->setFlash('error', 'Erro ao criar o utilizador.');
+                return $this->render('create', [
+                    'model' => $model,
+                    'roleList' => $roleList
+                ]);
+            }
+            return $this->redirect(['index']);
+        }
 
+        return $this->render('create', [
+            'model' => $model,
+            'roleList' => $roleList
+        ]);
     }
 
     /**
@@ -141,7 +145,7 @@ class UserController extends Controller
         foreach ($roles as $role) {
             $roleList[$role->name] = $role->name;
         }
-        
+
         $userRoles = $auth->getRolesByUser($model->id);
         $currentRole = empty($userRoles) ? null : array_key_first($userRoles);
 
@@ -161,12 +165,12 @@ class UserController extends Controller
             }
 
             return $this->redirect(['index']);
-    }
+        }
 
-    return $this->render('update', [
-        'model' => $model,
-        'roleList' => $roleList,
-    ]);
+        return $this->render('update', [
+            'model' => $model,
+            'roleList' => $roleList,
+        ]);
     }
 
 
@@ -183,7 +187,35 @@ class UserController extends Controller
         }
 
         Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+
         return $this->goHome();
+    }
+
+
+    public function actionEditProfile()
+    {
+        /** @var User $model */
+        $model = Yii::$app->user->identity;
+        if (!$model) {
+            return $this->redirect(['site/login']);
+        }
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+
+            if (!empty($model->new_password)) {
+                $model->setPassword($model->new_password);
+                $model->generateAuthKey();
+            }
+
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
+                return $this->redirect(['edit-profile']);
+            }
+        }
+
+        return $this->render('edit-profile', [
+            'model' => $model,
+        ]);
     }
 
     /**

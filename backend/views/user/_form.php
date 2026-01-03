@@ -5,8 +5,8 @@ use yii\widgets\ActiveForm;
 
 
 $status = [
-    common\Models\User::STATUS_ACTIVE => '10',
-    common\Models\User::STATUS_INACTIVE => '9',
+    common\Models\User::STATUS_ACTIVE => 'Ativado',
+    common\Models\User::STATUS_INACTIVE => 'Desativado',
 ];
 
 /** @var yii\web\View $this */
