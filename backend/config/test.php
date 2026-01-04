@@ -10,6 +10,10 @@ return [
         ],
         'request' => [
             'cookieValidationKey' => 'test',
+            'csrfParam' => '_csrf-backend-test',
+        ],
+        'session' => [
+            'name' => 'advanced-backend-test',
         ],
     ],
 ];
