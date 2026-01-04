@@ -15,5 +15,12 @@ return [
         'session' => [
             'name' => 'advanced-backend-test',
         ],
+        'db' => [
+            'class' => \yii\db\Connection::class,
+            'dsn' => 'mysql:host=localhost;dbname=vortexdb_test',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
     ],
 ];
