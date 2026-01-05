@@ -918,3 +918,17 @@ footer {
     text-shadow: 0 0 6px #00d1ff;
     text-decoration: underline;  
 }
+.btn-team {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: #ffffff !important;
+    border: none;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-team:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
+    color: #ffffff !important;
+}
+
