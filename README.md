@@ -2,21 +2,6 @@
 
 A comprehensive web application built on the Yii2 Advanced Project Template, designed for complex multi-tier development with frontend, backend, and console applications.
 
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Directory Structure](#directory-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Docker Setup](#docker-setup)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## 🎯 Overview
 
 VortexApp is a sophisticated web application leveraging the Yii2 framework's advanced template architecture. It provides a robust foundation for building scalable applications with clear separation between frontend, backend, and console components.
