@@ -2,6 +2,7 @@
 
 A comprehensive web application built on the Yii2 Advanced Project Template, designed for complex multi-tier development with frontend, backend, and console applications.
 
+<<<<<<< HEAD
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -32,6 +33,23 @@ VortexApp is a sophisticated web application leveraging the Yii2 framework's adv
 - **Testing Framework**: Integrated Codeception for comprehensive testing
 - **Shared Components**: Common models and configurations across tiers
 
+=======
+## 🎯 Overview
+
+VortexApp is a sophisticated web application leveraging the Yii2 framework's advanced template architecture. It provides a robust foundation for building scalable applications with clear separation between frontend, backend, and console components.
+
+## ✨ Features
+
+- **Multi-tier Architecture**: Separate frontend, backend, and console applications
+- **MQTT Integration**: Real-time messaging with Mosquitto broker
+- **Docker Support**: Containerized deployment with Docker Compose
+- **Vagrant Integration**: VM-based development environment
+- **Environment Management**: Multiple environment configurations (dev, prod, test)
+- **Database Migrations**: Version-controlled database schema management
+- **Testing Framework**: Integrated Codeception for comprehensive testing
+- **Shared Components**: Common models and configurations across tiers
+
+>>>>>>> origin/main
 ## 🛠️ Tech Stack
 
 - **Framework**: Yii2 Advanced Template
@@ -322,4 +340,8 @@ For issues, questions, or contributions, please:
 
 ---
 
+<<<<<<< HEAD
 **Built with ❤️ using Yii2 Framework**
+=======
+**Built with ❤️ using Yii2 Framework**
+>>>>>>> origin/main
