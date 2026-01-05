@@ -283,21 +283,6 @@ nav {
     background: #fbbf24; 
     color: #111827;
 }
-.team-link {
-    color: #ffffff;
-    text-decoration: none;
-    transition: color 0.2s ease, text-shadow 0.2s ease;
-}
-
-.team-link-item {
-    cursor: pointer;
-}
-
-.team-link:hover {
-    color: #00d1ff;              
-    text-shadow: 0 0 6px #00d1ff;
-    text-decoration: underline;  
-}
 
 
 .badge-player {
@@ -309,7 +294,6 @@ nav {
     text-align: center;
     margin-bottom: 20px;
 }
-
 
 
 .btn {
@@ -917,4 +901,20 @@ footer {
     width: 100%;
     padding: 12px 30px;
   }
+}
+
+.team-link {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.team-link-item {
+    cursor: pointer;
+}
+
+.team-link:hover {
+    color: #00d1ff;              
+    text-shadow: 0 0 6px #00d1ff;
+    text-decoration: underline;  
 }
