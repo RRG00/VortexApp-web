@@ -14,8 +14,8 @@ class SignupCest
         $I->amOnRoute('site/signup');
         $I->see('Registar');
         $I->submitForm('#form-signup', [
-            'SignupForm[username]' => 'player' . time(),
-            'SignupForm[email]'    => 'player' . time() . '@mail.com',
+            'SignupForm[username]' => 'testplayer_',
+            'SignupForm[email]'    => 'testplayer_' . '@test.com',
             'SignupForm[password]' => '12345678',
         ]);
 

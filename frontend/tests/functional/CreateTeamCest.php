@@ -14,7 +14,7 @@ final class CreateTeamCest
         $I->amOnRoute('site/login');
 
         $I->submitForm('#login-form', [
-            'LoginForm[username]' => 'player',
+            'LoginForm[username]' => 'teamtester',
             'LoginForm[password]' => '12345678',
         ]);
 
@@ -25,11 +25,11 @@ final class CreateTeamCest
     {
         $this->loginAsPlayer($I);
 
-        $I->amOnRoute('equipa/create');
+        $I->amOnRoute('team/create');
         $I->submitForm('form', [
-            'Equipa[nome_equipa]' => 'Equipa Funcional ' . time(),
+            'Equipa[nome]' => 'Equipa Funcional ' . time(),
         ]);
 
-        $I->see('Equipa Funcional');
+        $I->see('Esta é a sua equipa');
     }
 }
