@@ -47,7 +47,7 @@ class Partida extends \yii\db\ActiveRecord
         return [
             [['data'], 'default', 'value' => null],
             [['vitorias_a', 'vitorias_b'], 'default', 'value' => 0],
-            [['id_torneio', 'equipa_a', 'equipa_b', 'estado'], 'required'],
+            [['id_torneio', 'estado'], 'required'],
             [['id_torneio', 'equipa_a', 'equipa_b', 'vitorias_a', 'vitorias_b'], 'integer'],
             [['estado'], 'string'],
             [['data'], 'safe'],
