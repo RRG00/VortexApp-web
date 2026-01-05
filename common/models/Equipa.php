@@ -44,6 +44,7 @@ class Equipa extends \yii\db\ActiveRecord
             [['nome', 'data_criacao'], 'required'],
             [['data_criacao'], 'safe'],
             [['nome'], 'string', 'max' => 255],
+            [['nome'], 'match', 'pattern' => '/^[A-Za-z0-9]+$/', 'message' => 'O nome da equipa só pode conter letras (A-Z) e números (0-9).'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
         ];
     }

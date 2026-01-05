@@ -26,6 +26,12 @@ class UpdateTeamForm extends Model
 
     public function update()
     {
+        // Validar nome da equipa
+        if (!preg_match('/^[A-Za-z0-9]+$/', $this->equipa->nome)) {
+            $this->equipa->addError('nome', 'O nome da equipa só pode conter letras (A-Z) e números (0-9).');
+            return null;
+        }
+
         if (!$this->validate() || !$this->equipa->validate()) {
             return null;
         }
