@@ -4,7 +4,7 @@ require_once __DIR__ . '/phpMQTT.php';
 
 function FazPublishNoMosquitto($canal, $msg)
 {
-    $server   = '172.22.21.245';
+    $server   = '127.0.0.1';
     $port     = 1883;
     $clientId = 'vortex_chat_' . uniqid();
 

@@ -18,12 +18,12 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
             <?php if ($isUserTeam): ?>
                 <div style="background-color: #007bff; color: white; padding: 10px; border-radius: 5px; font-weight: bold; text-align: center; margin-bottom: 20px;">Esta é a sua equipa</div>
             <?php endif; ?>
-            <div class="team-profile-img" >
+            <div class="team-profile-img">
                 <div class="profile-avatar">
                     <?php if ($equipa->profileImage): ?>
                         <img src="<?= Yii::$app->request->baseUrl ?>/uploads/<?= Html::encode($equipa->profileImage->path) ?>.<?= Html::encode($equipa->profileImage->extension) ?>"
-                             alt="<?= Html::encode($equipa->nome) ?>"
-                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            alt="<?= Html::encode($equipa->nome) ?>"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                     <?php else: ?>
                         <?= $initials ?>
                     <?php endif; ?>
@@ -33,7 +33,7 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
             <!-- Nome da equipa -->
             <div class="card shadow-sm mb-4" style="background-color: #252541; border: none;">
                 <div class="card-body text-center py-4">
-                    <h1 class="display-4 fw-bold mb-2 text-white"><?=$equipa->nome?></h1>
+                    <h1 class="display-4 fw-bold mb-2 text-white"><?= $equipa->nome ?></h1>
                 </div>
             </div>
 
@@ -47,7 +47,7 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
                                 <i class="bi bi-info-circle-fill me-2"></i>Nome do Capitão
                             </h3>
                             <p class="text-white-50">
-                                <?= $capitao ?? 'Sem capitão'?>
+                                <?= $capitao ?? 'Sem capitão' ?>
                             </p>
 
 
@@ -77,31 +77,19 @@ $initials = strtoupper(substr($equipa->nome, 0, 2));
                     </div>
                 </div>
             </div>
-
             <?php if ($isCaptain): ?>
-                <div class="col-md-6 col-lg-6 col-xl-4">
-                    <div class="d-flex justify-content-center gap-2 mb-4">
-                        <?= Html::a('Editar Equipa', ['update','id' => $equipa->id], [
-                            'class' => 'btn btn-primary text-nowrap'
-                        ]) ?>
-
-                        <?= Html::a('Adicionar Membros', ['add-members', 'id' => $equipa->id], [
-                            'class' => 'btn btn-primary text-nowrap'
-                        ]) ?>
-
-                    </div>
-
-                    
-                    <div class="d-flex justify-content-center gap-2 mb-4">
-                         <?= Html::a('Remover Membros', ['delete-members', 'id' => $equipa->id], [
-                            'class' => 'btn btn-danger text-nowrap'
-                        ]) ?>
-
-                    </div>
-
+                <div class="d-flex justify-content-center gap-4 mb-4">
+                    <?= Html::a('Editar Equipa', ['update', 'id' => $equipa->id], [
+                        'class' => 'btn btn-team text-nowrap'
+                    ]) ?>
+                    <?= Html::a('Adicionar Membros', ['add-members', 'id' => $equipa->id], [
+                        'class' => 'btn btn-team text-nowrap'
+                    ]) ?>
+                    <?= Html::a('Remover Membros', ['delete-members', 'id' => $equipa->id], [
+                        'class' => 'btn btn-outline-danger text-nowrap'
+                    ]) ?>
                 </div>
             <?php endif; ?>
-
 
         </div>
     </div>
