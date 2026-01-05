@@ -625,13 +625,15 @@ tr:hover {
 }
 
 .team-profile-img {
-  background-color: #1a1a2e !important;
-  border: none !important;
-  align-items: center !important;
-  justify-content: center !important;
-  align-content: center !important;
-  border-color: pink !important;
+    display: flex;
+    justify-content: center;   
+    align-items: center; 
+    margin-bottom: 20px;       
+    margin-top: 20px;     
+    background-color: #1a1a2e;
+    border: none;
 }
+
 
 /* Games Section */
 .games-section {
