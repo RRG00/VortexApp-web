@@ -27,12 +27,6 @@ $this->title = 'Iniciar Sessão';
 
             <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
-            <div class="my-1 mx-0" style="color:#999;">
-                Esqueceu-se da sua password: <?= Html::a('Recuperar', ['site/request-password-reset']) ?>.
-                <br>
-                <br>
-                Reenviar email de verificação <?= Html::a('Reenviar', ['site/resend-verification-email']) ?>
-            </div>
             <br>
             <div class="form-group">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
