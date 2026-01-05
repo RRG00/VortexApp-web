@@ -15,7 +15,7 @@ use yii\helpers\Url;
                 <span class="status <?php
                 if ($torneio->estado == 'Em breve') {
                     echo 'pending';
-                } elseif ($torneio->estado == 'A decorrer') {
+                } elseif ($torneio->estado == 'Em andamento') {
                     echo 'active';
                 } elseif ($torneio->estado == 'Concluido') {
                     echo 'completed';

@@ -33,7 +33,7 @@ class RefereeDashboardController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'actions' => ['index', 'update', 'management', 'get-team-players', 'save-stats', 'start-tournament'],
+                            'actions' => ['index', 'update', 'management', 'get-team-players', 'save-stats', 'start-tournament', 'finish-tournament'],
                             'roles' => ['viewResults', 'updateResults', 'startTournament'],
                         ],
                     ],
@@ -193,24 +193,25 @@ class RefereeDashboardController extends Controller
             }
         }
 
-        // Optional: Update tournament status
-        // $tournament->status = 'started';
-        // $tournament->save();
-
         return $this->redirect(['management', 'id' => $id]);
     }
 
     private function processMatchUpdate($tournamentId)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        // 1. Get Tournament to save the winner later
+        $tournament = Tournament::findOne($tournamentId);
+        if (!$tournament) return ['success' => false, 'message' => 'Torneio não encontrado'];
+
+        if ($tournament->estado === 'Concluido') {
+            return ['success' => false, 'message' => 'O torneio foi encerrado (Concluido).'];
+        }
+
+        $gameId = $tournament->id_jogo;
         $data = json_decode(Yii::$app->request->rawBody, true);
 
         if (!isset($data['brackets'])) return ['success' => false];
-
-        // Get the tournament to find the Game ID (needed for statistics)
-        $tournament = Tournament::findOne($tournamentId);
-        if (!$tournament) return ['success' => false, 'message' => 'Torneio não encontrado'];
-        $gameId = $tournament->id_jogo;
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
@@ -220,24 +221,27 @@ class RefereeDashboardController extends Controller
                 $partida = Partida::findOne($matchData['partida_id']);
                 if (!$partida) continue;
 
-                // 1. Capture the "Previous State" to prevent double-counting stats
+                // Check if match was already finished (to avoid double stats)
                 $wasConcluded = ($partida->estado === Partida::ESTADO_CONCLUIDA);
 
-                // 2. Update Scores
+                // Update Scores
                 $partida->vitorias_a = (int)$matchData['team1']['score'];
                 $partida->vitorias_b = (int)$matchData['team2']['score'];
 
-                // 3. Check for Winner
+                // === CHECK IF A WINNER WAS SELECTED ===
                 if ($matchData['winner'] !== null) {
                     $partida->estado = Partida::ESTADO_CONCLUIDA;
 
-                    // --- A. PROGRESSION LOGIC (Move winner to next round) ---
+                    // Identify Winner and Loser IDs
                     $winnerId = ($matchData['winner'] == 1) ? $partida->equipa_a : $partida->equipa_b;
                     $loserId  = ($matchData['winner'] == 1) ? $partida->equipa_b : $partida->equipa_a;
 
+                    // --- PROGRESSION LOGIC ---
+                    // Calculate where the winner should go next
                     $nextRound = $partida->round + 1;
                     $nextMatchIndex = floor($partida->match_index / 2);
 
+                    // Try to find the next match in the database
                     $nextMatch = Partida::findOne([
                         'id_torneio' => $tournamentId,
                         'round' => $nextRound,
@@ -245,62 +249,96 @@ class RefereeDashboardController extends Controller
                     ]);
 
                     if ($nextMatch) {
+                        // CASE A: Next match exists -> ADVANCE WINNER TO NEXT ROUND
                         if ($partida->match_index % 2 == 0) {
                             $nextMatch->equipa_a = $winnerId;
                         } else {
                             $nextMatch->equipa_b = $winnerId;
                         }
                         $nextMatch->save();
+                    } else {
+                        // CASE B: No next match exists -> THIS IS THE FINAL!
+                        // SAVE THE TOURNAMENT WINNER
+                        $tournament->vencedor = $winnerId;
+                        $tournament->save(false); // save(false) skips validation to ensure it writes
                     }
+                    // -------------------------
 
-                    // --- B. STATS LOGIC (Wins/Defeats) ---
-                    // We only run this if the match is JUST NOW finishing (was not concluded before)
+                    // --- STATS LOGIC (Only run if match wasn't already finished) ---
                     if (!$wasConcluded) {
-                        // Update Winners (+1 Win)
-                        $winnerMembers = MembrosEquipa::findAll(['id_equipa' => $winnerId]);
-                        foreach ($winnerMembers as $membro) {
-                            $estat = Estatisticas::findOne(['id_utilizador' => $membro->id_utilizador, 'id_jogo' => $gameId]);
-                            if (!$estat) {
-                                $estat = new Estatisticas();
-                                $estat->id_utilizador = $membro->id_utilizador;
-                                $estat->id_jogo = $gameId;
-                                $estat->vitorias = 0;
-                                $estat->derrotas = 0;
-                            }
-                            $estat->vitorias++;
-                            $estat->save(false);
-                        }
-
-                        // Update Losers (+1 Defeat)
-                        $loserMembers = MembrosEquipa::findAll(['id_equipa' => $loserId]);
-                        foreach ($loserMembers as $membro) {
-                            $estat = Estatisticas::findOne(['id_utilizador' => $membro->id_utilizador, 'id_jogo' => $gameId]);
-                            if (!$estat) {
-                                $estat = new Estatisticas();
-                                $estat->id_utilizador = $membro->id_utilizador;
-                                $estat->id_jogo = $gameId;
-                                $estat->vitorias = 0;
-                                $estat->derrotas = 0;
-                            }
-                            $estat->derrotas++;
-                            $estat->save(false);
-                        }
+                        $this->updatePlayerStats($winnerId, $gameId, 'win');
+                        $this->updatePlayerStats($loserId, $gameId, 'loss');
                     }
                 } else {
-                    // If user removed the winner (resetting match), set back to In Progress
+                    // === RESET LOGIC (If user un-selects the winner) ===
                     $partida->estado = Partida::ESTADO_EM_ANDAMENTO;
+
+                    // If this was the final, we must REMOVE the winner from the tournament table
+                    // We check if it was the final by looking for a next match again
+                    $nextRound = $partida->round + 1;
+                    $nextMatchIndex = floor($partida->match_index / 2);
+                    $nextMatch = Partida::findOne(['id_torneio' => $tournamentId, 'round' => $nextRound, 'match_index' => $nextMatchIndex]);
+
+                    if (!$nextMatch) {
+                        // It was the final, clear the winner
+                        $tournament->vencedor = null;
+                        $tournament->save(false);
+                    }
                 }
 
                 $partida->save();
             }
 
             $transaction->commit();
-            return ['success' => true, 'message' => 'Resultados e estatísticas guardados!'];
+            return ['success' => true, 'message' => 'Resultados guardados!'];
         } catch (\Exception $e) {
             $transaction->rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
+
+    // Helper function to keep code clean
+    private function updatePlayerStats($teamId, $gameId, $type)
+    {
+        if (!$teamId) return;
+        $members = MembrosEquipa::findAll(['id_equipa' => $teamId]);
+
+        foreach ($members as $membro) {
+            $estat = Estatisticas::findOne(['id_utilizador' => $membro->id_utilizador, 'id_jogo' => $gameId]);
+            if (!$estat) {
+                $estat = new Estatisticas();
+                $estat->id_utilizador = $membro->id_utilizador;
+                $estat->id_jogo = $gameId;
+            }
+
+            if ($type === 'win') $estat->vitorias++;
+            else $estat->derrotas++;
+
+            $estat->save(false);
+        }
+    }
+
+    public function actionFinishTournament($id)
+{
+    $model = $this->findModel($id);
+    
+    // Check if already finished
+    if ($model->estado === 'Concluido') {
+        Yii::$app->session->setFlash('warning', 'O torneio já se encontra encerrado.');
+        return $this->redirect(['management', 'id' => $id]);
+    }
+
+    // Update the state to your database value 'Concluido'
+    $model->estado = 'Concluido';
+    
+    if ($model->save()) {
+        Yii::$app->session->setFlash('success', 'Torneio encerrado com sucesso! Edições bloqueadas.');
+    } else {
+        Yii::$app->session->setFlash('error', 'Erro ao encerrar o torneio.');
+    }
+
+    return $this->redirect(['management', 'id' => $id]);
+}
 
 
     /**

@@ -429,15 +429,24 @@ nav {
 }
 
 .status.active {
-  background: var(--success);
-  color: white;
+    background-color: var(--success);
+    color: white;
 }
 
-.status.pending,
-.status.cancelled,
+.status.pending{
+    background-color: var(--warning);
+    color: var(--dark-bg);
+}
+
+.status.cancelled
+{
+    background-color: var(--danger);
+    color: var(--dark-bg);
+}
+
 .status.completed {
-  background: var(--warning);
-  color: var(--dark-bg);
+    background-color: gray;
+    color: var(--dark-bg);
 }
 
 .tournament-info h3 {

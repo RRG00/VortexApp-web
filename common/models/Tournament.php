@@ -45,9 +45,9 @@ class Tournament extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['regras', 'premios', 'aprovado_por'], 'default', 'value' => null],
+            [['regras', 'premios', 'aprovado_por', 'vencedor'], 'default', 'value' => null],
             [['nome', 'best_of', 'limite_inscricoes', 'data_inicio', 'data_fim', 'estado', 'organizador_id', 'id_jogo'], 'required'],
-            [['best_of', 'limite_inscricoes', 'organizador_id', 'aprovado_por', 'id_jogo'], 'integer'],
+            [['best_of', 'limite_inscricoes', 'organizador_id', 'aprovado_por', 'id_jogo', 'vencedor'], 'integer'],
             [['regras'], 'string'],
             [['descricao'], 'string', 'max' => 500],
             [['data_inicio', 'data_fim'], 'safe'],
@@ -80,6 +80,7 @@ class Tournament extends \yii\db\ActiveRecord
             'id_jogo' => 'Id Jogo',
             'arbitro_id' => 'Árbitro',
             'requisitos' => 'Requesitos',
+            'vencedor' => 'Vencedor',
         ];
     }
 
