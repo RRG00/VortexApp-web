@@ -942,4 +942,113 @@ footer {
     box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
     color: #ffffff !important;
 }
+/* --- Read-Only Bracket Styles --- */
 
+/* The main container for the bracket tree */
+.tournament-bracket {
+    display: flex;
+    flex-direction: row;        /* Rounds side-by-side */
+    gap: 4rem;                  /* Increased space between rounds for better look */
+    padding: 20px 0;
+    justify-content: center;    /* CENTER HORIZONTALLY */
+    align-items: stretch;       /* Make all rounds equal height */
+}
+
+/* Individual Round Column */
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;           /* Slightly wider for better readability */
+}
+
+/* Round Title Container */
+.bracket-round-title {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    text-align: center;         /* Center the title text */
+    height: 30px;               /* Fixed height to keep alignment */
+}
+
+/* The Container holding the matches */
+.bracket-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;                  /* Space between matches in the same round */
+    justify-content: center;    /* CENTER VERTICALLY (Key for the Grand Final) */
+    flex-grow: 1;               /* Fill the available vertical space */
+}
+
+/* THE MATCH CARD */
+.bracket-match {
+    background-color: #34495e;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border: 1px solid #4a5f7f;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80px;
+}
+
+/* Team Row inside the card */
+.match-team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+}
+
+/* Team Name Styling */
+.team-name {
+    font-weight: 600;
+    color: #b0b8c1;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+/* Score Styling */
+.team-score {
+    font-weight: bold;
+    color: #b0b8c1;
+}
+
+/* --- WINNER STYLES --- */
+.match-team.winner .team-name {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+.match-team.winner .team-score {
+    color: #ffffff;
+}
+
+.match-team.winner {
+    position: relative;
+    background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 0%, rgba(0,0,0,0) 100%);
+}
+
+.match-team.winner::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    background-color: #2ecc71;
+    border-radius: 2px;
+}
+
+.bracket-match.final {
+    border: 1px solid #f1c40f;
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.1); /* Add a glow to the final */
+}

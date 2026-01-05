@@ -16,7 +16,17 @@ $this->params['breadcrumbs'][] = $this->title;
 // Importa o CSS externo
 $this->registerCssFile('@web/css/tournament-index.css', ['depends' => [\yii\bootstrap4\BootstrapAsset::class]]);
 ?>
-
+<div class="col-12 mt-4">
+    <div class="">
+        <div class="d-flex justify-content-end align-items-center">
+            <?= \yii\helpers\Html::a(
+                '<i class="fas fa-sync-alt "></i> Update Estados',
+                ['tournament/update-estado'],
+                ['class' => 'btn btn-primary', 'data-method' => 'post']
+            ) ?>
+        </div>
+    </div>
+</div>
 <div class="tournament-index">
     <div class="tournament-header">
         <h1><?= Html::encode($this->title) ?></h1>

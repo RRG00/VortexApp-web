@@ -140,14 +140,30 @@
   font-weight: 600;
 }
 
-.status.active {
-  background: green;
-  color: white;
+.status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.status.pending,
-.status.cancelled,
+.status.active {
+    background-color: var(--success);
+    color: white;
+}
+
+.status.pending{
+    background-color: var(--warning);
+    color: var(--dark-bg);
+}
+
+.status.cancelled
+{
+    background-color: var(--danger);
+    color: var(--dark-bg);
+}
+
 .status.completed {
-  background: var(--warning);
-  color: var(--dark-bg);
+    background-color: gray;
+    color: var(--dark-bg);
 }
