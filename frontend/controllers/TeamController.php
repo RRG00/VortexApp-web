@@ -36,7 +36,7 @@ class TeamController extends Controller
                     'actions' => [
                         'delete' => ['POST'],
                         'attach-member' => ['POST'],
-~~~~                        'remove-member' => ['POST'],
+                        'remove-member' => ['POST'],
                     ],
                 ],
                 'access' => [
@@ -44,32 +44,27 @@ class TeamController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'actions' => ['index'],
-                            'roles' => ['?', '@'],
+                            'actions' => ['index', 'view'],
+                            'roles'   => ['?', '@'],
                         ],
                         [
                             'allow' => true,
                             'actions' => ['create'],
-                            'roles' => ['@'],
+                            'roles'   => ['@'],
+                        ],
+                        [
+
+                            'allow' => true,
+                            'actions' => ['update', 'delete'],
+                            'roles'   => ['updateTeam', 'deleteTeam'],
                         ],
                         [
                             'allow' => true,
                             'actions' => ['add-members', 'attach-member', 'delete-members', 'remove-member'],
-                            'roles' => ['@'],
+                            'roles'   => ['updateTeam'],
                         ],
-                        [
-                            'allow' => true,
-                            'actions' => ['view'],
-                            'roles' => ['?', '@'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['update', 'delete'],
-                            'roles' => ['@'],
-                        ]
-
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
     }
@@ -134,37 +129,37 @@ class TeamController extends Controller
     }
 
     public function actionAddMembers($id)
-{
-    $equipa = $this->findModel($id);
+    {
+        $equipa = $this->findModel($id);
 
-    $searchTerm = Yii::$app->request->get('q');
+        $searchTerm = Yii::$app->request->get('q');
 
-    $query = User::find()
-        ->alias('u')
-        ->innerJoin('auth_assignment aa', 'aa.user_id = u.id')
-        ->andWhere(['aa.item_name' => 'player'])
-        ->andWhere(['u.status' => User::STATUS_ACTIVE])
-        ->andWhere([
-            'not exists',
-            MembrosEquipa::find()
-                ->select(new Expression('1'))
-                ->where('membros_equipa.id_utilizador = u.id'),
-        ])
-        ->andFilterWhere(['like', 'u.username', $searchTerm]);
+        $query = User::find()
+            ->alias('u')
+            ->innerJoin('auth_assignment aa', 'aa.user_id = u.id')
+            ->andWhere(['aa.item_name' => 'player'])
+            ->andWhere(['u.status' => User::STATUS_ACTIVE])
+            ->andWhere([
+                'not exists',
+                MembrosEquipa::find()
+                    ->select(new Expression('1'))
+                    ->where('membros_equipa.id_utilizador = u.id'),
+            ])
+            ->andFilterWhere(['like', 'u.username', $searchTerm]);
 
-    $dataProvider = new ActiveDataProvider([
-        'query' => $query,
-        'pagination' => ['pageSize' => 10],
-        'sort' => ['defaultOrder' => ['username' => SORT_ASC]],
-    ]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 10],
+            'sort' => ['defaultOrder' => ['username' => SORT_ASC]],
+        ]);
 
-    return $this->render('add-members', [
-        'equipa' => $equipa,
-        'dataProvider' => $dataProvider,
-        'searchTerm' => $searchTerm,
-    ]);
-}
-    
+        return $this->render('add-members', [
+            'equipa' => $equipa,
+            'dataProvider' => $dataProvider,
+            'searchTerm' => $searchTerm,
+        ]);
+    }
+
 
 
     public function actionAttachMember($id, $userId)
@@ -313,12 +308,27 @@ class TeamController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
 
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+<<<<<<< HEAD
             if ($model->upload()) {
                 if ($model->save()) {
 
                     Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
                     return $this->redirect(['index']);
                 }
+=======
+
+            // If there's an image file, try to upload it
+            if ($model->imageFile) {
+                $model->upload();
+            }
+
+            // Save the model
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
+                return $this->redirect(['view', 'id' => $id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Erro ao atualizar a equipa.');
+>>>>>>> origin/main
             }
         }
         return $this->render('edit-team', [
@@ -347,23 +357,23 @@ class TeamController extends Controller
             Yii::$app->session->setFlash('error', 'Você não é o capitão da equipa.');
             return $this->redirect(['view', 'id' => $id]);
         }
-        
+
         // Delete all relations before deleting the team
         try {
             // Delete all team members
             MembrosEquipa::deleteAll(['id_equipa' => $id]);
-            
+
             // Delete team inscriptions
             \common\models\Inscricao::deleteAll(['id_equipa' => $id]);
-            
+
             // Delete team image if exists
             if ($model->profileImage) {
                 $model->profileImage->delete();
             }
-            
+
             // Delete the team
             $model->delete();
-            
+
             Yii::$app->session->setFlash('success', 'Equipa apagada com sucesso.');
         } catch (\Exception $e) {
             Yii::$app->session->setFlash('error', 'Erro ao apagar equipa: ' . $e->getMessage());
@@ -377,7 +387,7 @@ class TeamController extends Controller
     {
         $equipa = $this->findModel($id);
         $currentUserId = Yii::$app->user->id;
-        
+
         // Check if user is the captain
         $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
         if (!$currentMembership || $currentMembership->funcao !== 'capitao') {
@@ -402,7 +412,7 @@ class TeamController extends Controller
     {
         $equipa = $this->findModel($id);
         $currentUserId = Yii::$app->user->id;
-        
+
         // Check if user is the captain
         $currentMembership = MembrosEquipa::findOne(['id_equipa' => $id, 'id_utilizador' => $currentUserId]);
         if (!$currentMembership || $currentMembership->funcao !== 'capitao') {

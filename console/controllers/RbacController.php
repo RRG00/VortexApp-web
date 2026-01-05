@@ -79,7 +79,6 @@ class RbacController extends Controller
         $auth->add($banPlayers);
 
         //Premissões frontend (Captian)
-
         $updateTeam = $auth -> createPermission('updateTeam');
         $updateTeam->description= "Atualizar Equipa";
         $auth->add($updateTeam);
