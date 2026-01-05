@@ -12,7 +12,6 @@ $this->registerCssFile(Yii::getAlias('@web/css/referre-index.css'), [
 
 $this->title = 'Referee Dashboard';
 ?>
-<!-- Gestão de Estado dos Torneios -->
 <div class="col-12 mt-4">
     <div class="">
         <div class="d-flex justify-content-end align-items-center">
@@ -33,7 +32,7 @@ $this->title = 'Referee Dashboard';
                     <span class="status <?php
                                         if ($torneio->estado == 'Em breve') {
                                             echo 'pending';
-                                        } elseif ($torneio->estado == 'A decorrer') {
+                                        } elseif ($torneio->estado == 'Em andamento') {
                                             echo 'active';
                                         } elseif ($torneio->estado == 'Concluido') {
                                             echo 'completed';
