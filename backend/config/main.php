@@ -64,12 +64,12 @@
                     //ENDPOINTS API -> NOTIFICAÇÕES
                     'POST api/notifications/publish-invite' => 'api/notifications/publish-invite',
 
-                    //ENDPOINTS API -> EQUIPAS
-                    'GET api/team/find'  => 'api/team/find',
-                    'GET api/team/by-user' => 'api/team/by-user',
-                    'POST api/team/create' => 'api/team/create',
-                    'PUT api/team/update/<id>' => 'api/team/update',
-                    'DELETE api/team/delete/<id>' => 'api/team/delete',
+                    // ENDPOINTS API -> EQUIPAS
+                    'GET api/team/find/<id>'        => 'api/team/find',
+                    'GET api/team/by-user/<id_user>' => 'api/team/by-user',
+                    'POST api/team/create'          => 'api/team/create',
+                    'PUT api/team/update/<id>'      => 'api/team/update',
+                    'DELETE api/team/delete/<id>'   => 'api/team/delete',
 
                     //ENDPOINTS API -> USER
                     'GET api/user/find/<id>' => 'api/user/find-user',
@@ -78,15 +78,16 @@
                     'DELETE api/user/delete/<id>' => 'api/user/delete',
 
                     //ENDPOINTS API -> TOURNAMENT
-                    'GET api/tournament/team/<id>' => 'api/tournament/find-team-tournament',
+                    'GET api/tournament/team/<id_equipa>' => 'api/tournament/find-team-tournament',
                     'GET api/tournaments/find' => 'api/tournament/find-tournament',
-                    'POST api/tournament/create' => 'api/create-tournament',
+                    'POST api/tournament/create' => 'api/tournament/create-tournament',
                     'PUT api/tournament/update/<id>' => 'api/tournament/update-tournament',
-                    'DELETE api/tournament/delete/<id>' => 'api/tournament/deleteTournament',
+                    'DELETE api/tournament/delete/<id>' => 'api/tournament/delete-tournament',
 
                     //ENDPOINTS API -> User Profile
-                    'GET api/profile/view-user-profile'   => 'api/profile/view-user-profile',
-                    'PUT api/profile/update-user-profile' => 'api/profile/update-user-profile',
+                    'GET api/profile/view-user-profile/<id_user>'   => 'api/profile/view-user-profile',
+                    'PUT api/profile/update-user-profile/<id_user>' => 'api/profile/update-user-profile',
+
 
                     //ENDPOINTS CHAT(ANDROID)
                     'POST api/chat/send' => 'api/chat/send',

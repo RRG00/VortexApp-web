@@ -77,20 +77,40 @@ $this->registerJs("
                 <div class="card-body" style="background-color: #2c3e5a; overflow-x: auto;">
 
                     <?php
-                    // CASE 1: Brackets already exist (Tournament is live)
+                    // CASE 1: Brackets exist (Tournament is live)
                     if (!empty($brackets['rounds'])):
+                        // *** FIX: Check 'estado' instead of 'status' ***
+                        $isFinished = ($model->estado === 'Concluido');
                     ?>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="text-white">
-                                <small><i class="fas fa-info-circle"></i> Clique numa partida para definir o vencedor</small>
+                                <?php if ($isFinished): ?>
+                                    <span class="badge badge-danger p-2" style="font-size: 1em;">
+                                        <i class="fas fa-lock"></i> TORNEIO CONCLUÍDO
+                                    </span>
+                                <?php else: ?>
+                                    <small><i class="fas fa-info-circle"></i> Clique numa partida para definir o vencedor</small>
+                                <?php endif; ?>
                             </div>
-                            <?= Html::a('<i class="fas fa-redo"></i> Reset', ['start-tournament', 'id' => $model->id], [
-                                'class' => 'btn btn-outline-danger btn-sm',
-                                'data-confirm' => 'Tem a certeza? Isso apagará todos os resultados atuais.'
-                            ]) ?>
-                            <button class="btn btn-success btn-sm" id="saveBrackets">
-                                <i class="fas fa-save"></i> Guardar Resultados
-                            </button>
+
+                            <div>
+                                <?php if (!$isFinished): ?>
+                                    <?= Html::a('<i class="fas fa-redo"></i> Reset', ['start-tournament', 'id' => $model->id], [
+                                        'class' => 'btn btn-outline-danger btn-sm mr-2',
+                                        'data-confirm' => 'Tem a certeza? Isso apagará todos os resultados atuais.'
+                                    ]) ?>
+
+                                    <button class="btn btn-success btn-sm mr-2" id="saveBrackets">
+                                        <i class="fas fa-save"></i> Guardar Brackets
+                                    </button>
+
+                                    <?= Html::a('<i class="fas fa-flag-checkered"></i> Encerrar Torneio', ['finish-tournament', 'id' => $model->id], [
+                                        'class' => 'btn btn-warning btn-sm',
+                                        'data-method' => 'post',
+                                        'data-confirm' => 'Tem a certeza? Ao encerrar, não poderá mais editar os resultados.'
+                                    ]) ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
 
                         <div class="tournament-bracket" id="tournamentBracket">
@@ -99,8 +119,15 @@ $this->registerJs("
                                     <h4 class="round-title"><?= Html::encode($round['name']) ?></h4>
                                     <div class="bracket-matches">
                                         <?php foreach ($round['matches'] as $matchIndex => $match): ?>
-                                            <?php $isFinal = ($roundIndex === count($brackets['rounds']) - 1); ?>
-                                            <div class="bracket-match <?= $isFinal ? 'final' : '' ?> clickable-match"
+                                            <?php
+                                            $isFinal = ($roundIndex === count($brackets['rounds']) - 1);
+
+                                            // *** FIX: Disable clicking if tournament is finished ***
+                                            $clickClass = $isFinished ? '' : 'clickable-match';
+                                            $clickAttr  = $isFinished ? '' : 'onclick="openMatchModal(this)"';
+                                            ?>
+
+                                            <div class="bracket-match <?= $isFinal ? 'final' : '' ?> <?= $clickClass ?>"
                                                 data-round="<?= $roundIndex ?>"
                                                 data-match="<?= $matchIndex ?>"
                                                 data-match-id="<?= $match['match_id'] ?? '' ?>"
@@ -109,7 +136,7 @@ $this->registerJs("
                                                 data-team1-name="<?= Html::encode($match['team1']['name']) ?>"
                                                 data-team2-id="<?= $match['team2']['id'] ?>"
                                                 data-team2-name="<?= Html::encode($match['team2']['name']) ?>"
-                                                onclick="openMatchModal(this)">
+                                                <?= $clickAttr ?>>
                                                 <div class="match-team <?= $match['winner'] === 1 ? 'winner' : '' ?>">
                                                     <span class="team-name"><?= Html::encode($match['team1']['name']) ?></span>
                                                     <span class="team-score"><?= $match['score1'] ?></span>

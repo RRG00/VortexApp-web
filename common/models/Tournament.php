@@ -45,14 +45,15 @@ class Tournament extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['regras', 'premios', 'aprovado_por'], 'default', 'value' => null],
+            [['regras', 'premios', 'aprovado_por', 'vencedor'], 'default', 'value' => null],
             [['nome', 'best_of', 'limite_inscricoes', 'data_inicio', 'data_fim', 'estado', 'organizador_id', 'id_jogo'], 'required'],
-            [['best_of', 'limite_inscricoes', 'organizador_id', 'aprovado_por', 'id_jogo'], 'integer'],
+            [['best_of', 'limite_inscricoes', 'organizador_id', 'aprovado_por', 'id_jogo', 'vencedor'], 'integer'],
             [['regras'], 'string'],
             [['descricao'], 'string', 'max' => 500],
             [['data_inicio', 'data_fim'], 'safe'],
             [['nome', 'premios', 'requisitos'], 'string', 'max' => 255],
             [['estado'], 'string', 'max' => 50],
+            ['data_fim', 'compare', 'compareAttribute' => 'data_inicio', 'operator' => '>=', 'enableClientValidation' => true, 'message' => 'A data de fim não pode ser anterior à data de início.'],
             [['organizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['organizador_id' => 'id']],
             [['aprovado_por'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['aprovado_por' => 'id']],
             [['id_jogo'], 'exist', 'skipOnError' => true, 'targetClass' => JOGO::class, 'targetAttribute' => ['id_jogo' => 'id_jogo']],
@@ -80,6 +81,7 @@ class Tournament extends \yii\db\ActiveRecord
             'id_jogo' => 'Id Jogo',
             'arbitro_id' => 'Árbitro',
             'requisitos' => 'Requesitos',
+            'vencedor' => 'Vencedor',
         ];
     }
 

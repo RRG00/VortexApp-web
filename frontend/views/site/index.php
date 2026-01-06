@@ -39,9 +39,19 @@ $initials = strtoupper(substr($username, 0, 2));
                     <span class="game-badge">
                         <?= Html::encode($tournament->jogo->nome) ?>
                     </span>
-                    <span class="status active">
-                        <?= Html::encode($tournament->estado) ?>
-                    </span>
+                    <span class="status <?php
+                                        if ($tournament->estado == 'Em breve') {
+                                            echo 'pending';
+                                        } elseif ($tournament->estado == 'Em andamento') {
+                                            echo 'active';
+                                        } elseif ($tournament->estado == 'Concluido') {
+                                            echo 'completed';
+                                        } elseif ($tournament->estado == 'Cancelado') {
+                                            echo 'cancelled';
+                                        } else {
+                                            echo 'pending'; // classe padrão
+                                        }
+                                        ?>"><?= $tournament->estado ?></span>
                 </div>
 
                 <div class="tournament-info">

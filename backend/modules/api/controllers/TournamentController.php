@@ -62,6 +62,8 @@ class TournamentController extends Controller
                 'estado' => $t->estado
             ];
         }
+
+        return $result;
     }
 
     public function actionCreateTournament()
@@ -114,10 +116,8 @@ class TournamentController extends Controller
     public function actionUpdateTournament($id)
     {
         $data = Yii::$app->request->bodyParams;
-        var_dump($data);
-        die;
 
-        $model = Tournament::find($id);
+        $model = Tournament::findOne($id);
 
         if (!$model) {
             Yii::$app->response->statusCode = 404;

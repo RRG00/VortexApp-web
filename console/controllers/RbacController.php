@@ -60,7 +60,11 @@ class RbacController extends Controller
         $deleteTournament = $auth->createPermission('deleteTournament');
         $deleteTournament->description="Apagar Torneios";
         $auth->add($deleteTournament);
-        
+
+        $finishTournament = $auth->createPermission('finishTournament');
+        $finishTournament->description="Finalizar Torneios";
+        $auth->add($finishTournament);
+
         //Permissões para Resultados e gestão de Players
         $viewResults = $auth->createPermission('viewResults');
         $viewResults->description="Ver Resultados";
@@ -78,7 +82,7 @@ class RbacController extends Controller
         $banPlayers->description="Banir Players";
         $auth->add($banPlayers);
 
-        //Premissões frontend (Captian)
+        //Premissões frontend (captain)
         $updateTeam = $auth -> createPermission('updateTeam');
         $updateTeam->description= "Atualizar Equipa";
         $auth->add($updateTeam);
@@ -112,6 +116,7 @@ class RbacController extends Controller
         $auth->addChild($admin, $startTournament);
         $auth->addChild($admin, $updateTournament);
         $auth->addChild($admin, $deleteTournament);
+        $auth->addChild($admin, $finishTournament);
         $auth->addChild($admin, $viewResults);
         $auth->addChild($admin, $updateResults);
         $auth->addChild($admin, $managePlayers);
@@ -127,6 +132,7 @@ class RbacController extends Controller
         $auth->addChild($organizer, $startTournament);
         $auth->addChild($organizer, $updateTournament);
         $auth->addChild($organizer, $deleteTournament);
+        $auth->addChild($organizer, $finishTournament);
         $auth->addChild($organizer, $viewResults);
         $auth->addChild($organizer, $updateResults);
 
@@ -140,14 +146,15 @@ class RbacController extends Controller
         $auth->addChild($referee, $updateResults);
         $auth->addChild($referee, $updateTournament);
         $auth->addChild($referee, $startTournament);
+        $auth->addChild($referee, $finishTournament);
 
-        //Captian -> create team , update etc
-        $captian = $auth->createRole('captian');
-        $captian->description="Captian";
-        $auth->add($captian);
-        $auth->addChild($captian, $updateTeam);
-        $auth->addChild($captian, $insTournament);
-        $auth->addChild($captian, $deleteTeam);
+        //captain -> create team , update etc
+        $captain = $auth->createRole('captain');
+        $captain->description="captain";
+        $auth->add($captain);
+        $auth->addChild($captain, $updateTeam);
+        $auth->addChild($captain, $insTournament);
+        $auth->addChild($captain, $deleteTeam);
 
         //Player -> index frontend only
         $player = $auth->createRole('player');
@@ -156,17 +163,23 @@ class RbacController extends Controller
 
         //Atribuir Roles a utilizadores
         $auth->assign($admin, 1); 
-        $auth->assign($organizer, 26); 
-        $auth->assign($referee, 22); 
-        $auth->assign($captian, 6); 
 
-         $equipes = Equipa::find()->all();
-            foreach ($equipes as $equipa) {
-                if ($equipa->id_capitao) {
-                    $auth->assign($captian, $equipa->id_capitao);
-                }
+        $equipes = Equipa::find()->all();
+        
+        // Array to track IDs we have already processed
+        $processedCaptains = [];
+
+        foreach ($equipes as $equipa) {
+            $captainId = $equipa->id_capitao;
+
+            // Check if captain exists AND hasn't been processed yet
+            if ($captainId && !in_array($captainId, $processedCaptains)) {
+                $auth->assign($captain, $captainId);
+                
+                // Add to processed list so we don't add them again
+                $processedCaptains[] = $captainId;
             }
-
+        }
 
         echo "RBAC Admin criado com sucesso!\n";
         echo "RBAC Organizador criado com sucesso!\n";
