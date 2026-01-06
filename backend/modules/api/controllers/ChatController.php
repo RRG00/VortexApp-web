@@ -22,6 +22,19 @@ class ChatController extends Controller
 
         return $behaviors;
     }
+    function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server   = 'localhost';
+        $port     = 1883;
+        $clientId = 'vortex_chat_' . uniqid();
+
+        $mqtt = new \phpMQTT($server, $port, $clientId);
+
+        if ($mqtt->connect(true, NULL, null, null)) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
+    }
 
     public function actionHistory($teamId = null)
     {
@@ -59,47 +72,66 @@ class ChatController extends Controller
     {
         $request = Yii::$app->request;
 
-        $teamId = $request->post('teamId');
-        $userId = $request->post('userId');
+        $teamId  = $request->post('teamId');
+        $userId  = $request->post('userId');
         $message = $request->post('message');
 
         if (!$teamId || !$userId || !$message) {
             Yii::$app->response->statusCode = 400;
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'teamId, userId e message são obrigatórios',
             ];
         }
 
         try {
+            $timestamp = date('Y-m-d H:i:s');
+
             $result = Yii::$app->db->createCommand()->insert('chat_mensagens', [
-                'id_equipa' => (int)$teamId,
-                'id_user' => (int)$userId,
-                'mensagem' => $message,
-                'created_at' => date('Y-m-d H:i:s'),
+                'id_equipa'  => (int)$teamId,
+                'id_user'    => (int)$userId,
+                'mensagem'   => $message,
+                'created_at' => $timestamp,
             ])->execute();
 
             if ($result) {
+
+                // MQTT publish
+                $publisherFile = Yii::getAlias('@app') . '/../mosquitto/ChatPublisher.php';
+                if (file_exists($publisherFile)) {
+                    require_once $publisherFile;
+
+                    $topic   = 'vortex/chat/team/' . (int)$teamId;
+                    $payload = json_encode([
+                        'teamId'    => (int)$teamId,
+                        'userId'    => (int)$userId,
+                        'message'   => $message,
+                        'timestamp' => $timestamp,
+                    ]);
+
+                    FazPublishNoMosquitto($topic, $payload);
+                }
+
                 return [
-                    'status' => 'success',
+                    'status'  => 'success',
                     'message' => 'Mensagem enviada com sucesso',
-                    'data' => [
-                        'teamId' => (int)$teamId,
-                        'userId' => (int)$userId,
-                        'timestamp' => date('Y-m-d H:i:s'),
+                    'data'    => [
+                        'teamId'    => (int)$teamId,
+                        'userId'    => (int)$userId,
+                        'timestamp' => $timestamp,
                     ],
                 ];
-            } else {
-                Yii::$app->response->statusCode = 500;
-                return [
-                    'status' => 'error',
-                    'message' => 'Erro ao inserir mensagem',
-                ];
             }
+
+            Yii::$app->response->statusCode = 500;
+            return [
+                'status'  => 'error',
+                'message' => 'Erro ao inserir mensagem',
+            ];
         } catch (\Exception $e) {
             Yii::$app->response->statusCode = 500;
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => $e->getMessage(),
             ];
         }
