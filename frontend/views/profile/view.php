@@ -78,10 +78,6 @@ $initials = strtoupper(substr($user->username, 0, 2));
                             <span>K/D</span>
                             <strong><?= Html::encode(number_format($stat->kd, 2)) ?></strong>
                         </div>
-                        <div class="game-stat-item">
-                            <span>Pontuacao</span>
-                            <strong><?= Html::encode(number_format($stat->pontuacao, 0)) ?></strong>
-                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
