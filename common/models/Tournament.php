@@ -56,7 +56,7 @@ class Tournament extends \yii\db\ActiveRecord
             ['data_fim', 'compare', 'compareAttribute' => 'data_inicio', 'operator' => '>=', 'enableClientValidation' => true, 'message' => 'A data de fim não pode ser anterior à data de início.'],
             [['organizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['organizador_id' => 'id']],
             [['aprovado_por'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['aprovado_por' => 'id']],
-            [['id_jogo'], 'exist', 'skipOnError' => true, 'targetClass' => JOGO::class, 'targetAttribute' => ['id_jogo' => 'id_jogo']],
+            [['id_jogo'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['id_jogo' => 'id_jogo']],
             [['arbitro_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['arbitro_id' => 'id']], 
         ];
     }
