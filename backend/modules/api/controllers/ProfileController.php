@@ -15,6 +15,9 @@ use yii\filters\auth\QueryParamAuth;
 
 class ProfileController extends Controller
 {
+
+    public $enableCsrfValidation = false; 
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
