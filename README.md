@@ -1,310 +1,190 @@
 # VortexApp
 
-A comprehensive web application built on the Yii2 Advanced Project Template, designed for complex multi-tier development with frontend, backend, and console applications.
+Uma aplicação web abrangente construída sobre o Template Avançado de Projeto Yii2, concebida para desenvolvimento multi-nível complexo com aplicações frontend, backend e consola.
 
-## 🎯 Overview
-
-VortexApp is a sophisticated web application leveraging the Yii2 framework's advanced template architecture. It provides a robust foundation for building scalable applications with clear separation between frontend, backend, and console components.
-
-## ✨ Features
-
-- **Multi-tier Architecture**: Separate frontend, backend, and console applications
-- **MQTT Integration**: Real-time messaging with Mosquitto broker
-- **Docker Support**: Containerized deployment with Docker Compose
-- **Vagrant Integration**: VM-based development environment
-- **Environment Management**: Multiple environment configurations (dev, prod, test)
-- **Database Migrations**: Version-controlled database schema management
-- **Testing Framework**: Integrated Codeception for comprehensive testing
-- **Shared Components**: Common models and configurations across tiers
-
-## 🛠️ Tech Stack
+## 🛠️ Stack Tecnológica
 
 - **Framework**: Yii2 Advanced Template
-- **Language**: PHP 8.x
-- **Database**: MySQL/MariaDB
+- **Linguagem**: PHP 8.x
+- **Base de Dados**: MySQL/MariaDB
 - **Message Broker**: Mosquitto (MQTT)
-- **Containerization**: Docker & Docker Compose
-- **Virtual Machine**: Vagrant
-- **Testing**: Codeception
-- **Frontend**: JavaScript, CSS
-- **Version Control**: Git
+- **Containerização**: Docker & Docker Compose
+- **Testes**: Codeception
+- **Frontend**: HTML, JavaScript, CSS
+- **Controlo de Versão**: Git
 
-## 📁 Directory Structure
+## 📁 Estrutura de Diretórios
 
 ```
 VortexApp-web/
 │
-├── backend/                # Backend application
-│   ├── assets/            # Backend assets (JS, CSS)
-│   ├── config/            # Backend configurations
-│   ├── controllers/       # Backend controllers
-│   ├── models/            # Backend-specific models
-│   ├── runtime/           # Runtime files
-│   ├── tests/             # Backend tests
-│   ├── views/             # Backend views
-│   └── web/               # Web entry point
+├── backend/                # Aplicação backend
+│   ├── assets/            # Assets backend (JS, CSS)
+│   ├── config/            # Configurações backend
+│   ├── controllers/       # Controladores backend
+│   ├── models/            # Modelos específicos backend
+│   ├── runtime/           # Ficheiros runtime
+│   ├── tests/             # Testes backend
+│   ├── views/             # Vistas backend
+│   └── web/               # Ponto de entrada web
 │
-├── frontend/              # Frontend application
-│   ├── assets/            # Frontend assets (JS, CSS)
-│   ├── config/            # Frontend configurations
-│   ├── controllers/       # Frontend controllers
-│   ├── models/            # Frontend-specific models
-│   ├── runtime/           # Runtime files
-│   ├── tests/             # Frontend tests
-│   ├── views/             # Frontend views
-│   ├── web/               # Web entry point
-│   └── widgets/           # Frontend widgets
+├── frontend/              # Aplicação frontend
+│   ├── assets/            # Assets frontend (JS, CSS)
+│   ├── config/            # Configurações frontend
+│   ├── controllers/       # Controladores frontend
+│   ├── models/            # Modelos específicos frontend
+│   ├── runtime/           # Ficheiros runtime
+│   ├── tests/             # Testes frontend
+│   ├── views/             # Vistas frontend
+│   ├── web/               # Ponto de entrada web
+│   └── widgets/           # Widgets frontend
 │
-├── console/               # Console application
-│   ├── config/            # Console configurations
-│   ├── controllers/       # Console commands
-│   ├── migrations/        # Database migrations
-│   ├── models/            # Console-specific models
-│   └── runtime/           # Runtime files
+├── console/               # Aplicação consola
+│   ├── config/            # Configurações consola
+│   ├── controllers/       # Comandos consola
+│   ├── migrations/        # Migrações de base de dados
+│   ├── models/            # Modelos específicos consola
+│   └── runtime/           # Ficheiros runtime
 │
-├── common/                # Shared components
-│   ├── config/            # Shared configurations
-│   ├── mail/              # Email templates
-│   ├── models/            # Shared models
-│   └── tests/             # Common tests
+├── common/                # Componentes partilhados
+│   ├── config/            # Configurações partilhadas
+│   ├── mail/              # Templates de email
+│   ├── models/            # Modelos partilhados
+│   └── tests/             # Testes comuns
 │
-├── environments/          # Environment configurations
-├── mosquitto/             # MQTT broker configuration
-├── vagrant/               # Vagrant VM configuration
-├── docker-compose.yml     # Docker services definition
-├── Vagrantfile            # Vagrant configuration
-└── composer.json          # PHP dependencies
+├── environments/          # Configurações de ambiente
+├── mosquitto/             # Configuração do broker MQTT
+├── vagrant/               # Configuração VM Vagrant
+├── docker-compose.yml     # Definição de serviços Docker
+├── Vagrantfile            # Configuração Vagrant
+└── composer.json          # Dependências PHP
 ```
 
-## 📋 Prerequisites
+## 📋 Pré-requisitos
 
-- **PHP** >= 7.4 (recommended 8.0+)
-- **Composer** - Dependency manager for PHP
-- **MySQL/MariaDB** - Database server
-- **Docker** (optional) - For containerized deployment
-- **Vagrant** (optional) - For VM-based development
-- **Git** - Version control
+- **PHP** >= 8.3.14 (recomendado 8.0+)
+- **Composer** - Gestor de dependências para PHP
+- **MySQL/MariaDB** - Servidor de base de dados
+- **Docker** (opcional) - Para implementação containerizada
+- **Git** - Controlo de versão
 
-## 🚀 Installation
+## 🚀 Instalação
 
-### Standard Installation
+### Instalação Standard
 
-1. **Clone the repository**
+1. **Clonar o repositório**
    ```bash
    git clone https://github.com/RRG00/VortexApp-web.git
    cd VortexApp-web
    ```
 
-2. **Install dependencies**
+2. **Instalar dependências**
    ```bash
    composer install
    ```
 
-3. **Initialize the application**
-   
-   For Linux/Mac:
+3. **Inicializar a aplicação**
    ```bash
    php init
    ```
    
-   For Windows:
+4. **Inicializar a aplicação**
    ```bash
-   init.bat
+   php yii rbac/init
    ```
    
-   Select your environment (0 for Development, 1 for Production)
+   Selecione o seu ambiente (0 para Desenvolvimento, 1 para Produção)
 
-4. **Configure database**
+5. **Configurar base de dados**
    
-   Edit `common/config/main-local.php` and set your database connection:
+   Edite `common/config/main-local.php` e defina a sua ligação à base de dados:
    ```php
    'db' => [
        'class' => 'yii\db\Connection',
-       'dsn' => 'mysql:host=localhost;dbname=your_database',
-       'username' => 'your_username',
-       'password' => 'your_password',
+       'dsn' => 'mysql:host=localhost;dbname=sua_base_dados',
+       'username' => 'seu_utilizador',
+       'password' => 'sua_password',
        'charset' => 'utf8',
    ],
    ```
-
-5. **Run migrations**
-   ```bash
-   php yii migrate
-   ```
-
-6. **Set up web server**
    
-   Point your web server's document root to:
-   - Frontend: `/path/to/VortexApp-web/frontend/web`
-   - Backend: `/path/to/VortexApp-web/backend/web`
+6. **Configurar servidor web**
+   
+   Aponte a raiz do documento do seu servidor web para:
+   - Frontend: `/caminho/para/VortexApp-web/frontend/web`
+   - Backend: `/caminho/para/VortexApp-web/backend/web`
 
-### Docker Installation
 
-1. **Clone the repository**
+### Configuração MQTT
+
+1. **Instalar MQTT**
    ```bash
-   git clone https://github.com/RRG00/VortexApp-web.git
-   cd VortexApp-web
+   mosquitto-2.0.15-install-windows-x64.exe /S
    ```
 
-2. **Start Docker containers**
-   ```bash
-   docker-compose up -d
-   ```
+## 🎮 Utilização
 
-3. **Initialize inside container**
-   ```bash
-   docker-compose exec php php init
-   ```
+### Aplicações Web
 
-4. **Run migrations**
-   ```bash
-   docker-compose exec php php yii migrate
-   ```
+- **Frontend**: Aceder em `http://localhost` (ou o seu domínio configurado)
+- **Backend**: Aceder em `http://localhost/admin` (ou o seu domínio configurado)
 
-### Vagrant Installation
+### Comandos de Consola
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/RRG00/VortexApp-web.git
-   cd VortexApp-web
-   ```
-
-2. **Start Vagrant VM**
-   ```bash
-   vagrant up
-   ```
-
-3. **SSH into the VM**
-   ```bash
-   vagrant ssh
-   ```
-
-4. **Follow standard installation steps inside VM**
-
-## ⚙️ Configuration
-
-### Environment Configuration
-
-The application supports multiple environments:
-- **Development** (`environments/dev`)
-- **Production** (`environments/prod`)
-
-Switch environments by running:
+Execute comandos de consola usando:
 ```bash
-php init
+php yii <comando>
 ```
 
-### MQTT Configuration
-
-Edit `mosquitto/mosquitto.conf` to configure the MQTT broker settings.
-
-### Application Parameters
-
-Edit the following files to configure application-specific parameters:
-- `common/config/params.php` - Shared parameters
-- `frontend/config/params.php` - Frontend parameters
-- `backend/config/params.php` - Backend parameters
-
-## 🎮 Usage
-
-### Web Applications
-
-- **Frontend**: Access at `http://localhost` (or your configured domain)
-- **Backend**: Access at `http://localhost/admin` (or your configured domain)
-
-### Console Commands
-
-Run console commands using:
+Exemplos de comandos:
 ```bash
-php yii <command>
-```
-
-Example commands:
-```bash
-# List all available commands
+# Listar todos os comandos disponíveis
 php yii help
 
-# Run database migrations
+# Executar migrações de base de dados
 php yii migrate
 
-# Create new migration
-php yii migrate/create <name>
+# Criar nova migração
+php yii migrate/create <nome>
 ```
 
-### Running with Docker
+## 🧪 Testes
 
+A aplicação utiliza Codeception para testes.
+
+### Executar suites de teste específicas
 ```bash
-# Start all services
-docker-compose up -d
+# Teste Funcional
+php vendor/bin/codecept run functional NomedoTeste -c frontend | backend | common
 
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Execute commands in container
-docker-compose exec php php yii <command>
+# Teste Unitário
+php vendor/bin/codecept run unit NomedoTeste -c frontend | backend | common
 ```
 
-## 🧪 Testing
-
-The application uses Codeception for testing.
-
-### Run all tests
-```bash
-composer run-script test
-```
-
-### Run specific test suites
-```bash
-# Backend tests
-./vendor/bin/codecept run -c backend
-
-# Frontend tests
-./vendor/bin/codecept run -c frontend
-
-# Common tests
-./vendor/bin/codecept run -c common
-
-# Console tests
-./vendor/bin/codecept run -c console
-```
-
-## 👥 Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Contributors
+### Contribuidores
 
 - [Guilherme Sá](https://github.com/GS1-Hub)
 - [RRG00](https://github.com/RRG00)
 - [Guilherme Reis](https://github.com/PomaxS22)
 
-## 📄 License
+## 📄 Licença
 
-This project is licensed under the BSD-3-Clause License - see the [LICENSE.md](LICENSE.md) file for details.
+Este projeto está licenciado sob a Licença BSD-3-Clause - consulte o ficheiro [LICENSE.md](LICENSE.md) para detalhes.
 
-## 📞 Support
+## 📞 Suporte
 
-For issues, questions, or contributions, please:
-- Open an issue on [GitHub Issues](https://github.com/RRG00/VortexApp-web/issues)
-- Contact the development team
+Para questões, perguntas ou contribuições, por favor:
+- Abra uma issue no [GitHub Issues](https://github.com/RRG00/VortexApp-web/issues)
+- Contacte a equipa de desenvolvimento
 
-## 🔗 Useful Links
+## 🔗 Links Úteis
 
-- [Yii2 Documentation](https://www.yiiframework.com/doc/guide/2.0/en)
+- [Documentação Yii2](https://www.yiiframework.com/doc/guide/2.0/en)
 - [Yii2 Advanced Template](https://github.com/yiisoft/yii2-app-advanced)
-- [Composer Documentation](https://getcomposer.org/doc/)
-- [Docker Documentation](https://docs.docker.com/)
-- [Codeception Documentation](https://codeception.com/docs)
+- [Documentação Composer](https://getcomposer.org/doc/)
+- [Documentação Docker](https://docs.docker.com/)
+- [Documentação Codeception](https://codeception.com/docs)
 
 ---
 
-**Built with ❤️ using Yii2 Framework**
+**Construído com ❤️ usando a Framework Yii2**
