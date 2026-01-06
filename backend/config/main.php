@@ -78,7 +78,7 @@
                     'DELETE api/user/delete/<id>' => 'api/user/delete',
 
                     //ENDPOINTS API -> TOURNAMENT
-                    'GET api/tournament/team/<id>' => 'api/tournament/find-team-tournament',
+                    'GET api/tournament/team/<id_equipa>' => 'api/tournament/find-team-tournament',
                     'GET api/tournaments/find' => 'api/tournament/find-tournament',
                     'POST api/tournament/create' => 'api/create-tournament',
                     'PUT api/tournament/update/<id>' => 'api/tournament/update-tournament',

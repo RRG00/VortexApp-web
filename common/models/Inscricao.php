@@ -75,7 +75,7 @@ class Inscricao extends \yii\db\ActiveRecord
      */
     public function getTorneio()
     {
-        return $this->hasOne(Torneio::class, ['id' => 'id_torneio']);
+        return $this->hasOne(Tournament::class, ['id' => 'id_torneio']);
     }
 
 }

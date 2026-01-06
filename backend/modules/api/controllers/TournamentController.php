@@ -62,6 +62,8 @@ class TournamentController extends Controller
                 'estado' => $t->estado
             ];
         }
+
+        return $result;
     }
 
     public function actionCreateTournament()
