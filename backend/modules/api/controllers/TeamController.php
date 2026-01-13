@@ -19,7 +19,7 @@ class TeamController extends Controller
         $behaviors = parent::behaviors();
 
         $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
+            'class'      => QueryParamAuth::class,
             'tokenParam' => 'access-token',
         ];
 
