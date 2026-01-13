@@ -57,6 +57,15 @@ class TeamController extends ActiveController
         $token = Yii::$app->request->get('access-token');
         $token = trim($token);
 
+        $token = Yii::$app->request->get('access-token');
+        $token = trim($token);
+
+        return [
+            'token' => $token,
+            'len'   => strlen($token),
+        ];
+
+
 
         $authUser = User::findOne([
             'access_token' => $token,
