@@ -140,6 +140,7 @@ class User extends ActiveRecord implements IdentityInterface
 
 
 
+
     /**
      * Finds user by username
      *
