@@ -67,9 +67,10 @@ class TeamController extends Controller
 
         $team = $membro->equipa;
 
-
-        $capitao = User::findOne($team->id_capitao);
-
+        $capitao = null;
+        if (!empty($team->id_capitao)) {
+            $capitao = User::findOne($team->id_capitao);
+        }
 
         $membros = MembrosEquipa::find()
             ->where(['id_equipa' => $team->id])
@@ -77,6 +78,9 @@ class TeamController extends Controller
 
         $membersArray = [];
         foreach ($membros as $m) {
+            if (!$m->utilizador) {
+                continue;
+            }
             $u = $m->utilizador;
             $membersArray[] = [
                 'id'       => $u->id,
@@ -93,13 +97,14 @@ class TeamController extends Controller
                 'id_capitao'   => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
-            'captain' => [
+            'captain' => $capitao ? [
                 'id'       => $capitao->id,
                 'username' => $capitao->username,
-            ],
+            ] : null,
             'members' => $membersArray,
         ];
     }
+
 
 
 
