@@ -2,7 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use common\models\Equipa;
 
 use common\models\User;
@@ -10,21 +10,29 @@ use common\models\MembrosEquipa;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 
-class TeamController extends Controller
+
+class TeamController extends ActiveController   
 {
     public $modelClass = Equipa::class;
 
     public function behaviors()
-    {
-        $behaviors = parent::behaviors();
+{
+    $behaviors = parent::behaviors();
 
-        $behaviors['authenticator'] = [
-            'class'      => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-        ];
-        \Yii::info('TOKEN API: ' . \Yii::$app->request->get('access-token'), 'api');
-        return $behaviors;
+    if (isset($behaviors['rateLimiter'])) {
+        unset($behaviors['rateLimiter']);
     }
+
+    $behaviors['authenticator'] = [
+        'class'      => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+
+    Yii::info('TOKEN API: ' . Yii::$app->request->get('access-token'), 'api');
+
+    return $behaviors;
+}
+
 
     public function beforeAction($action)
     {
