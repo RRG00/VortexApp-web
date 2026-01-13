@@ -68,9 +68,11 @@ class TeamController extends ActiveController
 
 
         $authUser = User::findOne([
+            'id'           => $id_user,
             'access_token' => $token,
             'status'       => User::STATUS_ACTIVE,
         ]);
+
 
         if (!$authUser) {
             Yii::$app->response->statusCode = 401;
