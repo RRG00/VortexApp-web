@@ -15,16 +15,16 @@ class TeamController extends Controller
     public $modelClass = Equipa::class;
 
     public function behaviors()
-{
-    $behaviors = parent::behaviors();
+    {
+        $behaviors = parent::behaviors();
 
-    $behaviors['authenticator'] = [
-        'class' => QueryParamAuth::class,
-        'tokenParam' => 'access-token',
-    ];
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
+        ];
 
-    return $behaviors;
-}
+        return $behaviors;
+    }
 
     public function beforeAction($action)
     {
@@ -67,16 +67,40 @@ class TeamController extends Controller
 
         $team = $membro->equipa;
 
+
+        $capitao = User::findOne($team->id_capitao);
+
+
+        $membros = MembrosEquipa::find()
+            ->where(['id_equipa' => $team->id])
+            ->all();
+
+        $membersArray = [];
+        foreach ($membros as $m) {
+            $u = $m->utilizador;
+            $membersArray[] = [
+                'id'       => $u->id,
+                'username' => $u->username,
+                'funcao'   => $m->funcao,
+            ];
+        }
+
         return [
             'status' => 'success',
             'team' => [
-                'id'          => $team->id,
-                'nome'        => $team->nome,
-                'id_capitao'  => $team->id_capitao,
+                'id'           => $team->id,
+                'nome'         => $team->nome,
+                'id_capitao'   => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
-        ];  
+            'captain' => [
+                'id'       => $capitao->id,
+                'username' => $capitao->username,
+            ],
+            'members' => $membersArray,
+        ];
     }
+
 
 
     //READ 
