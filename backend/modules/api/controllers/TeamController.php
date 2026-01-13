@@ -55,11 +55,18 @@ class TeamController extends ActiveController
     public function actionByUser($id_user)
     {
         $token = Yii::$app->request->get('access-token');
+        $token = trim($token);
 
-        return [
-            'raw_token' => $token,
-            'len'       => strlen($token),
-        ];
+
+        $authUser = User::findOne([
+            'access_token' => $token,
+            'status'       => User::STATUS_ACTIVE,
+        ]);
+
+        if (!$authUser) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Invalid token'];
+        }
 
         $user = User::findOne($id_user);
         if (!$user) {
@@ -75,13 +82,11 @@ class TeamController extends ActiveController
 
         $team = $membro->equipa;
 
-
         $capitao = User::findOne($team->id_capitao);
         if (!$capitao) {
             Yii::$app->response->statusCode = 500;
             return ['status' => 'error', 'message' => 'Captain not found for team'];
         }
-
 
         $membros = MembrosEquipa::find()
             ->where(['id_equipa' => $team->id])
@@ -103,9 +108,9 @@ class TeamController extends ActiveController
         return [
             'status' => 'success',
             'team' => [
-                'id'           => $team->id,
-                'nome'         => $team->nome,
-                'id_capitao'   => $team->id_capitao,
+                'id'         => $team->id,
+                'nome'       => $team->nome,
+                'id_capitao' => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
             'captain' => [
@@ -115,6 +120,7 @@ class TeamController extends ActiveController
             'members' => $membersArray,
         ];
     }
+
 
 
 
