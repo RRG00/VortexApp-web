@@ -84,7 +84,7 @@ class TeamController extends Controller
             if (!$m->utilizador) {
                 continue;
             }
-            $u = $m->utilizador;
+            $u = $m->user;
             $membersArray[] = [
                 'id'       => $u->id,
                 'username' => $u->username,
