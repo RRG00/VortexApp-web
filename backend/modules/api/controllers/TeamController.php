@@ -54,20 +54,6 @@ class TeamController extends ActiveController
 
     public function actionByUser($id_user)
     {
-        $token = Yii::$app->request->get('access-token');
-        $token = trim($token);
-
-        $authUser = User::findOne([
-            'id'           => $id_user,
-            'access_token' => $token,
-            'status'       => User::STATUS_ACTIVE,
-        ]);
-
-        if (!$authUser) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Invalid token'];
-        }
-
         $user = User::findOne($id_user);
         if (!$user) {
             Yii::$app->response->statusCode = 404;
@@ -120,7 +106,6 @@ class TeamController extends ActiveController
             'members' => $membersArray,
         ];
     }
-
 
 
 
