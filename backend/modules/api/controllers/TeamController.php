@@ -67,7 +67,7 @@ class TeamController extends Controller
 
         $team = $membro->equipa;
 
-    
+
         $capitao = User::findOne($team->id_capitao);
         if (!$capitao) {
             Yii::$app->response->statusCode = 500;

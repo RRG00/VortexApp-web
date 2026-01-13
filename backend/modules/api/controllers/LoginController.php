@@ -50,6 +50,11 @@ class LoginController extends Controller
 
         if ($model->validate() && $model->login()) {
             $user = Yii::$app->user->identity;
+
+            /** @var \common\models\User $user */
+            $user->access_token = Yii::$app->security->generateRandomString();
+            $user->save(false);
+
             $auth  = Yii::$app->authManager;
             $roles = $auth->getRolesByUser($user->id);
             $rolename = null;
@@ -66,14 +71,15 @@ class LoginController extends Controller
             }
 
             return [
-                'success' => true,
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'role' => $rolename,
-                'access_token' => $user->auth_key,
-                'team_id' => $teamId,
+                'success'      => true,
+                'user_id'      => $user->id,
+                'username'     => $user->username,
+                'role'         => $rolename,
+                'access_token' => $user->access_token,
+                'team_id'      => $teamId,
             ];
         }
+
 
 
 
