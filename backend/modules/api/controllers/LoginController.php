@@ -1,15 +1,17 @@
-<?php 
+<?php
 
 namespace backend\modules\api\controllers;
+
 use Yii;
 use common\models\LoginForm;
-use yii\web\Controller; 
+use yii\web\Controller;
 
-class LoginController extends Controller {
+class LoginController extends Controller
+{
 
     public $modelClassLogin = 'common\models\LoginForm';
 
-     public function beforeAction($action)
+    public function beforeAction($action)
     {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
@@ -32,7 +34,7 @@ class LoginController extends Controller {
         $behaviors['access']['rules'][] = [
             'allow' => true,
             'actions' => ['login'],
-            'roles' => ['?', '@'], 
+            'roles' => ['?', '@'],
         ];
 
         return $behaviors;
@@ -53,18 +55,27 @@ class LoginController extends Controller {
             $rolename = null;
             if (!empty($roles)) {
                 foreach ($roles as $role) {
-                    $rolename = array_keys($roles)[0];  
+                    $rolename = array_keys($roles)[0];
                 }
             }
-                return [
-                    'success' => true,
-                    'user_id' => $user->id,
-                    'username' => $user->username,
-                    'role' => $rolename,
-                    'access_token' => $user->auth_key,
-                ];
+
+            $teamId = null;
+            $membro = \common\models\MembrosEquipa::findOne(['id_utilizador' => $user->id]);
+            if ($membro && $membro->equipa) {
+                $teamId = $membro->equipa->id;
+            }
+
+            return [
+                'success' => true,
+                'user_id' => $user->id,
+                'username' => $user->username,
+                'role' => $rolename,
+                'access_token' => $user->auth_key,
+                'team_id' => $teamId,
+            ];
         }
-        
+
+
 
 
         Yii::$app->response->statusCode = 401;
@@ -73,7 +84,4 @@ class LoginController extends Controller {
             'message' => 'Invalid username or password',
         ];
     }
-
-
-
 }
