@@ -67,10 +67,13 @@ class TeamController extends Controller
 
         $team = $membro->equipa;
 
-        $capitao = null;
-        if (!empty($team->id_capitao)) {
-            $capitao = User::findOne($team->id_capitao);
+    
+        $capitao = User::findOne($team->id_capitao);
+        if (!$capitao) {
+            Yii::$app->response->statusCode = 500;
+            return ['status' => 'error', 'message' => 'Captain not found for team'];
         }
+
 
         $membros = MembrosEquipa::find()
             ->where(['id_equipa' => $team->id])
@@ -97,13 +100,14 @@ class TeamController extends Controller
                 'id_capitao'   => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
-            'captain' => $capitao ? [
+            'captain' => [
                 'id'       => $capitao->id,
                 'username' => $capitao->username,
-            ] : null,
+            ],
             'members' => $membersArray,
         ];
     }
+
 
 
 
