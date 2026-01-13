@@ -63,6 +63,13 @@ class TeamController extends ActiveController
             'status'       => User::STATUS_ACTIVE,
         ]);
 
+        return [
+            'id_user'      => $id_user,
+            'token'        => $token,
+            'status_value' => User::STATUS_ACTIVE,
+            'found'        => (bool)$authUser,
+        ];
+
         if (!$authUser) {
             Yii::$app->response->statusCode = 401;
             return ['status' => 'error', 'message' => 'Invalid token'];
