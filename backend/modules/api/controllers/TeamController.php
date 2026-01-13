@@ -11,28 +11,21 @@ use Yii;
 use yii\filters\auth\QueryParamAuth;
 
 
-class TeamController extends ActiveController   
+class TeamController extends ActiveController
 {
     public $modelClass = Equipa::class;
 
     public function behaviors()
-{
-    $behaviors = parent::behaviors();
+    {
+        $behaviors = parent::behaviors();
 
-    if (isset($behaviors['rateLimiter'])) {
-        unset($behaviors['rateLimiter']);
+        $behaviors['authenticator'] = [
+            'class'      => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
+        ];
+
+        return $behaviors;
     }
-
-    $behaviors['authenticator'] = [
-        'class'      => QueryParamAuth::class,
-        'tokenParam' => 'access-token',
-    ];
-
-    Yii::info('TOKEN API: ' . Yii::$app->request->get('access-token'), 'api');
-
-    return $behaviors;
-}
-
 
     public function beforeAction($action)
     {
