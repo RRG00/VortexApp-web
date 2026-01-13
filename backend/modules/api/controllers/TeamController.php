@@ -19,10 +19,10 @@ class TeamController extends ActiveController
     {
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator'] = [
-            'class'      => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-        ];
+        //$behaviors['authenticator'] = [
+        //'class'      => QueryParamAuth::class,
+        // 'tokenParam' => 'access-token',
+        //];
 
         return $behaviors;
     }
@@ -54,6 +54,23 @@ class TeamController extends ActiveController
 
     public function actionByUser($id_user)
     {
+        $token = Yii::$app->request->get('access-token');
+
+        if (!$token) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Missing access token'];
+        }
+
+        $authUser = User::findOne([
+            'access_token' => $token,
+            'status'       => User::STATUS_ACTIVE,
+        ]);
+
+        if (!$authUser) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Invalid token'];
+        }
+        
         $user = User::findOne($id_user);
         if (!$user) {
             Yii::$app->response->statusCode = 404;
