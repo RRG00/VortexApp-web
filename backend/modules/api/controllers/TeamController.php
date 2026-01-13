@@ -80,7 +80,7 @@ class TeamController extends ActiveController
 
         $membersArray = [];
         foreach ($membros as $m) {
-            if (!$m->utilizador) {
+            if (!$m->user) {
                 continue;
             }
             $u = $m->user;
@@ -90,6 +90,7 @@ class TeamController extends ActiveController
                 'funcao'   => $m->funcao,
             ];
         }
+
 
         return [
             'status' => 'success',
