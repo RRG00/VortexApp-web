@@ -22,7 +22,7 @@ class TeamController extends Controller
             'class'      => QueryParamAuth::class,
             'tokenParam' => 'access-token',
         ];
-
+        \Yii::info('TOKEN API: ' . \Yii::$app->request->get('access-token'), 'api');
         return $behaviors;
     }
 
