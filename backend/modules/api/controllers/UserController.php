@@ -72,7 +72,7 @@ class UserController extends Controller
             ->alias('u') // Cleaner way to alias
             ->innerJoin(['a' => 'auth_assignment'], 'u.id = a.user_id')
             // VERIFY: Is it 'referee' or 'arbitro' in your DB? Change below if needed.
-            ->where(['a.auth_name' => 'referee'])
+            ->where(['a.item_name' => 'referee'])
             ->asArray()
             ->all();
 
