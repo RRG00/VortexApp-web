@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use common\Models\User;
-use app\Models\UserSearch;
+use backend\Models\UserSearch;
 use frontend\models\VerifyEmailForm;
 use InvalidArgumentException;
 use Yii;
