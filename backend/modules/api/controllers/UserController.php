@@ -48,7 +48,7 @@ class UserController extends Controller
 
         $photoUrl = null;
         if ($image) {
-            $baseUrl  = Yii::$app->request->hostInfo; 
+            $baseUrl  = Yii::$app->request->hostInfo;
             $photoUrl = $baseUrl . '/VortexApp-web/frontend/web/uploads/'
                 . $image->path . '.' . $image->extension;
         }
@@ -62,6 +62,26 @@ class UserController extends Controller
                 'photo'    => $photoUrl,
             ],
         ];
+    }
+
+    public function actionGetArbitros()
+    {
+        // OPTION A: If you use Yii2 RBAC (auth_assignment table)
+        $sql = "SELECT u.id, u.username 
+            FROM user u 
+            JOIN auth_assignment a ON u.id = a.user_id 
+            WHERE a.item_name = 'arbitro'"; // Make sure the role name is exactly 'arbitro' or 'referee' in your DB
+
+        $arbitros = \Yii::$app->db->createCommand($sql)->queryAll();
+
+        // OPTION B: If you have a 'role' column in your 'user' table
+        // $arbitros = \common\models\User::find()
+        //     ->select(['id', 'username'])
+        //     ->where(['role' => 'arbitro'])
+        //     ->asArray()
+        //     ->all();
+
+        return $arbitros;
     }
 
     //PUT 
