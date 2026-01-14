@@ -11,7 +11,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
-use backend\Models\SignupForm;
+use backend\models\SignupForm;
 
 
 /**
