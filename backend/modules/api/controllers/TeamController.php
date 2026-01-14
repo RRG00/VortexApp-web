@@ -114,9 +114,9 @@ class TeamController extends ActiveController
     public function actionCreate()
     {
         $model   = new Equipa();
-        $request = Yii::$app->request;
-        $data    = $request->bodyParams;
+        $data    = Yii::$app->request->bodyParams;
 
+        // 1) Capitão vem do id_user enviado no JSON
         $userId = $data['id_user'] ?? null;
         $user   = User::findOne($userId);
         if (!$user) {
@@ -124,13 +124,13 @@ class TeamController extends ActiveController
             return ['status' => 'error', 'message' => 'User not exists'];
         }
 
-        $model->load($data, '');
+        $model->nome         = $data['nome'] ?? null;
         $model->data_criacao = $data['data_criacao'] ?? date('Y-m-d H:i:s');
+
+        $model->id_capitao = $userId;
 
         $tx = Yii::$app->db->beginTransaction();
         try {
-            $model->id_capitao = $userId;
-
             if (!$model->validate() || !$model->save()) {
                 Yii::$app->response->statusCode = 400;
                 return ['status' => 'error', 'message' => 'Validation failed', 'errors' => $model->errors];
@@ -159,6 +159,7 @@ class TeamController extends ActiveController
             return ['status' => 'error', 'message' => 'Internal server error'];
         }
     }
+
 
 
     //Update
