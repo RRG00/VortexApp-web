@@ -33,6 +33,13 @@ class TeamController extends ActiveController
         return parent::beforeAction($action);
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['create']);
+        return $actions;
+    }
+
     public function actionFind($id)
     {
         $team = Equipa::findOne($id);
