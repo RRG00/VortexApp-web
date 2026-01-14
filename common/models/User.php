@@ -126,11 +126,20 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne([
-            'auth_key' => $token,
-            'status'   => self::STATUS_ACTIVE,
+        \Yii::info('TOKEN API (param): ' . $token, 'api');
+
+        $user = static::findOne([
+            'access_token' => $token,
+            'status'       => self::STATUS_ACTIVE,
         ]);
+
+        \Yii::info('TOKEN API (user id): ' . ($user ? $user->id : 'null'), 'api');
+
+        return $user;
     }
+
+
+
 
     /**
      * Finds user by username

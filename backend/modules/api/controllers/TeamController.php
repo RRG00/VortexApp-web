@@ -2,7 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use common\models\Equipa;
 
 use common\models\User;
@@ -10,21 +10,22 @@ use common\models\MembrosEquipa;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 
-class TeamController extends Controller
+
+class TeamController extends ActiveController
 {
     public $modelClass = Equipa::class;
 
     public function behaviors()
-{
-    $behaviors = parent::behaviors();
+    {
+        $behaviors = parent::behaviors();
 
-    $behaviors['authenticator'] = [
-        'class' => QueryParamAuth::class,
-        'tokenParam' => 'access-token',
-    ];
+        //$behaviors['authenticator'] = [
+        //'class'      => QueryParamAuth::class,
+        // 'tokenParam' => 'access-token',
+        //];
 
-    return $behaviors;
-}
+        return $behaviors;
+    }
 
     public function beforeAction($action)
     {
@@ -67,6 +68,30 @@ class TeamController extends Controller
 
         $team = $membro->equipa;
 
+        $capitao = User::findOne($team->id_capitao);
+        if (!$capitao) {
+            Yii::$app->response->statusCode = 500;
+            return ['status' => 'error', 'message' => 'Captain not found for team'];
+        }
+
+        $membros = MembrosEquipa::find()
+            ->where(['id_equipa' => $team->id])
+            ->all();
+
+        $membersArray = [];
+        foreach ($membros as $m) {
+            if (!$m->user) {
+                continue;
+            }
+            $u = $m->user;
+            $membersArray[] = [
+                'id'       => $u->id,
+                'username' => $u->username,
+                'funcao'   => $m->funcao,
+            ];
+        }
+
+
         return [
             'status' => 'success',
             'team' => [
@@ -75,8 +100,14 @@ class TeamController extends Controller
                 'id_capitao'  => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
-        ];  
+            'captain' => [
+                'id'       => $capitao->id,
+                'username' => $capitao->username,
+            ],
+            'members' => $membersArray,
+        ];
     }
+
 
 
     //READ 

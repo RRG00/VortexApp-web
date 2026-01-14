@@ -45,7 +45,9 @@
                 'targets' => [
                     [
                         'class' => \yii\log\FileTarget::class,
-                        'levels' => ['error', 'warning'],
+                        'levels' => ['error', 'warning', 'info'],
+                        'categories' => ['api'],
+                        'logFile' => '@app/runtime/logs/app.log',
                     ],
                 ],
             ],
