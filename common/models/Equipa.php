@@ -43,6 +43,7 @@ class Equipa extends \yii\db\ActiveRecord
         return [
             [['nome', 'data_criacao'], 'required'],
             [['data_criacao'], 'safe'],
+            [['id_capitao'], 'integer'],
             [['nome'], 'string', 'max' => 255],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
         ];
@@ -57,6 +58,7 @@ class Equipa extends \yii\db\ActiveRecord
             'id' => 'Id',
             'nome' => 'Nome',
             'data_criacao' => 'Data Criacao',
+            'id_capitao'   => 'captain',
         ];
     }
 

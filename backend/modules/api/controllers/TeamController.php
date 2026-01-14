@@ -113,21 +113,25 @@ class TeamController extends ActiveController
     //READ 
     public function actionCreate()
     {
-        $model   = new Equipa();
-        $data    = Yii::$app->request->bodyParams;
-
-        // 1) Capitão vem do id_user enviado no JSON
+        $data   = Yii::$app->request->bodyParams;
         $userId = $data['id_user'] ?? null;
-        $user   = User::findOne($userId);
+
+        $user = User::findOne($userId);
         if (!$user) {
             Yii::$app->response->statusCode = 400;
             return ['status' => 'error', 'message' => 'User not exists'];
         }
 
+        $membro = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+        if ($membro && $membro->equipa) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'User already has a team'];
+        }
+
+        $model = new Equipa();
         $model->nome         = $data['nome'] ?? null;
         $model->data_criacao = $data['data_criacao'] ?? date('Y-m-d H:i:s');
-
-        $model->id_capitao = $userId;
+        $model->id_capitao   = $userId;
 
         $tx = Yii::$app->db->beginTransaction();
         try {
@@ -140,10 +144,15 @@ class TeamController extends ActiveController
             $membroEquipa->id_equipa     = $model->id;
             $membroEquipa->id_utilizador = $userId;
             $membroEquipa->funcao        = 'capitao';
-
             if (!$membroEquipa->save()) {
                 Yii::$app->response->statusCode = 400;
-                return ['status' => 'error', 'message' => 'Failed to add captain to team', 'errors' => $membroEquipa->errors];
+                return ['status' => 'error', 'message' => 'Failed to add captain', 'errors' => $membroEquipa->errors];
+            }
+
+            $auth = Yii::$app->authManager;
+            $captainRole = $auth->getRole('captain');
+            if ($captainRole && !$auth->getAssignment('captain', $userId)) {
+                $auth->assign($captainRole, $userId);
             }
 
             $tx->commit();
@@ -159,6 +168,7 @@ class TeamController extends ActiveController
             return ['status' => 'error', 'message' => 'Internal server error'];
         }
     }
+
 
 
 
