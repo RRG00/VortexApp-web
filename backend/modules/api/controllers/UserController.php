@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         $user = User::findOne($id);
         if (!$user) {
-            \Yii::$app->response->statuscode = 404;
+            \Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'No users found'];
         }
 
@@ -66,22 +66,21 @@ class UserController extends Controller
 
     public function actionGetArbitros()
     {
-        // OPTION A: If you use Yii2 RBAC (auth_assignment table)
-        $sql = "SELECT u.id, u.username 
-            FROM user u 
-            JOIN auth_assignment a ON u.id = a.user_id 
-            WHERE a.item_name = 'arbitro'"; // Make sure the role name is exactly 'arbitro' or 'referee' in your DB
 
-        $arbitros = \Yii::$app->db->createCommand($sql)->queryAll();
+        $arbitros = \common\models\User::find()
+            ->select(['u.id', 'u.username'])
+            ->alias('u') // Cleaner way to alias
+            ->innerJoin(['a' => 'auth_assignment'], 'u.id = a.user_id')
+            // VERIFY: Is it 'referee' or 'arbitro' in your DB? Change below if needed.
+            ->where(['a.auth_name' => 'referee'])
+            ->asArray()
+            ->all();
 
-        // OPTION B: If you have a 'role' column in your 'user' table
-        // $arbitros = \common\models\User::find()
-        //     ->select(['id', 'username'])
-        //     ->where(['role' => 'arbitro'])
-        //     ->asArray()
-        //     ->all();
-
-        return $arbitros;
+        // Even if empty, return success so Android doesn't crash/error
+        return [
+            'status' => 'success',
+            'arbitros' => $arbitros, // Will be [] if empty
+        ];
     }
 
     //PUT 
@@ -90,7 +89,7 @@ class UserController extends Controller
 
         $user = User::findOne($id);
         if (!$user) {
-            Yii::$app->response->statuscode = 404;
+            Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'User not found'];
         }
 
@@ -161,7 +160,7 @@ class UserController extends Controller
 
         $user = User::findOne($id);
         if (!$user) {
-            Yii::$app->response->statuscode = 404;
+            Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'User not found'];
         }
 
