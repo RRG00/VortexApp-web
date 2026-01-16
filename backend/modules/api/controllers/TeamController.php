@@ -228,9 +228,16 @@ class TeamController extends ActiveController
 
         $tx = Yii::$app->db->beginTransaction();
         try {
+            // DEBUG: ver quantas linhas vão ser apagadas
+            $count = MembrosEquipa::find()
+                ->where(['id_equipa' => $team->id])
+                ->count();
+            Yii::info("API TEAM DELETE id={$team->id} - apagar {$count} membros", 'api');
+
+            // 1) apagar membros dessa equipa
             MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
 
-
+            // 2) apagar equipa
             if (!$team->delete()) {
                 Yii::$app->response->statusCode = 400;
                 $tx->rollBack();
