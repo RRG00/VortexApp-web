@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         $user = User::findOne($id);
         if (!$user) {
-            \Yii::$app->response->statuscode = 404;
+            \Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'No users found'];
         }
 
@@ -48,7 +48,7 @@ class UserController extends Controller
 
         $photoUrl = null;
         if ($image) {
-            $baseUrl  = Yii::$app->request->hostInfo; 
+            $baseUrl  = Yii::$app->request->hostInfo;
             $photoUrl = $baseUrl . '/VortexApp-web/frontend/web/uploads/'
                 . $image->path . '.' . $image->extension;
         }
@@ -64,13 +64,32 @@ class UserController extends Controller
         ];
     }
 
+    public function actionGetArbitros()
+    {
+
+        $arbitros = \common\models\User::find()
+            ->select(['u.id', 'u.username'])
+            ->alias('u') // Cleaner way to alias
+            ->innerJoin(['a' => 'auth_assignment'], 'u.id = a.user_id')
+            // VERIFY: Is it 'referee' or 'arbitro' in your DB? Change below if needed.
+            ->where(['a.item_name' => 'referee'])
+            ->asArray()
+            ->all();
+
+        // Even if empty, return success so Android doesn't crash/error
+        return [
+            'status' => 'success',
+            'arbitros' => $arbitros, // Will be [] if empty
+        ];
+    }
+
     //PUT 
     public function actionUpdateUser($id)
     {
 
         $user = User::findOne($id);
         if (!$user) {
-            Yii::$app->response->statuscode = 404;
+            Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'User not found'];
         }
 
@@ -141,7 +160,7 @@ class UserController extends Controller
 
         $user = User::findOne($id);
         if (!$user) {
-            Yii::$app->response->statuscode = 404;
+            Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'User not found'];
         }
 

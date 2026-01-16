@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use common\Models\User;
-use app\Models\UserSearch;
+use backend\models\UserSearch;
 use frontend\models\VerifyEmailForm;
 use InvalidArgumentException;
 use Yii;
@@ -11,7 +11,8 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
-use backend\Models\SignupForm;
+use backend\models\SignupForm;
+
 
 /**
  * UserController implements the CRUD actions for User model.

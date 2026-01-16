@@ -2,7 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use common\models\Equipa;
 
 use common\models\User;
@@ -10,26 +10,34 @@ use common\models\MembrosEquipa;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 
-class TeamController extends Controller
+
+class TeamController extends ActiveController
 {
     public $modelClass = Equipa::class;
 
     public function behaviors()
-{
-    $behaviors = parent::behaviors();
+    {
+        $behaviors = parent::behaviors();
 
-    $behaviors['authenticator'] = [
-        'class' => QueryParamAuth::class,
-        'tokenParam' => 'access-token',
-    ];
+        //$behaviors['authenticator'] = [
+        //'class'      => QueryParamAuth::class,
+        // 'tokenParam' => 'access-token',
+        //];
 
-    return $behaviors;
-}
+        return $behaviors;
+    }
 
     public function beforeAction($action)
     {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
+    }
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['create']);
+        return $actions;
     }
 
     public function actionFind($id)
@@ -67,6 +75,30 @@ class TeamController extends Controller
 
         $team = $membro->equipa;
 
+        $capitao = User::findOne($team->id_capitao);
+        if (!$capitao) {
+            Yii::$app->response->statusCode = 500;
+            return ['status' => 'error', 'message' => 'Captain not found for team'];
+        }
+
+        $membros = MembrosEquipa::find()
+            ->where(['id_equipa' => $team->id])
+            ->all();
+
+        $membersArray = [];
+        foreach ($membros as $m) {
+            if (!$m->user) {
+                continue;
+            }
+            $u = $m->user;
+            $membersArray[] = [
+                'id'       => $u->id,
+                'username' => $u->username,
+                'funcao'   => $m->funcao,
+            ];
+        }
+
+
         return [
             'status' => 'success',
             'team' => [
@@ -75,26 +107,36 @@ class TeamController extends Controller
                 'id_capitao'  => $team->id_capitao,
                 'data_criacao' => $team->data_criacao,
             ],
-        ];  
+            'captain' => [
+                'id'       => $capitao->id,
+                'username' => $capitao->username,
+            ],
+            'members' => $membersArray,
+        ];
     }
+
 
 
     //READ 
     public function actionCreate()
     {
-        $model   = new Equipa();
-        $request = Yii::$app->request;
-        $data    = $request->bodyParams;
-
+        $data   = Yii::$app->request->bodyParams;
         $userId = $data['id_user'] ?? null;
-        $user   = User::findOne($userId);
+
+        $user = User::findOne($userId);
         if (!$user) {
             Yii::$app->response->statusCode = 400;
             return ['status' => 'error', 'message' => 'User not exists'];
         }
 
+        $membro = MembrosEquipa::findOne(['id_utilizador' => $userId]);
+        if ($membro && $membro->equipa) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'User already has a team'];
+        }
 
-        $model->load($data, '');
+        $model = new Equipa();
+        $model->nome         = $data['nome'] ?? null;
         $model->data_criacao = $data['data_criacao'] ?? date('Y-m-d H:i:s');
         $model->id_capitao   = $userId;
 
@@ -109,10 +151,15 @@ class TeamController extends Controller
             $membroEquipa->id_equipa     = $model->id;
             $membroEquipa->id_utilizador = $userId;
             $membroEquipa->funcao        = 'capitao';
-
             if (!$membroEquipa->save()) {
                 Yii::$app->response->statusCode = 400;
-                return ['status' => 'error', 'message' => 'Failed to add captain to team', 'errors' => $membroEquipa->errors];
+                return ['status' => 'error', 'message' => 'Failed to add captain', 'errors' => $membroEquipa->errors];
+            }
+
+            $auth = Yii::$app->authManager;
+            $captainRole = $auth->getRole('captain');
+            if ($captainRole && !$auth->getAssignment('captain', $userId)) {
+                $auth->assign($captainRole, $userId);
             }
 
             $tx->commit();
@@ -128,6 +175,9 @@ class TeamController extends Controller
             return ['status' => 'error', 'message' => 'Internal server error'];
         }
     }
+
+
+
 
     //Update
     public function actionUpdate($id)
@@ -169,20 +219,33 @@ class TeamController extends Controller
 
     //DELETE
     public function actionDelete($id)
-    {
+{
+    $team = Equipa::findOne($id);
+    if (!$team) {
+        Yii::$app->response->statusCode = 404;
+        return ['status' => 'error', 'message' => 'Team not found'];
+    }
 
-        $model = $this->modelClass::findOne($id);
+    $tx = Yii::$app->db->beginTransaction();
+    try {
+        MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
 
-        if (!$model) {
-            Yii::$app->response->statuscode = 404;
-            return ['status' => 'error', 'message' => 'Team not found'];
-        }
+        User::updateAll(['team_id' => null], ['team_id' => $team->id]);
 
-        if ($model->delete()) {
-            return ['status' => 'success', 'message' => 'Team deleted successfully'];
-        } else {
-            Yii::$app->response->statuscode = 400;
+        if (!$team->delete()) {
+            Yii::$app->response->statusCode = 400;
+            $tx->rollBack();
             return ['status' => 'error', 'message' => 'Failed to delete team'];
         }
+
+        $tx->commit();
+        return ['status' => 'success', 'message' => 'Team deleted successfully'];
+
+    } catch (\Throwable $e) {
+        $tx->rollBack();
+        Yii::$app->response->statusCode = 500;
+        return ['status' => 'error', 'message' => 'Internal server error'];
     }
+}
+
 }

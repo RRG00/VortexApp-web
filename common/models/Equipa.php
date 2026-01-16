@@ -43,6 +43,7 @@ class Equipa extends \yii\db\ActiveRecord
         return [
             [['nome', 'data_criacao'], 'required'],
             [['data_criacao'], 'safe'],
+            [['id_capitao'], 'integer'],
             [['nome'], 'string', 'max' => 255],
             [['nome'], 'match', 'pattern' => '/^[A-Za-z0-9]+$/', 'message' => 'O nome da equipa só pode conter letras (A-Z) e números (0-9).'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
@@ -58,6 +59,7 @@ class Equipa extends \yii\db\ActiveRecord
             'id' => 'Id',
             'nome' => 'Nome',
             'data_criacao' => 'Data Criacao',
+            'id_capitao'   => 'captain',
         ];
     }
 
