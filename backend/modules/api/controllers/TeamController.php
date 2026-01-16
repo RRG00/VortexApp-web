@@ -230,8 +230,6 @@ class TeamController extends ActiveController
         try {
             MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
 
-            User::updateAll(['team_id' => null], ['team_id' => $team->id]);
-
 
             if (!$team->delete()) {
                 Yii::$app->response->statusCode = 400;
