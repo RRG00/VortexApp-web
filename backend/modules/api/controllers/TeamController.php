@@ -228,21 +228,10 @@ class TeamController extends ActiveController
 
         $tx = Yii::$app->db->beginTransaction();
         try {
-            $membros = MembrosEquipa::find()
-                ->where(['id_equipa' => $team->id])
-                ->all();
-
-            foreach ($membros as $m) {
-                if ($m->user) {
-                    $m->user->team_id = null;
-                    $m->user->save(false, ['team_id']);
-                }
-            }
-
-    
+            
             MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
 
-          
+
             if (!$team->delete()) {
                 Yii::$app->response->statusCode = 400;
                 $tx->rollBack();
