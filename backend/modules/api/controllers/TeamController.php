@@ -223,29 +223,22 @@ class TeamController extends ActiveController
         $team = Equipa::findOne($id);
         if (!$team) {
             Yii::$app->response->statusCode = 404;
-            return ['status' => 'error', 'message' => 'Team not found'];
+            return ['status' => 'error', 'message' => "Team not found: $id"];
         }
 
         $tx = Yii::$app->db->beginTransaction();
         try {
-            // DEBUG: ver quantas linhas vão ser apagadas
-            $count = MembrosEquipa::find()
-                ->where(['id_equipa' => $team->id])
-                ->count();
-            Yii::info("API TEAM DELETE id={$team->id} - apagar {$count} membros", 'api');
+            $count = MembrosEquipa::deleteAll(['id_equipa' => $id]);
+            Yii::info("TEAM DELETE id=$id apagou $count membros", 'api');
 
-            // 1) apagar membros dessa equipa
-            MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
-
-            // 2) apagar equipa
             if (!$team->delete()) {
-                Yii::$app->response->statusCode = 400;
                 $tx->rollBack();
+                Yii::$app->response->statusCode = 400;
                 return ['status' => 'error', 'message' => 'Failed to delete team'];
             }
 
             $tx->commit();
-            return ['status' => 'success', 'message' => 'Team deleted successfully'];
+            return ['status' => 'success', 'message' => 'Team deleted successfully', 'deletedMembers' => $count];
         } catch (\Throwable $e) {
             $tx->rollBack();
             Yii::$app->response->statusCode = 500;
