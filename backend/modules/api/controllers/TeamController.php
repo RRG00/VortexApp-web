@@ -228,9 +228,8 @@ class TeamController extends ActiveController
 
         $tx = Yii::$app->db->beginTransaction();
         try {
-            
             MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
-
+            User::updateAll(['team_id' => null], ['team_id' => $team->id]);
 
             if (!$team->delete()) {
                 Yii::$app->response->statusCode = 400;
@@ -242,6 +241,7 @@ class TeamController extends ActiveController
             return ['status' => 'success', 'message' => 'Team deleted successfully'];
         } catch (\Throwable $e) {
             $tx->rollBack();
+            Yii::error($e->getMessage(), 'api');
             Yii::$app->response->statusCode = 500;
             return ['status' => 'error', 'message' => 'Internal server error'];
         }
