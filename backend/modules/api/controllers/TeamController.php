@@ -227,39 +227,42 @@ class TeamController extends ActiveController
         }
 
         try {
-            // Delete all team members (IGUAL AO FRONTEND)
+            // ANTES DE APAGAR - contar
+            $antesCount = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
+            Yii::info("ANTES: $antesCount membros na equipa $id", 'api');
+
+            // APAGAR
             $count = MembrosEquipa::deleteAll(['id_equipa' => $id]);
+            Yii::info("deleteAll() retornou: $count", 'api');
 
-            Yii::info("TEAM DELETE id=$id apagou $count membros", 'api');
+            // DEPOIS DE APAGAR - contar
+            $depoisCount = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
+            Yii::info("DEPOIS: $depoisCount membros na equipa $id", 'api');
 
-            // Delete team inscriptions (se existir)
-            if (class_exists('\common\models\Inscricao')) {
-                \common\models\Inscricao::deleteAll(['id_equipa' => $id]);
-            }
-
-            // Delete the team
+            // APAGAR EQUIPA
             if (!$team->delete()) {
-                Yii::$app->response->statusCode = 400;
                 return [
                     'status' => 'error',
                     'message' => 'Failed to delete team',
-                    'errors' => $team->errors
+                    'debug' => [
+                        'antes' => $antesCount,
+                        'deleteAll_retornou' => $count,
+                        'depois' => $depoisCount,
+                    ]
                 ];
             }
 
-            Yii::$app->response->statusCode = 200;
             return [
                 'status' => 'success',
-                'message' => 'Team deleted successfully',
-                'deletedMembers' => $count
+                'message' => 'Team deleted',
+                'debug' => [
+                    'antes' => $antesCount,
+                    'deleteAll_retornou' => $count,
+                    'depois' => $depoisCount,
+                ]
             ];
         } catch (\Exception $e) {
-            Yii::$app->response->statusCode = 500;
-            Yii::error("Erro ao apagar equipa: " . $e->getMessage(), 'api');
-            return [
-                'status' => 'error',
-                'message' => 'Error: ' . $e->getMessage()
-            ];
+            return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
 }
