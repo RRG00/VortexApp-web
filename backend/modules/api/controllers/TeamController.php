@@ -228,21 +228,16 @@ class TeamController extends ActiveController
 
         $tx = Yii::$app->db->beginTransaction();
         try {
+            $count = Yii::$app->db->createCommand()
+                ->delete('membros_equipa', ['id_equipa' => $id])
+                ->execute();
 
-            $membrosAntes = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
-            Yii::info("TEAM DELETE id=$id - Membros ANTES: $membrosAntes", 'api');
-
-          
-            $count = MembrosEquipa::deleteAll(['id_equipa' => $id]);
-            Yii::info("TEAM DELETE id=$id - Apagou $count membros", 'api');
-
-            $membrosDepois = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
-            Yii::info("TEAM DELETE id=$id - Membros DEPOIS: $membrosDepois", 'api');
+            Yii::info("TEAM DELETE id=$id apagou $count membros", 'api');
 
             if (!$team->delete()) {
                 $tx->rollBack();
                 Yii::$app->response->statusCode = 400;
-                return ['status' => 'error', 'message' => 'Failed to delete team', 'errors' => $team->errors];
+                return ['status' => 'error', 'message' => 'Failed to delete team'];
             }
 
             $tx->commit();
@@ -250,7 +245,6 @@ class TeamController extends ActiveController
         } catch (\Throwable $e) {
             $tx->rollBack();
             Yii::$app->response->statusCode = 500;
-            Yii::error("TEAM DELETE ERROR: " . $e->getMessage(), 'api');
             return ['status' => 'error', 'message' => 'Internal server error: ' . $e->getMessage()];
         }
     }
