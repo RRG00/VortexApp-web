@@ -219,33 +219,42 @@ class TeamController extends ActiveController
 
     //DELETE
     public function actionDelete($id)
-{
-    $team = Equipa::findOne($id);
-    if (!$team) {
-        Yii::$app->response->statusCode = 404;
-        return ['status' => 'error', 'message' => 'Team not found'];
-    }
-
-    $tx = Yii::$app->db->beginTransaction();
-    try {
-        MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
-
-        User::updateAll(['team_id' => null], ['team_id' => $team->id]);
-
-        if (!$team->delete()) {
-            Yii::$app->response->statusCode = 400;
-            $tx->rollBack();
-            return ['status' => 'error', 'message' => 'Failed to delete team'];
+    {
+        $team = Equipa::findOne($id);
+        if (!$team) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Team not found'];
         }
 
-        $tx->commit();
-        return ['status' => 'success', 'message' => 'Team deleted successfully'];
+        $tx = Yii::$app->db->beginTransaction();
+        try {
+            $membros = MembrosEquipa::find()
+                ->where(['id_equipa' => $team->id])
+                ->all();
 
-    } catch (\Throwable $e) {
-        $tx->rollBack();
-        Yii::$app->response->statusCode = 500;
-        return ['status' => 'error', 'message' => 'Internal server error'];
+            foreach ($membros as $m) {
+                if ($m->user) {
+                    $m->user->team_id = null;
+                    $m->user->save(false, ['team_id']);
+                }
+            }
+
+    
+            MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
+
+          
+            if (!$team->delete()) {
+                Yii::$app->response->statusCode = 400;
+                $tx->rollBack();
+                return ['status' => 'error', 'message' => 'Failed to delete team'];
+            }
+
+            $tx->commit();
+            return ['status' => 'success', 'message' => 'Team deleted successfully'];
+        } catch (\Throwable $e) {
+            $tx->rollBack();
+            Yii::$app->response->statusCode = 500;
+            return ['status' => 'error', 'message' => 'Internal server error'];
+        }
     }
-}
-
 }
