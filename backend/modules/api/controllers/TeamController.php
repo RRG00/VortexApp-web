@@ -219,20 +219,33 @@ class TeamController extends ActiveController
 
     //DELETE
     public function actionDelete($id)
-    {
+{
+    $team = Equipa::findOne($id);
+    if (!$team) {
+        Yii::$app->response->statusCode = 404;
+        return ['status' => 'error', 'message' => 'Team not found'];
+    }
 
-        $model = $this->modelClass::findOne($id);
+    $tx = Yii::$app->db->beginTransaction();
+    try {
+        MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
 
-        if (!$model) {
-            Yii::$app->response->statuscode = 404;
-            return ['status' => 'error', 'message' => 'Team not found'];
-        }
+        User::updateAll(['team_id' => null], ['team_id' => $team->id]);
 
-        if ($model->delete()) {
-            return ['status' => 'success', 'message' => 'Team deleted successfully'];
-        } else {
-            Yii::$app->response->statuscode = 400;
+        if (!$team->delete()) {
+            Yii::$app->response->statusCode = 400;
+            $tx->rollBack();
             return ['status' => 'error', 'message' => 'Failed to delete team'];
         }
+
+        $tx->commit();
+        return ['status' => 'success', 'message' => 'Team deleted successfully'];
+
+    } catch (\Throwable $e) {
+        $tx->rollBack();
+        Yii::$app->response->statusCode = 500;
+        return ['status' => 'error', 'message' => 'Internal server error'];
     }
+}
+
 }
