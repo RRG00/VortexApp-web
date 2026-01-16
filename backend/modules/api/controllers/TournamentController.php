@@ -28,7 +28,7 @@ class TournamentController extends Controller
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::class,
             'tokenParam' => 'access-token',
-           
+
         ];
 
         return $behaviors;
@@ -112,6 +112,71 @@ class TournamentController extends Controller
             'erros' => $model->errors,
         ];
     }
+    public function actionAllTournaments()
+    {
+        $tournaments = Tournament::find()->all();
+
+        if (!$tournaments) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'No tournaments found'];
+        }
+
+        $result = [];
+        foreach ($tournaments as $t) {
+            $result[] = [
+                'id'          => $t->id,
+                'nome'        => $t->nome,
+                'best_of'     => $t->best_of,
+                'data_inicio' => $t->data_inicio,
+                'data_fim'    => $t->data_fim,
+                'estado'      => $t->estado,
+            ];
+        }
+
+        return $result;
+    }
+    public function actionRegisterTeam()
+    {
+        $data = Yii::$app->request->bodyParams;
+        $idTorneio = $data['id_torneio'] ?? null;
+        $idEquipa  = $data['id_equipa']  ?? null;
+
+        if (!$idTorneio || !$idEquipa) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'id_torneio e id_equipa são obrigatórios'];
+        }
+
+        $torneio = Tournament::findOne($idTorneio);
+        $equipa  = \common\models\Equipa::findOne($idEquipa);
+
+        if (!$torneio || !$equipa) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Torneio ou equipa não encontrado'];
+        }
+
+
+        $existe = Inscricao::find()
+            ->where(['id_torneio' => $idTorneio, 'id_equipa' => $idEquipa])
+            ->exists();
+        if ($existe) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Equipa já inscrita neste torneio'];
+        }
+
+        $insc = new Inscricao();
+        $insc->id_torneio = $idTorneio;
+        $insc->id_equipa  = $idEquipa;
+
+        if ($insc->save()) {
+            Yii::$app->response->statusCode = 201;
+            return ['status' => 'success', 'message' => 'Equipa inscrita com sucesso'];
+        }
+
+        Yii::$app->response->statusCode = 400;
+        return ['status' => 'error', 'message' => 'Falha ao inscrever equipa', 'errors' => $insc->errors];
+    }
+
+
 
     public function actionUpdateTournament($id)
     {
