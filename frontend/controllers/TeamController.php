@@ -308,14 +308,14 @@ class TeamController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
 
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-<<<<<<< HEAD
+
             if ($model->upload()) {
                 if ($model->save()) {
 
                     Yii::$app->session->setFlash('success', 'Equipa atualizada com sucesso!');
                     return $this->redirect(['index']);
                 }
-=======
+
 
             // If there's an image file, try to upload it
             if ($model->imageFile) {
@@ -328,7 +328,7 @@ class TeamController extends Controller
                 return $this->redirect(['view', 'id' => $id]);
             } else {
                 Yii::$app->session->setFlash('error', 'Erro ao atualizar a equipa.');
->>>>>>> origin/main
+
             }
         }
         return $this->render('edit-team', [
