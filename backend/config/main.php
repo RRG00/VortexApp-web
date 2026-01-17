@@ -85,6 +85,10 @@
                     'POST api/tournament/create' => 'api/tournament/create-tournament',
                     'PUT api/tournament/update/<id>' => 'api/tournament/update-tournament',
                     'DELETE api/tournament/delete/<id>' => 'api/tournament/delete-tournament',
+                    'GET api/tournament/all-tournaments' => 'api/tournament/all-tournaments',
+                    'POST api/tournament/register-team' => 'api/tournament/register-team',
+
+
 
                     //ENDPOINTS API -> User Profile
                     'GET api/profile/view-user-profile/<id_user>'   => 'api/profile/view-user-profile',

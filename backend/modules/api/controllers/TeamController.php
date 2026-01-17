@@ -219,33 +219,56 @@ class TeamController extends ActiveController
 
     //DELETE
     public function actionDelete($id)
-{
-    $team = Equipa::findOne($id);
-    if (!$team) {
-        Yii::$app->response->statusCode = 404;
-        return ['status' => 'error', 'message' => 'Team not found'];
-    }
+    {
+        // FORÇA O RESPONSE A SER JSON
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-    $tx = Yii::$app->db->beginTransaction();
-    try {
-        MembrosEquipa::deleteAll(['id_equipa' => $team->id]);
-
-        User::updateAll(['team_id' => null], ['team_id' => $team->id]);
-
-        if (!$team->delete()) {
-            Yii::$app->response->statusCode = 400;
-            $tx->rollBack();
-            return ['status' => 'error', 'message' => 'Failed to delete team'];
+        $team = Equipa::findOne($id);
+        if (!$team) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => "Team not found: $id"];
         }
 
-        $tx->commit();
-        return ['status' => 'success', 'message' => 'Team deleted successfully'];
+        try {
+            // ANTES DE APAGAR
+            $antesCount = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
+            Yii::info("ANTES: $antesCount membros na equipa $id", 'api');
 
-    } catch (\Throwable $e) {
-        $tx->rollBack();
-        Yii::$app->response->statusCode = 500;
-        return ['status' => 'error', 'message' => 'Internal server error'];
+            // APAGAR
+            $count = MembrosEquipa::deleteAll(['id_equipa' => $id]);
+            Yii::info("deleteAll() retornou: $count", 'api');
+
+            // DEPOIS DE APAGAR
+            $depoisCount = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
+            Yii::info("DEPOIS: $depoisCount membros na equipa $id", 'api');
+
+            // APAGAR EQUIPA
+            if (!$team->delete()) {
+                Yii::$app->response->statusCode = 400;
+                return [
+                    'status' => 'error',
+                    'message' => 'Failed to delete team',
+                    'debug' => [
+                        'antes' => $antesCount,
+                        'deleteAll_retornou' => $count,
+                        'depois' => $depoisCount,
+                    ]
+                ];
+            }
+
+            Yii::$app->response->statusCode = 200; // IMPORTANTE!
+            return [
+                'status' => 'success',
+                'message' => 'Team deleted',
+                'debug' => [
+                    'antes' => $antesCount,
+                    'deleteAll_retornou' => $count,
+                    'depois' => $depoisCount,
+                ]
+            ];
+        } catch (\Exception $e) {
+            Yii::$app->response->statusCode = 500;
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
     }
-}
-
 }
