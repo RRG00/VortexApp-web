@@ -97,7 +97,7 @@
 
                     //ENDPOINTS CHAT(ANDROID)
                     'POST api/chat/send' => 'api/chat/send',
-                    'GET api/chat/history' => 'api/chat/history',
+                    'GET api/chat/messages/<teamId:\d+>' => 'api/chat/history',
                 ],
             ],
         ],
