@@ -27,6 +27,7 @@ class UserController extends Controller
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::class,
             'tokenParam' => 'access-token',
+            'except' => ['create'],
         ];
 
         return $behaviors;
