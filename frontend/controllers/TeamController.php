@@ -7,7 +7,7 @@ use common\models\EquipaSearch;
 use common\models\MembrosEquipa;
 use common\models\UpdateTeamForm;
 use common\models\User;
-use app\models\Convite;
+use frontend\models\Convite;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
