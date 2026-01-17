@@ -87,16 +87,26 @@ class ChatController extends Controller
         try {
             $timestamp = date('Y-m-d H:i:s');
 
+            $user = (new \yii\db\Query())
+                ->select(['username'])
+                ->from('user')
+                ->where(['id' => (int)$userId])
+                ->one();
+
+           
+            $username = $user ? $user['username'] : 'User_' . $userId;
+
+           
             $result = Yii::$app->db->createCommand()->insert('chat_mensagens', [
                 'id_equipa'  => (int)$teamId,
                 'id_user'    => (int)$userId,
+                'username'   => $username, 
                 'mensagem'   => $message,
                 'created_at' => $timestamp,
             ])->execute();
 
             if ($result) {
-
-                // MQTT publish
+     
                 $publisherFile = Yii::getAlias('@app') . '/../mosquitto/ChatPublisher.php';
                 if (file_exists($publisherFile)) {
                     require_once $publisherFile;
@@ -105,11 +115,12 @@ class ChatController extends Controller
                     $payload = json_encode([
                         'teamId'    => (int)$teamId,
                         'userId'    => (int)$userId,
+                        'username'  => $username, 
                         'message'   => $message,
                         'timestamp' => $timestamp,
                     ]);
 
-                    FazPublishNoMosquitto($topic, $payload);
+                    $this->FazPublishNoMosquitto($topic, $payload);
                 }
 
                 return [
@@ -118,6 +129,7 @@ class ChatController extends Controller
                     'data'    => [
                         'teamId'    => (int)$teamId,
                         'userId'    => (int)$userId,
+                        'username'  => $username,
                         'timestamp' => $timestamp,
                     ],
                 ];
