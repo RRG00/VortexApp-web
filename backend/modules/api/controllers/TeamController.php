@@ -176,9 +176,6 @@ class TeamController extends ActiveController
         }
     }
 
-
-
-
     //Update
     public function actionUpdate($id)
     {
@@ -220,7 +217,6 @@ class TeamController extends ActiveController
     //DELETE
     public function actionDelete($id)
     {
-        // FORÇA O RESPONSE A SER JSON
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         $team = Equipa::findOne($id);
@@ -229,46 +225,54 @@ class TeamController extends ActiveController
             return ['status' => 'error', 'message' => "Team not found: $id"];
         }
 
+        $tx = Yii::$app->db->beginTransaction();
         try {
-            // ANTES DE APAGAR
+            // COUNT BEFORE
             $antesCount = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
             Yii::info("ANTES: $antesCount membros na equipa $id", 'api');
 
-            // APAGAR
-            $count = MembrosEquipa::deleteAll(['id_equipa' => $id]);
-            Yii::info("deleteAll() retornou: $count", 'api');
+            // DELETE USING RAW SQL (bypasses ActiveRecord issues)
+            $deletedRows = Yii::$app->db->createCommand()
+                ->delete('MembrosEquipa', ['id_equipa' => $id])
+                ->execute();
 
-            // DEPOIS DE APAGAR
+            Yii::info("SQL DELETE executou: $deletedRows linhas deletadas", 'api');
+
+            // COUNT AFTER
             $depoisCount = MembrosEquipa::find()->where(['id_equipa' => $id])->count();
             Yii::info("DEPOIS: $depoisCount membros na equipa $id", 'api');
 
-            // APAGAR EQUIPA
-            if (!$team->delete()) {
-                Yii::$app->response->statusCode = 400;
-                return [
-                    'status' => 'error',
-                    'message' => 'Failed to delete team',
-                    'debug' => [
-                        'antes' => $antesCount,
-                        'deleteAll_retornou' => $count,
-                        'depois' => $depoisCount,
-                    ]
-                ];
+            // If members still exist, something is wrong
+            if ($depoisCount > 0) {
+                throw new \Exception("Failed to delete members: $depoisCount still remaining");
             }
 
-            Yii::$app->response->statusCode = 200; // IMPORTANTE!
+            // DELETE THE TEAM
+            if (!$team->delete()) {
+                throw new \Exception("Failed to delete team: " . json_encode($team->errors));
+            }
+
+            // Remove captain role from the user
+            $auth = Yii::$app->authManager;
+            if ($team->id_capitao) {
+                $auth->revoke($auth->getRole('captain'), $team->id_capitao);
+            }
+
+            $tx->commit();
+
+            Yii::$app->response->statusCode = 200;
             return [
                 'status' => 'success',
-                'message' => 'Team deleted',
-                'debug' => [
-                    'antes' => $antesCount,
-                    'deleteAll_retornou' => $count,
-                    'depois' => $depoisCount,
-                ]
+                'message' => 'Team deleted successfully',
             ];
         } catch (\Exception $e) {
+            $tx->rollBack();
+            Yii::error("Error deleting team: " . $e->getMessage(), 'api');
             Yii::$app->response->statusCode = 500;
-            return ['status' => 'error', 'message' => $e->getMessage()];
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
         }
     }
 }
