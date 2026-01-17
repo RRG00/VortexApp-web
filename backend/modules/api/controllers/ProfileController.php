@@ -109,6 +109,29 @@ class ProfileController extends Controller
             $user->email = $data['email'];
         }
 
+        $currentPassword = $data['current_password'] ?? null;
+        $newPassword = $data['new_password'] ?? null;
+
+        if ($currentPassword || $newPassword){
+            if (!$currentPassword || !$newPassword) {
+                Yii::$app->response->statusCode = 400;
+                return [
+                    'status' => 'error',
+                    'message' => 'Both current_password and new_password are required to change the password',
+                ];
+            }
+
+            if(!Yii::$app->security->validatePassword($currentPassword, $user->password_hash)) {
+                Yii::$app->response->statusCode = 400;
+                return [
+                    'status' => 'error',
+                    'message' => 'Current password is incorrect',
+                ];
+            }
+
+            $user->password_hash = Yii::$app->security->generatePasswordHash($newPassword);
+        }
+
         if ($user->save()) {
             return [
                 'status' => 'success',
