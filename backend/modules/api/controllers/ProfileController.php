@@ -72,7 +72,10 @@ class ProfileController extends Controller
 
         $memberSince = null;
         if ($user->created_at) {
-            $memberSince = Yii::$app->formatter->asDate($user->created_at, 'php:d-m-Y');
+            $memberSince = Yii::$app->formatter->asDate(
+                $user->created_at,
+                'php:d-m-Y' 
+            );
         }
 
         return [
