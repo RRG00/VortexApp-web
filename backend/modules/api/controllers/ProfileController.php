@@ -16,7 +16,7 @@ use yii\filters\auth\QueryParamAuth;
 class ProfileController extends Controller
 {
 
-    public $enableCsrfValidation = false; 
+    public $enableCsrfValidation = false;
 
     public function behaviors()
     {
@@ -70,6 +70,10 @@ class ProfileController extends Controller
             $photoUrl = 'DONT HAVE IMG';
         }
 
+        $memberSince = null;
+        if ($user->created_at) {
+            $memberSince = Yii::$app->formatter->asDate($user->created_at, 'php:d-m-Y');
+        }
 
         return [
             'status' => 'success',
@@ -78,7 +82,7 @@ class ProfileController extends Controller
                 'username'  => $user->username,
                 'email'     => $user->email,
                 'photo_url' => $photoUrl,
-                'member_since'=> $user->created_at,
+                'member_since' => $user->created_at,
             ],
             'stats' => $stats,
         ];
