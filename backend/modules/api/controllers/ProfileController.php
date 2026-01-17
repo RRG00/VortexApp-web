@@ -78,6 +78,7 @@ class ProfileController extends Controller
                 'username'  => $user->username,
                 'email'     => $user->email,
                 'photo_url' => $photoUrl,
+                'member_since'=> $user->created_at,
             ],
             'stats' => $stats,
         ];
