@@ -52,7 +52,7 @@ class LoginController extends Controller
             $user = Yii::$app->user->identity;
 
             /** @var \common\models\User $user */
-            $user->access_token = Yii::$app->security->generateRandomString();
+            $user->auth_key = Yii::$app->security->generateRandomString();
             $user->save(false);
 
             $auth  = Yii::$app->authManager;
@@ -75,7 +75,7 @@ class LoginController extends Controller
                 'user_id'      => $user->id,
                 'username'     => $user->username,
                 'role'         => $rolename,
-                'access_token' => $user->access_token,
+                'access_token' => $user->auth_key,
                 'team_id'      => $teamId,
             ];
         }
