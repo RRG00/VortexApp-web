@@ -129,7 +129,7 @@ class User extends ActiveRecord implements IdentityInterface
         \Yii::info('TOKEN API (param): ' . $token, 'api');
 
         $user = static::findOne([
-            'access_token' => $token,
+            'auth_key' => $token,
             'status'       => self::STATUS_ACTIVE,
         ]);
 
